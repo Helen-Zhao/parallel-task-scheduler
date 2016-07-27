@@ -1,0 +1,8 @@
+.classpath
+*.project
+.settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.m2e.core.prefs
+target/classes/main.class
+target/classes/Untitled 1
+*.class
+target/test-classes/Untitled2
