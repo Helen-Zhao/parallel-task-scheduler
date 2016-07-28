@@ -5,7 +5,7 @@ package models;
  */
 public class Edge {
     private Node startNode;
-    private  Node endNode;
+    private Node endNode;
     private int weight;
 
     public Edge(Node startNode, Node endNode, int weight) {

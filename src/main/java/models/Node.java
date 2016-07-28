@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,11 +15,11 @@ public class Node {
     private boolean hasRun;
     private int processor;
 
-    public Node(String name, int weight, List<Edge> incomingEdges) {
+    public Node(String name, int weight) {
 
         this.name = name;
         this.weight = weight;
-        this.incomingEdges = incomingEdges;
+        this.incomingEdges = new ArrayList<Edge>();
         this.startTime = -1;
         this.hasRun = false;
         this.processor = -1;
@@ -46,7 +47,7 @@ public class Node {
         this.startTime = startTime;
     }
 
-    public boolean isHasRun() {
+    public boolean getHasRun() {
         return hasRun;
     }
 
