@@ -4,8 +4,6 @@
   <artifactId>softeng-306-p1</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>softeng-306-p1</name>
-<<<<<<< HEAD
-=======
 
   <dependencies>
     <!-- https://mvnrepository.com/artifact/junit/junit -->
@@ -22,5 +20,5 @@
     </dependency>
 
   </dependencies>
->>>>>>> refs/remotes/Helen-Zhao/dev
+
 </project>
