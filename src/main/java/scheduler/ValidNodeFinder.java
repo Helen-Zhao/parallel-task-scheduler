@@ -9,7 +9,7 @@ import models.Node;
 public class ValidNodeFinder implements ValidNodeFinderInterface{
 	
 	// Find nodes with no dependencies (root) by searching for nodes with no incoming edges
-	public void findRootNodes(List<Node> nodes) {
+	public List<Node> findRootNodes(List<Node> nodes) {
 		List<Node> rootNodes = new ArrayList<Node>();
 		
 		for(Node n : nodes){
@@ -17,6 +17,8 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 				rootNodes.add(n);
 			}
 		}
+		
+		return rootNodes;
 	}
 	
 	// Check whether children or dependent nodes for particular node is satisfied
