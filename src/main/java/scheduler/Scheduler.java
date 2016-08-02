@@ -32,7 +32,7 @@ public class Scheduler implements SchedulerInterface{
 		return optimalSchedule;
 	}
 
-	private void retrievePossibleSchedules(ArrayList<Node> availableNodes, ArrayList<Node> currentSchedule,
+	private void retrievePossibleSchedules(List<Node> availableNodes, ArrayList<Node> currentSchedule,
 			int currentWeight) {
 		// TODO Auto-generated method stub
 		
@@ -56,7 +56,7 @@ public class Scheduler implements SchedulerInterface{
 						currentSchedule.add(node);
 			
 						ArrayList<Node> newAvailableNodes = new ArrayList(availableNodes);
-						newAvailableNodes.add(nodeFinder.checkDependentNodes(node));
+						newAvailableNodes.addAll(nodeFinder.checkDependentNodes(node));
 						newAvailableNodes.remove(node);
 			
 						retrievePossibleSchedules(newAvailableNodes, currentSchedule, currentWeight);
