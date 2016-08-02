@@ -20,7 +20,8 @@ public class NodeTest {
 
         assertEquals(name, node.getName());
         assertEquals(weight, node.getWeight());
-        assertEquals(new ArrayList<Edge>(), node.getIncomingEdges());
+        assertEquals(0, node.getNumberIncomingEdges());
+        assertEquals(0, node.getNumberOutgoingEdges());
         assertEquals(-1, node.getStartTime());
         assertEquals(-1, node.getProcessor());
         assertEquals(false, node.getHasRun());
