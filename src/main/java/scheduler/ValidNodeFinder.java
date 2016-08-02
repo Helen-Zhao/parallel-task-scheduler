@@ -21,7 +21,7 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	
 	// Check whether children or dependent nodes for particular node is satisfied
 	// If yes, add it to a list of satisfied nodes and return it
-	public List<Node> checkDependentNodes(Node n){
+	public List<Node> findSatisfiedNodes(Node n){
 		List<Node> satisfiedNodes = new ArrayList<Node>();
 		List<Edge> edges = n.getOutgoingEdges();
 		
