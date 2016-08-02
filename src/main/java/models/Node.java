@@ -11,6 +11,7 @@ public class Node {
     private String name;
     private int weight;
     private List<Edge> incomingEdges;
+    private List<Edge> outgoingEdges;
     private int startTime;
     private boolean hasRun;
     private int processor;
@@ -20,6 +21,7 @@ public class Node {
         this.name = name;
         this.weight = weight;
         this.incomingEdges = new ArrayList<Edge>();
+        this.outgoingEdges = new ArrayList<Edge>();
         this.startTime = -1;
         this.hasRun = false;
         this.processor = -1;
@@ -35,8 +37,28 @@ public class Node {
         return weight;
     }
 
-    public List<Edge> getIncomingEdges() {
-        return incomingEdges;
+    public Edge getIncomingEdge(int i) {
+    	return incomingEdges.get(i);
+    }
+    
+    public void addIncomingEdge(Edge edge) {
+    	incomingEdges.add(edge);
+    }
+    
+    public int getIncomingEdgeLength() {
+    	return incomingEdges.size();
+    }
+    
+    public Edge getOutgoingEdge(int i) {
+    	return outgoingEdges.get(i);
+    }
+    
+    public void addOutgoingEdge(Edge edge) {
+    	outgoingEdges.add(edge);
+    }
+    
+    public int getOutgoingEdgeLength() {
+    	return outgoingEdges.size();
     }
 
     public int getStartTime() {
