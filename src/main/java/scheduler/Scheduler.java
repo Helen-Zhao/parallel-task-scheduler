@@ -27,7 +27,7 @@ public class Scheduler implements SchedulerInterface{
 			upperBound += node.getWeight();
 		}
 		
-		retrievePossibleSchedules(nodeFinder.findRootNodes(nodeList), new ArrayList<Node>(), upperBound);
+		retrievePossibleSchedules((ArrayList<Node>) nodeFinder.findRootNodes(nodeList), new ArrayList<Node>(), upperBound);
 		
 		return optimalSchedule;
 	}
@@ -66,6 +66,7 @@ public class Scheduler implements SchedulerInterface{
 			}
 			
 			currentSchedule.remove(node);
+			checkedProcessors.clear();
 			node.setStartTime(-1);
 			node.setProcessor(-1);
 		}
