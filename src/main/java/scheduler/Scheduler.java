@@ -11,13 +11,9 @@ import models.Node;
 public class Scheduler implements SchedulerInterface{
 
 	private int upperBound = 0;
+	ArrayList<Node> optimalSchedule;
 	
-	ArrayList<Node> currentSchedule;
-	ArrayList<Node> optimalSchedule; 
-	ArrayList<Node> unallocatedNodes;
-	ArrayList<Node> availableNodes;
-	
-	NodeFinderInterface nodeFinder = new NodeFinder();
+	ValidNodeFinderInterface nodeFinder = new ValidNodeFinder();
 	ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator();
 	
 	public List<Node> createSchedule(List<Node> nodeList) {
@@ -26,52 +22,45 @@ public class Scheduler implements SchedulerInterface{
 			upperBound += node.getWeight();
 		}
 		
-		unallocatedNodes = new ArrayList<Node>(nodeList);
-		
-		// To be implemented
-		
-		availableNodes = nodeFinder.findRootNodes(unallocatedNodes);
-		
-		int sumWeight = 0;
-		retrievePossibleSchedules(availableNodes, currentSchedule, sumWeight);
+		retrievePossibleSchedules(nodeFinder.findRootNodes(nodeList), new ArrayList<Node>(), upperBound);
 		
 		return null;
 	}
 
-	private void retrievePossibleSchedules(ArrayList<Node> availableNodes2, ArrayList<Node> currentSchedule2,
+	private void retrievePossibleSchedules(ArrayList<Node> availableNodes, ArrayList<Node> currentSchedule,
 			int currentWeight) {
 		// TODO Auto-generated method stub
 		
-		if(availableNodes2.size() == 0 && currentWeight < upperBound) {
+		if(availableNodes.size() == 0 && currentWeight < upperBound) {
 			upperBound = currentWeight;
-			optimalSchedule = currentSchedule2;
+			optimalSchedule = currentSchedule;
 			return;
 		}
 		
-		List<Integer> blacklist = new ArrayList<Integer>();
+		List<Integer> checkedProcessors = new ArrayList<Integer>();
 		
-		for (Node node : availableNodes2) {
-			while (processorAllocator.selectProcessor(currentSchedule2, node, blacklist)) {
+		for (Node node : availableNodes) {
+			while (processorAllocator.allocateProcessor(currentSchedule, node, checkedProcessors)) {
 			
 				int newWeight = node.getStartTime()+node.getWeight();
-				blacklist.add(node.getProcessor());
+				checkedProcessors.add(node.getProcessor());
 				
 				if(newWeight > currentWeight) {
 					currentWeight = newWeight;
 					if(currentWeight < upperBound) {
-						currentSchedule2.add(node);
+						currentSchedule.add(node);
 			
-						ArrayList<Node> availableNodes3 = new ArrayList(availableNodes2);
-						availableNodes3.add(nodeFinder.findNodes(node));
-						availableNodes3.remove(node);
+						ArrayList<Node> newAvailableNodes = new ArrayList(availableNodes);
+						newAvailableNodes.add(nodeFinder.checkDependentNodes(node));
+						newAvailableNodes.remove(node);
 			
-						retrievePossibleSchedules(availableNodes3, currentSchedule2, currentWeight);
+						retrievePossibleSchedules(newAvailableNodes, currentSchedule, currentWeight);
 					}
 				}
 				
 			}
 			
-			currentSchedule2.remove(node);
+			currentSchedule.remove(node);
 		}
 		
 	}
