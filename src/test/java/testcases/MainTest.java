@@ -7,7 +7,7 @@ import org.junit.Test;
 public class MainTest {
 	
 	@Test
-	public void OneProcSimpleTest() {
+	public void oneProcSimpleTest() {
 		
 		// Expected output file
 		File expected = new File("./src/main/resources/dotfiles/outputfiles/1_processor_simple-output.dot");
@@ -24,7 +24,7 @@ public class MainTest {
 	}
 
 	@Test
-	public void TwoProcSimpleTest() {
+	public void twoProcSimpleTest() {
 		
 		// Expected output file
 		File expected = new File("./src/main/resources/dotfiles/outputfiles/2_processor_simple-output.dot");
@@ -41,7 +41,7 @@ public class MainTest {
 	}
 	
 	@Test
-	public void FourProcOneSrcOneDestTest() {
+	public void fourProcOneSrcOneDestTest() {
 		
 		// Expected output file
 		File expected = new File("./src/main/resources/dotfiles/outputfiles/4_processor_1_src_1_dest-output.dot");
@@ -58,7 +58,7 @@ public class MainTest {
 	}
 	
 	@Test
-	public void FourProcOneSrcThreeDestTest() {
+	public void fourProcOneSrcThreeDestTest() {
 		
 		// Expected output file
 		File expected = new File("./src/main/resources/dotfiles/outputfiles/4_processor_1_src_3_dest-output.dot");
@@ -75,7 +75,7 @@ public class MainTest {
 	}
 	
 	@Test
-	public void FourProcThreeSrcOneDestTest() {
+	public void fourProcThreeSrcOneDestTest() {
 		
 		// Expected output file
 		File expected = new File("./src/main/resources/dotfiles/outputfiles/4_processor_3_src_1_dest-output.dot");
@@ -92,7 +92,7 @@ public class MainTest {
 	}
 	
 	@Test
-	public void FourProcThreeSrcTwoDestTest() {
+	public void fourProcThreeSrcTwoDestTest() {
 		
 		// Expected output file
 		File expected = new File("./src/main/resources/dotfiles/outputfiles/4_processor_3_src_2_dest-output.dot");
