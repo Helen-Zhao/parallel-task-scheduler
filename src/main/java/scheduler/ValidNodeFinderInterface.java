@@ -7,6 +7,6 @@ public interface ValidNodeFinderInterface {
 
 	public List<Node> findRootNodes(List<Node> nodes);
 	
-	public List<Node> findSatisfiedNodes(Node n);
+	public List<Node> findSatisfiedNodes(Node node);
 	
 }

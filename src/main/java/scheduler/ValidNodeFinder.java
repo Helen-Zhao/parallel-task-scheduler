@@ -12,9 +12,9 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	public List<Node> findRootNodes(List<Node> nodes) {
 		List<Node> rootNodes = new ArrayList<Node>();
 		
-		for(Node n : nodes){
-			if(n.getIncomingEdges() == null || n.getIncomingEdges().size() == 0){
-				rootNodes.add(n);
+		for(Node node : nodes){
+			if(node.getIncomingEdges() == null || node.getIncomingEdges().size() == 0){
+				rootNodes.add(node);
 			}
 		}
 		
@@ -23,17 +23,17 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	
 	// Check whether children or dependent nodes for particular node is satisfied
 	// If yes, add it to a list of satisfied nodes and return it
-	public List<Node> findSatisfiedNodes(Node n){
-		// Children will not be satisfied unless node n itself is satisfied
-		if(n.getHasRun() == false) {
+	public List<Node> findSatisfiedNodes(Node node){
+		// Children will not be satisfied unless input node itself is satisfied
+		if(node.getHasRun() == false) {
 			return new ArrayList<Node>();
 		}
 		
 		List<Node> satisfiedNodes = new ArrayList<Node>();
-		List<Edge> edges = n.getOutgoingEdges();
+		List<Edge> edges = node.getOutgoingEdges();
 		
-		for(Edge e: edges){
-			Node endNode = e.getEndNode();
+		for(Edge edge: edges){
+			Node endNode = edge.getEndNode();
 			if(isAvailable(endNode)){
 				satisfiedNodes.add(endNode);
 			}
@@ -43,11 +43,11 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	}
 	
 	// Check incoming edges for particular node and determine whether it is available or not 
-	public boolean isAvailable(Node n){
-		List<Edge> edges = n.getIncomingEdges();
+	public boolean isAvailable(Node node){
+		List<Edge> edges = node.getIncomingEdges();
 		
-		for(Edge e: edges){
-			Node startNode = e.getStartNode();
+		for(Edge edge: edges){
+			Node startNode = edge.getStartNode();
 			if(startNode.getHasRun() == false){
 				return false;
 			}
@@ -56,9 +56,4 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 		return true;
 	}
 	
-		
-	
-	
-	
-
 }
