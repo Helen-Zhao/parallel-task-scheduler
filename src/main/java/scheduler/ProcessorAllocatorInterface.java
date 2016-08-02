@@ -10,6 +10,6 @@ import models.Node;
  */
 interface ProcessorAllocatorInterface {
     
-	public boolean allocateProcessor(ArrayList<Node> schedule, Node node, List<Integer> checkedProcessors);
+	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors);
 	
 }

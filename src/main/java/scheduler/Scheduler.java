@@ -27,7 +27,7 @@ public class Scheduler implements SchedulerInterface{
 			upperBound += node.getWeight();
 		}
 		
-		retrievePossibleSchedules(nodeFinder.findRootNodes(nodeList), new ArrayList<Node>(), upperBound);
+		retrievePossibleSchedules((ArrayList<Node>) nodeFinder.findRootNodes(nodeList), new ArrayList<Node>(), upperBound);
 		
 		return optimalSchedule;
 	}
@@ -56,7 +56,7 @@ public class Scheduler implements SchedulerInterface{
 						currentSchedule.add(node);
 			
 						ArrayList<Node> newAvailableNodes = new ArrayList(availableNodes);
-						newAvailableNodes.add(nodeFinder.checkDependentNodes(node));
+						newAvailableNodes.addAll(nodeFinder.checkDependentNodes(node));
 						newAvailableNodes.remove(node);
 			
 						retrievePossibleSchedules(newAvailableNodes, currentSchedule, currentWeight);

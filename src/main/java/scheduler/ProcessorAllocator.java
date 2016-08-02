@@ -1,6 +1,7 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import models.Node;
 
@@ -9,7 +10,8 @@ import models.Node;
  */
 public class ProcessorAllocator implements ProcessorAllocatorInterface {
 
-	public boolean allocateProcessor(ArrayList<Node> schedule, Node node, List<Integer> unavailableProcessors) {
+	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> unavailableProcessors) {
 		return false;
 	}
+	
 }
