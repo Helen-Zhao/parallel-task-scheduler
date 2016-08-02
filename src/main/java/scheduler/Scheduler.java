@@ -66,6 +66,7 @@ public class Scheduler implements SchedulerInterface{
 			}
 			
 			currentSchedule.remove(node);
+			checkedProcessors.clear();
 			node.setStartTime(-1);
 			node.setProcessor(-1);
 		}
