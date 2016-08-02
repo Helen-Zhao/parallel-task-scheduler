@@ -13,8 +13,13 @@ public class Scheduler implements SchedulerInterface{
 	private int upperBound = 0;
 	ArrayList<Node> optimalSchedule;
 	
-	ValidNodeFinderInterface nodeFinder = new ValidNodeFinder();
-	ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator();
+	ValidNodeFinderInterface nodeFinder;
+	ProcessorAllocatorInterface processorAllocator;
+	
+	public Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processorAllocator) {
+		this.nodeFinder = nodeFinder;
+		this.processorAllocator = processorAllocator;
+	}
 	
 	public List<Node> createSchedule(List<Node> nodeList) {
 		
@@ -24,14 +29,14 @@ public class Scheduler implements SchedulerInterface{
 		
 		retrievePossibleSchedules(nodeFinder.findRootNodes(nodeList), new ArrayList<Node>(), upperBound);
 		
-		return null;
+		return optimalSchedule;
 	}
 
 	private void retrievePossibleSchedules(ArrayList<Node> availableNodes, ArrayList<Node> currentSchedule,
 			int currentWeight) {
 		// TODO Auto-generated method stub
 		
-		if(availableNodes.size() == 0 && currentWeight < upperBound) {
+		if(availableNodes.size() == 0 && currentWeight <= upperBound) {
 			upperBound = currentWeight;
 			optimalSchedule = currentSchedule;
 			return;
@@ -61,6 +66,8 @@ public class Scheduler implements SchedulerInterface{
 			}
 			
 			currentSchedule.remove(node);
+			node.setStartTime(-1);
+			node.setProcessor(-1);
 		}
 		
 	}
