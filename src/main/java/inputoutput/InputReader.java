@@ -18,73 +18,80 @@ import models.Node;
 public class InputReader {
 	
 	//List of nodes and edges compiled from input .dot file. Can be accessible from other classes and methods.
-	public static List<Node> nodeList = new ArrayList<Node>();
-	public static List<Edge> edgeList = new ArrayList<Edge>();
+	public List<Node> nodeList = new ArrayList<Node>();
+	public List<Edge> edgeList = new ArrayList<Edge>();
 	
 	//Main input reader function
-	public InputReader(File f, int processors) {
+	public InputReader(File f) {
 		BufferedReader br = null;
 		
 		try {
 			
 			String sCurrentLine;
-			//instantiation of buffered reader on .dot file
 			br = new BufferedReader(new FileReader(f));
 			//skips the first line as it has text we don't want to extract
 			br.readLine();
 			
-			//If current line read is not end of file or the last line of file (again has no value to us), then do the following
-			while((sCurrentLine = br.readLine()) != null || (sCurrentLine = br.readLine()) != "}") {
-				//if current line does not contain an arrow then it is a node, else it is an edge.
-				if(sCurrentLine.indexOf("->") == -1) {
-					//parse weight and get node name
-					int weight = weightCreator(sCurrentLine);
-					String nodeName = sCurrentLine.substring(0, 1);
-					//create the new node object
-					Node node = new Node(nodeName, weight);
-					//add node object to list
-					nodeList.add(node);
-				}
-				else {
-					//Instantiate string array to store the multiple split strings
-					String[] parts = sCurrentLine.split("->");
-					//name of first node
-					String firstNodeName = parts[0];
-					//name of second node
-					String secondNodeName = parts[1].substring(0, 1);
-					//index of first and second node for verification. Also acts as a boolean.
-					int firstNodeIndex = -1;
-					int secondNodeIndex = -1;
-					
-					//input weight property of edge
-					int weight = weightCreator(sCurrentLine);
-					//if weight is valid, then find the index of both nodes in the list.
-					if (weight != -1){
-						for (int i = 0; i < nodeList.size(); i++){
-							if (firstNodeName.equals(nodeList.get(i).getName())){
-								firstNodeIndex = i;
-							}
-							else if (secondNodeName.equals(nodeList.get(i).getName())){
-								secondNodeIndex = i;
+			while((sCurrentLine = br.readLine()) != null) {
+				if(!(sCurrentLine.equals("}"))){
+					//if current line does not contain an arrow then it is a node, else it is an edge.
+					if(sCurrentLine.indexOf("->") == -1) {
+						int weight = weightCreator(sCurrentLine);
+						String[] nodeNameParts = sCurrentLine.trim().split("\\s+");
+						String nodeName = nodeNameParts[0];
+						//boolean used to check if a node already has that name
+						boolean nameAlreadyExist = false;
+						for(int i = 0; i < nodeList.size(); i++) {
+							if (nodeList.get(i).getName().equals(nodeName)) {
+								nameAlreadyExist = true;
+								break;
 							}
 						}
-						//if both indexes found, then create an edge object using the name of the nodes and it's weight.
-						if ((firstNodeIndex != -1) && (secondNodeIndex != -1)){
-							Edge edge = new Edge(nodeList.get(firstNodeIndex), nodeList.get(secondNodeIndex), weight);
-							//add newly created edge object to list
-							edgeList.add(edge);
-							//add the new edge as an incoming/outgoing edge to its specific nodes.
-							nodeList.get(firstNodeIndex).addOutgoingEdge(edge);
-							nodeList.get(secondNodeIndex).addIncomingEdge(edge);
+						//if boolean evaluates to false, create the node
+						if (!nameAlreadyExist){
+							Node node = new Node(nodeName, weight);
+							nodeList.add(node);
 						}
-						//indexes not found. Node has not been created yet. File contains an error in the order of node creation/listing
 						else {
-							throw new IllegalArgumentException("Invalid nodes. Nodes not initialised yet");
+							throw new IllegalArgumentException("Node name already exists");
 						}
 					}
-					//Invalid weight property.
 					else {
-						throw new IllegalArgumentException("Invalid weight");
+						String[] parts = sCurrentLine.split("->");
+						String firstNodeName = parts[0].trim();
+						String[] parts2 = parts[1].trim().split("\\s+");
+						String secondNodeName = parts2[0];
+						//index of first and second node for verification. Also acts as a boolean.
+						int firstNodeIndex = -1;
+						int secondNodeIndex = -1;
+					
+						int weight = weightCreator(sCurrentLine);
+						//if weight is valid, then find the index of both nodes in the list.
+						if (weight != -1){
+							for (int i = 0; i < nodeList.size(); i++){
+								if (firstNodeName.equals(nodeList.get(i).getName())){
+									firstNodeIndex = i;
+								}
+								else if (secondNodeName.equals(nodeList.get(i).getName())){
+									secondNodeIndex = i;
+								}
+							}
+							//if both indexes found, then create an edge object using the name of the nodes and it's weight.
+							if ((firstNodeIndex != -1) && (secondNodeIndex != -1)){
+								Edge edge = new Edge(nodeList.get(firstNodeIndex), nodeList.get(secondNodeIndex), weight);
+								edgeList.add(edge);
+								nodeList.get(firstNodeIndex).addOutgoingEdge(edge);
+								nodeList.get(secondNodeIndex).addIncomingEdge(edge);
+							}
+							//indexes not found. Node has not been created yet. File contains an error in the order of node creation/listing
+							else {
+								throw new IllegalArgumentException("Invalid nodes. Nodes not initialised yet");
+							}
+						}
+						//Invalid weight property.
+						else {
+							throw new IllegalArgumentException("Invalid weight");
+						}
 					}
 				}
 			}
@@ -103,8 +110,12 @@ public class InputReader {
 	
 	//private method used to parse obtained "weight" property into an Integer Type from a String
 	private static int weightCreator(String s) {
+		
+		String[] weightSplit = s.split("=");
+		String weight = weightSplit[1];
+		
 		Pattern p = Pattern.compile("-?\\d+");
-		Matcher m = p.matcher(s);
+		Matcher m = p.matcher(weight);
 		while(m.find()){
 			return (Integer.parseInt(m.group()));
 		}
