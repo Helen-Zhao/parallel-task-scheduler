@@ -52,22 +52,46 @@ public class ValidNodeFinderTest {
 	}
 
 	@Test
-	public void testFindSatisfiedNodes() {
+	public void testFindSatisfiedChildren() {
 		// Should be empty initially
 		List<Node> expected = new ArrayList<Node>();
-		List<Node> actual = vnf.findSatisfiedNodes(a);
+		List<Node> actual = vnf.findSatisfiedChildren(a);
 		assertEquals(expected, actual);
 		
 		// Should still be empty because node x has not been completed
 		a.setHasRun(true);
-		actual = vnf.findSatisfiedNodes(a);
+		actual = vnf.findSatisfiedChildren(a);
 		assertEquals(expected, actual);
 		
 		// Should contain node b as now both node a and x are complete
 		x.setHasRun(true);
 		expected.add(b);
-		actual = vnf.findSatisfiedNodes(a);
+		actual = vnf.findSatisfiedChildren(a);
 		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testFindSatisfiedNodes() {
+		List<Node> expected = new ArrayList<Node>();
+		List<Node> inputList = new ArrayList<Node>();
+		inputList.add(a);
+		inputList.add(b);
+		inputList.add(c);
+		inputList.add(x);
+		
+		a.setHasRun(true);
+		x.setHasRun(true);
+		
+		// a and x are satisfied by default as root nodes, b has been satisfied as a and x have run
+		expected.add(a);
+		expected.add(b);
+		expected.add(x);
+		
+		List<Node> actual = vnf.findSatisfiedNodes(inputList);
+		
+		assertEquals(expected,actual);
+		
+		
 	}
 	
 }
