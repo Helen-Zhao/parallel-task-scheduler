@@ -23,7 +23,7 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	
 	// Check whether children or dependent nodes for particular node is satisfied
 	// If yes, add it to a list of satisfied nodes and return it
-	public List<Node> findSatisfiedNodes(Node node){
+	public List<Node> findSatisfiedChildren(Node node){
 		// Children will not be satisfied unless input node itself is satisfied
 		if(node.getHasRun() == false) {
 			return new ArrayList<Node>();
@@ -56,4 +56,16 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 		return true;
 	}
 	
+	// Given a list of nodes, find all of which have their dependencies satisfied
+	public List<Node> findSatisfiedNodes(List<Node> nodes){
+		
+		List<Node> satisfiedNodes = new ArrayList<Node>();
+		for( Node node : nodes){
+			if(isAvailable(node)){
+				satisfiedNodes.add(node);
+			}
+		}
+		
+		return satisfiedNodes;
+	}
 }
