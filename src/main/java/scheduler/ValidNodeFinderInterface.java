@@ -5,7 +5,8 @@ import models.Node;
 
 public interface ValidNodeFinderInterface {
 
-	public void findRootNodes(List<Node> nodes);
-	public List<Node> checkDependentNodes(Node n);
+	public List<Node> findRootNodes(List<Node> nodes);
+	
+	public List<Node> findSatisfiedNodes(Node node);
 	
 }
