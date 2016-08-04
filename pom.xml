@@ -24,6 +24,12 @@
       <artifactId>mockito-all</artifactId>
       <version>1.9.5</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/junit-addons/junit-addons -->
+	<dependency>
+	    <groupId>junit-addons</groupId>
+	    <artifactId>junit-addons</artifactId>
+	    <version>1.4</version>
+	</dependency>
 
   </dependencies>
 
