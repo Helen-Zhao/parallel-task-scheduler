@@ -17,34 +17,26 @@ public class OutputWriter {
 	private static HashSet<Node> printedNodes = new HashSet<Node>();
 	
 	//Main output writer function
-	public OutputWriter(List<Node> scheduleNodes, List<Edge> scheduleEdges) {
+	public OutputWriter(List<Node> scheduleNodes, List<Edge> scheduleEdges, String outputFileName) {
 		
 		try {
 			//Instantiate PrintWriter object to create and write to file. Set encoding to UTF-8
-			PrintWriter writer = new PrintWriter("./src/main/resources/output.dot", "UTF-8");
-			writer.println("digraph \"output\" {");
+			PrintWriter writer = new PrintWriter("./src/main/resources/" + outputFileName + ".dot", "UTF-8");
+			writer.println("digraph \"" + outputFileName + "\" {");
 			
-			int j = 0;
 			//iterate through list and print
 			for(int i = 0; i < scheduleNodes.size(); i++){
 				Node node = scheduleNodes.get(i);
-				Edge edge = scheduleEdges.get(j);
-				//if start and end nodes of an edge is printed, then print the edge
-				if ((printedNodes.contains(edge.getStartNode()))&&(printedNodes.contains(edge.getEndNode()))) {
-					writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
-					j++;
-					//iterate through current node again as it is not printed
-					i--;
-				}
-				else {
 				writer.println("\t\t" + node.getName() + "\t\t [Weight=" + node.getWeight() + ", Start=" + node.getStartTime() + ", Processor=" + node.getProcessor() + "];");
 				printedNodes.add(node);
-				}
-				//if i has iterated through the entire list, then print remaining edges
-				if(i == scheduleNodes.size()-1){
-					for(int k = j; k < scheduleEdges.size(); k++){
-						edge = scheduleEdges.get(k);
+				for(int j = 0; j < scheduleEdges.size(); j++) {
+					Edge edge = scheduleEdges.get(j);
+					//if start and end nodes of an edge is printed, then print the edge
+					if ((printedNodes.contains(edge.getStartNode()))&&(printedNodes.contains(edge.getEndNode()))) {
 						writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
+						if(i != scheduleNodes.size() - 1){
+							scheduleEdges.remove(edge);
+						}
 					}
 				}
 			}

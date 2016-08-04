@@ -53,6 +53,7 @@ public class OutputWriterTest {
 		fourthNode.setStartTime(7);
 		fourthNode.setProcessor(2);
 
+		//Adding nodes and edges into their respective lists to pass into OutputWriter
 		inputNodeList.add(firstNode);
 		inputNodeList.add(secondNode);
 		inputNodeList.add(thirdNode);
@@ -63,11 +64,15 @@ public class OutputWriterTest {
 		inputEdgeList.add(thirdEdge);
 		inputEdgeList.add(fourthEdge);
 		
-		new OutputWriter(inputNodeList, inputEdgeList);
+		//Name of output file hard coded as "outputFile"
+		String outputFileName = "outputFile";
 		
+		new OutputWriter(inputNodeList, inputEdgeList, outputFileName);
+		
+		//Prepared "expected" file to compare output file against
 		File expected = new File("./src/test/resources/expectedOutput.dot");
 		
-		File output = new File("./src/main/resources/output.dot");
+		File output = new File("./src/main/resources/" + outputFileName + ".dot");
 		
 		FileAssert.assertEquals(expected, output);
 	}
