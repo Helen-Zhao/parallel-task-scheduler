@@ -3,6 +3,7 @@ package scheduler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import models.Node;
 
@@ -41,7 +42,7 @@ public class SimpleBestFirstScheduler implements SchedulerInterface{
 		
 		if(availableNodes.size() == 0 && currentWeight <= upperBound) {
 			upperBound = currentWeight;
-			optimalSchedule = currentSchedule;
+			optimalSchedule = currentSchedule.stream().map(n -> n.clone()).collect(Collectors.toCollection(ArrayList::new));
 			return;
 		}
 		
