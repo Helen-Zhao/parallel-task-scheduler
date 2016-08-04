@@ -1,12 +1,13 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
  * Created by helen on 28/07/2016.
  */
-public class Node {
+public class Node implements Comparable<Node> {
 
     private String name;
     private int weight;
@@ -92,4 +93,7 @@ public class Node {
         this.processor = processor;
     }
 
+	public int compareTo(Node node) {
+		return node.getWeight() - this.weight;
+	}
 }

@@ -1,6 +1,7 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import models.Node;
@@ -8,7 +9,7 @@ import models.Node;
 /**
  * Created by helen on 28/07/2016.
  */
-public class Scheduler implements SchedulerInterface{
+public class SimpleBestFirstScheduler implements SchedulerInterface{
 
 	private int upperBound = 0;
 	ArrayList<Node> optimalSchedule;
@@ -16,7 +17,7 @@ public class Scheduler implements SchedulerInterface{
 	ValidNodeFinderInterface nodeFinder;
 	ProcessorAllocatorInterface processorAllocator;
 	
-	public Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processorAllocator) {
+	public SimpleBestFirstScheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processorAllocator) {
 		this.nodeFinder = nodeFinder;
 		this.processorAllocator = processorAllocator;
 	}
@@ -27,14 +28,16 @@ public class Scheduler implements SchedulerInterface{
 			upperBound += node.getWeight();
 		}
 		
-		retrievePossibleSchedules((ArrayList<Node>) nodeFinder.findRootNodes(nodeList), new ArrayList<Node>(), upperBound);
+		List<Node> availableNodes = nodeFinder.findRootNodes(nodeList);
+		Collections.sort(availableNodes);
+		
+		buildSchedule(availableNodes, new ArrayList<Node>(), upperBound);
 		
 		return optimalSchedule;
 	}
 
-	private void retrievePossibleSchedules(ArrayList<Node> availableNodes, ArrayList<Node> currentSchedule,
+	private void buildSchedule(List<Node> availableNodes, ArrayList<Node> currentSchedule,
 			int currentWeight) {
-		// TODO Auto-generated method stub
 		
 		if(availableNodes.size() == 0 && currentWeight <= upperBound) {
 			upperBound = currentWeight;
@@ -55,11 +58,12 @@ public class Scheduler implements SchedulerInterface{
 					if(currentWeight < upperBound) {
 						currentSchedule.add(node);
 			
-						ArrayList<Node> newAvailableNodes = new ArrayList(availableNodes);
-						newAvailableNodes.addAll(nodeFinder.checkDependentNodes(node));
+						List<Node> newAvailableNodes = new ArrayList<Node>(availableNodes);
+						newAvailableNodes.addAll(nodeFinder.findSatisfiedChildren(node));
 						newAvailableNodes.remove(node);
+						Collections.sort(newAvailableNodes);
 			
-						retrievePossibleSchedules(newAvailableNodes, currentSchedule, currentWeight);
+						buildSchedule(newAvailableNodes, currentSchedule, currentWeight);
 					}
 				}
 				
@@ -69,6 +73,7 @@ public class Scheduler implements SchedulerInterface{
 			checkedProcessors.clear();
 			node.setStartTime(-1);
 			node.setProcessor(-1);
+			node.setHasRun(false);
 		}
 		
 	}
