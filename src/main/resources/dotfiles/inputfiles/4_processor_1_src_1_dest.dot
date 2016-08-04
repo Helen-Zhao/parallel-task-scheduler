@@ -1,0 +1,19 @@
+digraph "4_processor_1_src_1_dest" {
+	a		[Weight=1];
+	b		[Weight=2];
+	a -> b	[Weight=3];
+	c		[Weight=3];
+	a -> c	[Weight=4];
+	d		[Weight=4];
+	a -> d	[Weight=5];
+	e		[Weight=5];
+	a -> e	[Weight=1];
+	f		[Weight=6];
+	a -> f	[Weight=2];
+	g		[Weight=1];
+	b -> g	[Weight=1];
+	c -> g	[Weight=1];
+	d -> g	[Weight=1];
+	e -> g	[Weight=1];
+	f -> g	[Weight=1];
+}
