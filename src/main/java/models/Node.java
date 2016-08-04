@@ -28,7 +28,6 @@ public class Node {
 
     }
 
-
     public String getName() {
         return name;
     }
@@ -41,6 +40,10 @@ public class Node {
     	return incomingEdges.get(i);
     }
     
+    public List<Edge> getIncomingEdges() {
+    	return incomingEdges;
+    }
+    
     public void addIncomingEdge(Edge edge) {
     	incomingEdges.add(edge);
     }
@@ -51,6 +54,10 @@ public class Node {
     
     public Edge getOutgoingEdge(int i) {
     	return outgoingEdges.get(i);
+    }
+    
+    public List<Edge> getOutgoingEdges() {
+    	return outgoingEdges;
     }
     
     public void addOutgoingEdge(Edge edge) {
