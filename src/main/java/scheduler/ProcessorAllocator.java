@@ -24,22 +24,17 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 			return false;
 		}
 		
-		int earliestStartTime = -1, bestProcessor = -1;
+		int earliestStartTime = Integer.MAX_VALUE, bestProcessor = -1;
 		int tempEarliestStartTime;
 		
 		// Go through every processor and find the best time available for each one
 		for (int i=1; i<=numProcessors; i++) {
 			// If the specified processor is available, then find the best time for the specified processor
 			if (!unavailableProcessors.contains(i)) {
-				// The last/maximum time will be the latest 
 				tempEarliestStartTime = findEarliestStartTime(schedule, node, i);
-				// Initialises the first earliestStartTime as the best with its respective processor,
-				// Which is then used to compare with the other earliestStartTime's in the other processors
-				if (earliestStartTime == -1) {
-					earliestStartTime = tempEarliestStartTime;
-					bestProcessor = i;
-					// Determining and updating the earliest possible start time and respective processor
-				} else if (tempEarliestStartTime < earliestStartTime) {
+
+				// Determining and updating the earliest possible start time and respective processor
+				if (tempEarliestStartTime < earliestStartTime) {
 					earliestStartTime = tempEarliestStartTime;
 					bestProcessor = i;
 				}
