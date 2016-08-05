@@ -60,7 +60,7 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 
 	public int findEarliestStartTime(List<Node> schedule, Node node, int processor) {
 		List<Edge> edges = node.getIncomingEdges();
-		int longestEndTime = 0;
+		int shortestEndTime = 0;
 		int endTime, dependentNodeProc;
 		
 		// Comparison with already scheduled items for finding minimum starting time
@@ -75,28 +75,28 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 				if((dependentNode.equals(scheduledNode)) && (dependentNodeProc == processor)) {
 					// No communication time required
 					endTime = dependentNode.getStartTime() + dependentNode.getWeight();
-					if (endTime > longestEndTime) {
-						longestEndTime = endTime;
+					if (endTime > shortestEndTime) {
+						shortestEndTime = endTime;
 					}
 				} 
 				// If the dependent node does not occur in the specified processor
 				else if ((dependentNode.equals(scheduledNode)) && (dependentNodeProc != processor)) {
 					// Communication time is required
 					endTime = dependentNode.getStartTime() + dependentNode.getWeight() + edge.getWeight();
-					if (endTime > longestEndTime) {
-						longestEndTime = endTime;
+					if (endTime > shortestEndTime) {
+						shortestEndTime = endTime;
 					}
 				}
 				// If something is already scheduled in the specified processor, then minimum starting time can occur immediately after, as there is no dependency
 				else if (scheduledNode.getProcessor() == processor) {
 					endTime = scheduledNode.getStartTime() + scheduledNode.getWeight();
-					if (endTime > longestEndTime) {
-						longestEndTime = endTime;
+					if (endTime > shortestEndTime) {
+						shortestEndTime = endTime;
 					}
 				}
 			}
 		}
-		return longestEndTime;
+		return shortestEndTime;
 	}
 
 	public int getNumberProcessors() {
