@@ -46,16 +46,8 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 		node.setProcessor(bestProcessor);
 		node.setHasRun(true);
 		
-		// Makes the processor which we just assigned into the scheduler unavailable (Do I do want to do this here?)
-		//unavailableProcessors.add(bestProcessor);
-		
-		// Determines if there are still available processors which can be used
-		if (unavailableProcessors.size() == numProcessors) {
-			return false;
-		} 
-		else {
-			return true;
-		}
+		// Node has been assigned a Processor and startTime 
+		return true;
 	}
 
 	public int findEarliestStartTime(List<Node> schedule, Node node, int processor) {
