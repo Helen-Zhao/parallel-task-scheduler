@@ -55,9 +55,9 @@ public class DepthFirst_BaB_SchedulerTest {
 
         doAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
-            Object[] args = invocation.getArguments();
+                Object[] args = invocation.getArguments();
                 List<Node> nodes = (List<Node>) args[0];
-                    if (!nodes.get(0).getHasRun() && !nodes.get(1).getHasRun()) {
+                if (!nodes.get(0).getHasRun() && !nodes.get(1).getHasRun()) {
                     List<Node> toReturn = new ArrayList<Node>();
                     toReturn.add(new Node("a", 1));
                     return toReturn;
@@ -65,9 +65,7 @@ public class DepthFirst_BaB_SchedulerTest {
                     List<Node> toReturn = new ArrayList<Node>();
                     toReturn.add(new Node("b", 1));
                     return toReturn;
-                }
-
-                else {
+                } else {
                     return new ArrayList<Node>();
                 }
             }
@@ -76,6 +74,7 @@ public class DepthFirst_BaB_SchedulerTest {
         doAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
+
                 if (((Node) args[1]).getName().equals("a")) {
                     ((Node) args[1]).setHasRun(true);
                     ((Node) args[1]).setStartTime(0);
@@ -88,8 +87,7 @@ public class DepthFirst_BaB_SchedulerTest {
                     return false;
                 }
             }
-        }).when(processorAllocatorMock).allocateProcessor(eq(new ArrayList<Node>()), anyObject(), eq(null));
-
+        }).when(processorAllocatorMock).allocateProcessor(anyList(), anyObject(), eq(null));
 
 
         List<Node> expectedOptimalSchedule = new ArrayList<>();
