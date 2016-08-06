@@ -13,13 +13,13 @@ import static org.mockito.Mockito.when;
 /**
  * Created by helen on 28/07/2016.
  */
-public class SchedulerTest {
+public class SimpleBestFirstSchedulerTest {
 
     @Test
     public void testScheduler() {
         ValidNodeFinderInterface nodeFinderMock = mock(ValidNodeFinderInterface.class);
         ProcessorAllocatorInterface processorAllocatorMock = mock(ProcessorAllocator.class);
-        SchedulerInterface scheduler = new Scheduler(nodeFinderMock, processorAllocatorMock);
+        SchedulerInterface scheduler = new SimpleBestFirstScheduler(nodeFinderMock, processorAllocatorMock);
 
 
         List<Node> nodeList = new ArrayList<Node>();
@@ -36,7 +36,7 @@ public class SchedulerTest {
 
         List<Node> expected2 = new ArrayList<Node>();
         expected.add(b);
-        when(nodeFinderMock.checkDependentNodes(a)).thenReturn(expected2);
+        when(nodeFinderMock.findSatisfiedChildren(a)).thenReturn(expected2);
 
 
 
