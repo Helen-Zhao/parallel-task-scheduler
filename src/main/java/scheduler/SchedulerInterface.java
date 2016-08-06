@@ -5,7 +5,7 @@ import models.Node;
 /**
  * Created by helen on 28/07/2016.
  */
-interface SchedulerInterface {
+public interface SchedulerInterface {
 	
     public List<Node> createSchedule(List<Node> nodeList);
     

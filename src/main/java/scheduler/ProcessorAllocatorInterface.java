@@ -8,7 +8,7 @@ import models.Node;
 /**
  * Created by helen on 28/07/2016.
  */
-interface ProcessorAllocatorInterface {
+public interface ProcessorAllocatorInterface {
     
 	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors);
 	

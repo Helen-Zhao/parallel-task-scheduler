@@ -24,6 +24,11 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	ValidNodeFinderInterface nodeFinder;
 	ProcessorAllocatorInterface processorAllocator;
 	
+	public DepthFirst_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
+		  this.nodeFinder = nodeFinder;
+		  this.processorAllocator = processAllocator;
+	}
+	
 	public List<Node> createSchedule(List<Node> nodeList) {
 		
 		// Bound initialized 
@@ -42,16 +47,16 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		Node node;
 		
 		// While all paths from level 0 have not been explored, continue finding paths
-		while (level != -1) {
+		while (level > -1) {
 			
 			// While there are nodes still to be allocated, continue to allocate
 			// When there are no more available nodes, end of a path has been reached
 			while(availableNodes.size() != 0) {
 				// Get the index of the next node in the current level to explore from the available nodes
 				int nextNodeIndex;
-				try {
+				if (level < indexStack.size()) {
 					nextNodeIndex = indexStack.get(level);
-				} catch(ArrayIndexOutOfBoundsException e)  { // this level has not yet been reached
+				} else { // this level has not yet been reached
 					// next node in new level is the first available node
 					nextNodeIndex = 0;
 					// add index of new level to list of indices
@@ -59,29 +64,37 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 				}
 				
 				// Get the next available node
-				try {
+				if (nextNodeIndex < availableNodes.size()) {
 					node = availableNodes.get(nextNodeIndex);
-				} catch (ArrayIndexOutOfBoundsException e) { // No new nodes available on this level
+				} else { // No new nodes available on this level
 					// Reset index of level for new path
 					indexStack.set(level, 0);
 					// Return to previous level
 					level--;
-					// Remove node from the latest level, has no longer been run
-					node = schedule.get(schedule.size()-1);
-					node.setHasRun(false);
-					schedule.remove(schedule.size()-1);
-					// Reset list of available nodes to state of previous level
-					// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
-					availableNodes = nodeFinder.findSatisfiedNodes(nodeList);
+					if(schedule.size() > 0) {
+						// Remove node from the latest level, has no longer been run
+						node = schedule.get(schedule.size()-1);
+						node.setHasRun(false);
+						schedule.remove(schedule.size()-1);
+						// Reset list of available nodes to state of previous level
+						// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
+						availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
+					}
+					if(level < 0) {
+						break;
+					}
 					continue;
 				}
 				
 				// Update next node index in list of indices
-				indexStack.set(level, nextNodeIndex++);
+				nextNodeIndex++;
+				indexStack.set(level, nextNodeIndex);
 				
 				// Allocate node to a processor
 				// TODO consider branches with a node being assigned different processors
-				processorAllocator.allocateProcessor(schedule, node, null);
+				// Allocating to earliest start time might cause all sensible paths to be hit, 
+				// branches covering all permutations of node order on all processors may not be necessary
+				processorAllocator.allocateProcessor(schedule, node, new ArrayList<Integer>()); // Alter to method that just checks all processors
 				
 				// Find when the newly allocated node finishes
 				int nodeEndTime = node.getStartTime()+node.getWeight();
@@ -96,13 +109,15 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					if (currentBound > bestBound) {
 						// Return to previous level
 						level--;
-						// Remove node from the latest level, has no longer been run
-						node = schedule.get(schedule.size()-1);
-						node.setHasRun(false);
-						schedule.remove(schedule.size()-1);
-						// Reset list of available nodes to state of previous level
-						// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
-						availableNodes = nodeFinder.findSatisfiedNodes(nodeList);			
+						if(schedule.size() > 0) {
+							// Remove node from the latest level, has no longer been run
+							node = schedule.get(schedule.size()-1);
+							node.setHasRun(false);
+							schedule.remove(schedule.size()-1);
+							// Reset list of available nodes to state of previous level
+							// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
+							availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
+						}			
 						continue;
 					}
 				}
@@ -130,13 +145,15 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			
 			// Return to previous level and find more paths
 			level--;
-			// Remove node from the latest level, has no longer been run
-			node = schedule.get(schedule.size()-1);
-			node.setHasRun(false);
-			schedule.remove(schedule.size()-1);
-			// Reset list of available nodes to state of previous level
-			// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
-			availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
+			if(schedule.size() > 0) {
+				// Remove node from the latest level, has no longer been run
+				node = schedule.get(schedule.size()-1);
+				node.setHasRun(false);
+				schedule.remove(schedule.size()-1);
+				// Reset list of available nodes to state of previous level
+				// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
+				availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
+			}
 		}
 
 		return optimalSchedule;
