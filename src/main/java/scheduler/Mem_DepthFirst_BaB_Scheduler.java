@@ -13,7 +13,7 @@ import models.Node;
  * @author Jay
  *
  */
-public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
+public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
 	int bestBound = 0;
 	List<Node> optimalSchedule;
@@ -24,7 +24,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	ValidNodeFinderInterface nodeFinder;
 	ProcessorAllocatorInterface processorAllocator;
 	
-	public DepthFirst_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
+	public Mem_DepthFirst_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
 		  this.nodeFinder = nodeFinder;
 		  this.processorAllocator = processAllocator;
 	}
@@ -159,7 +159,4 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
 		return optimalSchedule;
 	}
-
-	
-	
 }

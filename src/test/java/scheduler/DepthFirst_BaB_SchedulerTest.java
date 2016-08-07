@@ -14,7 +14,7 @@ public class DepthFirst_BaB_SchedulerTest {
 	
 	@Test
 	public void simpleLectureTest() {
-		SchedulerInterface sched = new DepthFirst_BaB_Scheduler(new ValidNodeFinderCustomMock(), new processMock());
+		SchedulerInterface sched = new Mem_DepthFirst_BaB_Scheduler(new ValidNodeFinderCustomMock(), new processMock());
 		
 		List<Node> nodes = new ArrayList<Node>();
 		Node a = new Node("a", 2);
