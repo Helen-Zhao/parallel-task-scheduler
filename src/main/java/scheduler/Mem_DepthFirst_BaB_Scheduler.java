@@ -2,7 +2,6 @@ package scheduler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import models.Node;
 
@@ -16,7 +15,7 @@ import models.Node;
 public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
 	int bestBound = 0;
-	List<Node> optimalSchedule;
+	List<Node> optimalSchedule = new ArrayList<Node>();
 	
 	List<Node> schedule = new ArrayList<Node>();
 	List<Integer> indexStack = new ArrayList<Integer>();
@@ -140,8 +139,11 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			if ((currentBound <= bestBound) && (level > -1)) { // TODO alter check to MasterSchedule for parallelization
 				bestBound = currentBound;
 				// TODO Is there a more memory/speed efficient way of keeping track of optimal schedule?  Map?
-				// Clone current schedule -- clone to prevent alteratio
-				optimalSchedule = schedule.stream().map(n -> n.clone()).collect(Collectors.toCollection(ArrayList::new));
+				// Clone current schedule -- clone to prevent alteration
+				optimalSchedule.clear();
+				for (int i = 0; i < schedule.size(); i++) {
+					optimalSchedule.add(schedule.get(i).clone());
+				}
 			}
 			
 			// Return to previous level and find more paths
