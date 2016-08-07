@@ -1,0 +1,10 @@
+digraph "1_processor_simple" {
+	a		[Weight=1];
+	b		[Weight=2];
+	a -> b	[Weight=2];
+	c		[Weight=3];
+	a -> c	[Weight=3];
+	d		[Weight=4];
+	b -> d	[Weight=4];
+	c -> d	[Weight=5];
+}

@@ -41,5 +41,17 @@ class processMock implements ProcessorAllocatorInterface {
 			}
 			return true;
 		}
+
+		@Override
+		public int findEarliestStartTime(List<Node> schedule, Node node, int processor) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public int getNumberProcessors() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
 		
 }
