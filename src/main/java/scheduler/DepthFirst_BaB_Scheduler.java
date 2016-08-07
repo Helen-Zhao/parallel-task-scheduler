@@ -80,6 +80,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 						// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
 						availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
 					}
+					// TODO Optimize out the need for this, some restructure necessary
 					if(level < 0) {
 						break;
 					}
@@ -136,7 +137,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			
 			// End of a path is reached
 			// If bound of new path is better than best known bound, update best bound and store new optimal schedule
-			if (currentBound <= bestBound) { // TODO alter check to MasterSchedule for parallelization
+			if ((currentBound <= bestBound) && (level > -1)) { // TODO alter check to MasterSchedule for parallelization
 				bestBound = currentBound;
 				// TODO Is there a more memory/speed efficient way of keeping track of optimal schedule?  Map?
 				// Clone current schedule -- clone to prevent alteratio
