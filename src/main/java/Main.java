@@ -1,5 +1,6 @@
 import inputoutput.InputReader;
 import inputoutput.OutputWriter;
+import models.Edge;
 import models.Node;
 import scheduler.*;
 
@@ -30,10 +31,12 @@ public class Main {
         }
 
         List<Node> nodeList;
+        List<Edge> edgeList;
 
         try {
             InputReader inputReader = new InputReader(inputFile);
             nodeList = inputReader.nodeList;
+            edgeList = inputReader.edgeList;
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -45,7 +48,7 @@ public class Main {
         scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
         List<Node> optimalSchedule = scheduler.createSchedule(nodeList);
 
-        OutputWriter outputWriter = new OutputWriter();
+        OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, "INPUT-output.dot");
 
 
     }
