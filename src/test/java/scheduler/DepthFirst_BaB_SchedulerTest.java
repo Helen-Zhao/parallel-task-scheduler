@@ -36,22 +36,10 @@ public class DepthFirst_BaB_SchedulerTest {
         initialNodeList.add(a);
         initialNodeList.add(b);
 
-        List<Node> justA = new ArrayList<>();
-        justA.add(a);
-
-        List<Node> justB = new ArrayList<>();
-        justB.add(b);
-
-        List<Node> processedNodeList = new ArrayList<>();
         Node allocatedA = new Node("a", 1);
         allocatedA.setProcessor(1);
         allocatedA.setStartTime(0);
         allocatedA.setHasRun(true);
-        processedNodeList.add(allocatedA);
-        processedNodeList.add(b);
-
-        List<Node> justAllocatedA = new ArrayList<>();
-        justAllocatedA.add(allocatedA);
 
         doAnswer(new Answer() {
             public Object answer(InvocationOnMock invocation) {
@@ -95,6 +83,7 @@ public class DepthFirst_BaB_SchedulerTest {
         allocatedB.setHasRun(true);
         allocatedB.setProcessor(1);
         allocatedB.setStartTime(1);
+
         expectedOptimalSchedule.add(allocatedA);
         expectedOptimalSchedule.add(allocatedB);
 
