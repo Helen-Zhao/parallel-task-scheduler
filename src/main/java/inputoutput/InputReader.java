@@ -19,7 +19,7 @@ public class InputReader {
 	
 	// List of nodes and edges compiled from input .dot file. Can be accessible from other classes and methods.
 	public List<Node> nodeList = new ArrayList<Node>();
-	public List<Edge> edgeList = new ArrayList<Edge>();
+	public static List<Edge> edgeList = new ArrayList<Edge>();
 	
 	// Main input reader function
 	public InputReader(File f) throws IOException {
@@ -64,6 +64,11 @@ public class InputReader {
 				throw e2;
 			}
 		}
+	}
+	
+	//Getter for list of edges
+	public static List<Edge> getListOfEdges() {
+		return edgeList;
 	}
 	
 	// Private method used to parse obtained "weight" property into an Integer Type from a String
