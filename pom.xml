@@ -4,7 +4,6 @@
   <artifactId>softeng-306-p1</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>softeng-306-p1</name>
-
   <dependencies>
     <!-- https://mvnrepository.com/artifact/junit/junit -->
     <dependency>
@@ -24,6 +23,12 @@
       <artifactId>mockito-all</artifactId>
       <version>1.9.5</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/junit-addons/junit-addons -->
+	<dependency>
+	    <groupId>junit-addons</groupId>
+	    <artifactId>junit-addons</artifactId>
+	    <version>1.4</version>
+	</dependency>
 
   </dependencies>
 

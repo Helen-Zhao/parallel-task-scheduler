@@ -60,8 +60,8 @@ public class ValidNodeFinder implements ValidNodeFinderInterface {
 	public List<Node> findSatisfiedNodes(List<Node> nodes) {
 		
 		List<Node> satisfiedNodes = new ArrayList<Node>();
-		for(Node node : nodes) {
-			if(isAvailable(node)) {
+		for( Node node : nodes){
+			if(isAvailable(node) && !(node.getHasRun())) {
 				satisfiedNodes.add(node);
 			}
 		}

@@ -1,0 +1,63 @@
+﻿Merge remote-tracking branch 'refs/remotes/Helen-Zhao/dev'
+
+# Conflicts:
+#	src/main/java/scheduler/ValidNodeFinder.java
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	modified:   ProjectPlan/Gantt.png
+#	new file:   ProjectPlan/NPeasy-Plan-Diagrams.docx
+#	new file:   ProjectPlan/NPeasy-Plan-Diagrams.pdf
+#	modified:   ProjectPlan/Network.png
+#	modified:   ProjectPlan/ProcessorAllocaterSteps.md
+#	modified:   ProjectPlan/SOFTENG306-Chart.mpp
+#	modified:   pom.xml
+#	modified:   src/main/java/inputoutput/InputReader.java
+#	modified:   src/main/java/inputoutput/OutputWriter.java
+#	modified:   src/main/java/models/Node.java
+#	new file:   src/main/java/scheduler/Mem_DepthFirst_BaB_Scheduler.java
+#	deleted:    src/main/java/scheduler/NodeSelector.java
+#	deleted:    src/main/java/scheduler/NodeSelectorInterface.java
+#	modified:   src/main/java/scheduler/ProcessorAllocator.java
+#	modified:   src/main/java/scheduler/ProcessorAllocatorInterface.java
+#	deleted:    src/main/java/scheduler/Scheduler.java
+#	modified:   src/main/java/scheduler/SchedulerInterface.java
+#	modified:   src/main/java/scheduler/ValidNodeFinder.java
+#	modified:   src/main/java/scheduler/ValidNodeFinderInterface.java
+#	new file:   src/main/resources/dotfiles/inputfiles/1_processor_simple.dot
+#	new file:   src/main/resources/dotfiles/inputfiles/2_processor_simple.dot
+#	new file:   src/main/resources/dotfiles/inputfiles/4_processor_1_src_1_dest.dot
+#	new file:   src/main/resources/dotfiles/inputfiles/4_processor_1_src_3_dest.dot
+#	new file:   src/main/resources/dotfiles/inputfiles/4_processor_3_src_1_dest.dot
+#	new file:   src/main/resources/dotfiles/inputfiles/4_processor_3_src_2_dest.dot
+#	new file:   src/main/resources/dotfiles/outputfiles/1_processor_simple-output.dot
+#	new file:   src/main/resources/dotfiles/outputfiles/2_processor_simple-output.dot
+#	new file:   src/main/resources/dotfiles/outputfiles/4_processor_1_src_1_dest-output.dot
+#	new file:   src/main/resources/dotfiles/outputfiles/4_processor_1_src_3_dest-output.dot
+#	new file:   src/main/resources/dotfiles/outputfiles/4_processor_3_src_1_dest-output.dot
+#	new file:   src/main/resources/dotfiles/outputfiles/4_processor_3_src_2_dest-output.dot
+#	deleted:    src/test/java/MainTest.java
+#	modified:   src/test/java/inputouput/OutputWriterTest.java
+#	modified:   src/test/java/models/NodeTest.java
+#	new file:   src/test/java/scheduler/DepthFirst_BaB_SchedulerTest.java
+#	deleted:    src/test/java/scheduler/NodeSelectorTest.java
+#	new file:   src/test/java/scheduler/ProcessorAllocatorCustomMock.java
+#	modified:   src/test/java/scheduler/ProcessorAllocatorTest.java
+#	new file:   src/test/java/scheduler/ValidNodeFinderCustomMock.java
+#	modified:   src/test/java/scheduler/ValidNodeFinderTest.java
+#	new file:   src/test/java/testcases/MainTest.java
+#	new file:   src/test/resources/expectedOutput.dot
+#
+
