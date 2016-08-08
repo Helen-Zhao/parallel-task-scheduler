@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import models.Edge;
 import models.Node;
+import scheduler.ValidNodeFinder;
 
 public class ValidNodeFinderTest {
 	Node a, b, c, x;
@@ -82,16 +83,11 @@ public class ValidNodeFinderTest {
 		a.setHasRun(true);
 		x.setHasRun(true);
 		
-		// a and x are satisfied by default as root nodes, b has been satisfied as a and x have run
-		expected.add(a);
+		// b has been satisfied as a and x have run
 		expected.add(b);
-		expected.add(x);
 		
 		List<Node> actual = vnf.findSatisfiedNodes(inputList);
 		
 		assertEquals(expected,actual);
-		
-		
 	}
-	
 }

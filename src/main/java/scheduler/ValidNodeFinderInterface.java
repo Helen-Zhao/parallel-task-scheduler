@@ -10,5 +10,4 @@ public interface ValidNodeFinderInterface {
 	public List<Node> findSatisfiedChildren(Node node);
 	
 	public List<Node> findSatisfiedNodes(List<Node> nodes);
-	
 }
