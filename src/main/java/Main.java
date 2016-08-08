@@ -1,6 +1,7 @@
 import inputoutput.InputReader;
 import models.Edge;
 import models.Node;
+import scheduler.*;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +29,16 @@ public class Main {
 		List<Node> nodeList = inputReader.nodeList;
 		List<Edge> edgeList = inputReader.edgeList;
 
-		SchedulerInterface scheduler = new
+		SchedulerInterface scheduler;
+
+		switch (algorithm.toLowerCase()){
+			case "bnb":
+				//dostuff
+				break;
+			case "as":
+
+		}
+
 
 	}
 
