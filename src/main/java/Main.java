@@ -1,45 +1,53 @@
 import inputoutput.InputReader;
-import models.Edge;
+import inputoutput.OutputWriter;
 import models.Node;
 import scheduler.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
  * @author helen zhao
- * Created 08/08/16
+ *         Created 08/08/16
  */
 
 public class Main {
 
-	public static void main(String[] args) {
-		/*
-			Input params take the form of: input.dot, p, algorithm
-			where input.dot is the input file, p is the number of processors and algorithm specifes
-			what algorithm the scheduler should use
+    public static void main(String[] args) throws IllegalArgumentException {
+        /*
+            Input params take the form of: input file; number of processors p;
+			where input.dot is the input file and p is the number of processors
 		 */
 
+        File inputFile = new File(args[0]);
 
-		String inputFileName = args[0];
-		int numProcessors = Integer.parseInt(args[1]);
-		String algorithm = args[2];
+        int numProcessors;
+        try {
+            numProcessors = Integer.parseInt(args[1]);
+        } catch (NumberFormatException nfe) {
+            throw new IllegalArgumentException("Error: Argument 2 (Number of Processors) " + args[1] + " is not a number.");
+        }
 
-		InputReader inputReader = new InputReader(new File(inputFileName));
-		List<Node> nodeList = inputReader.nodeList;
-		List<Edge> edgeList = inputReader.edgeList;
+        List<Node> nodeList;
 
-		SchedulerInterface scheduler;
+        try {
+            InputReader inputReader = new InputReader(inputFile);
+            nodeList = inputReader.nodeList;
+        } catch (IOException io) {
+            throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
+        }
 
-		switch (algorithm.toLowerCase()){
-			case "bnb":
-				//dostuff
-				break;
-			case "as":
+        ValidNodeFinderInterface validNodeFinder = new ValidNodeFinder();
+        ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator(numProcessors);
+        SchedulerInterface scheduler;
 
-		}
+        scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+        List<Node> optimalSchedule = scheduler.createSchedule(nodeList);
+
+        OutputWriter outputWriter = new OutputWriter();
 
 
-	}
+    }
 
 }
