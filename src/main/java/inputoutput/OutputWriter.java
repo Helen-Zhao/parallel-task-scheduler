@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * Created by helen on 28/07/2016.
+ * @author William Lin
  */
 public class OutputWriter {
 	
@@ -22,7 +23,10 @@ public class OutputWriter {
 		try {
 			//Get working directory
 			String workingDir = System.getProperty("user.dir");
-			String dir = workingDir.substring(0, workingDir.indexOf("/src"));
+			String dir = ".";
+			if (workingDir.length() > 0 && workingDir.contains("/src")) {
+				dir = workingDir.substring(0, workingDir.indexOf("/src"));
+			}
 
 			//Instantiate PrintWriter object to create and write to file. Set encoding to UTF-8
 			PrintWriter writer = new PrintWriter(dir + "/src/main/resources/" + outputFileName + ".dot", "UTF-8");
@@ -35,6 +39,7 @@ public class OutputWriter {
 				printedNodes.add(node);
 			}
 
+			//Commented out as there is a bug with printedNodes.contains() that doesn't recognise cloned nodes as equal
 //			for(int j = 0; j < scheduleEdges.size(); j++) {
 //				Edge edge = scheduleEdges.get(j);
 //				//if start and end nodes of an edge is printed, then print the edge
