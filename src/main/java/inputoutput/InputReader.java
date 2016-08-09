@@ -21,7 +21,7 @@ public class InputReader {
 	public List<Node> nodeList = new ArrayList<Node>();
 	public static List<Edge> edgeList = new ArrayList<Edge>();
 	
-	// Main input reader function
+	// main.Main input reader function
 	public InputReader(File f) throws IOException {
 		BufferedReader br = null;
 		
@@ -54,14 +54,16 @@ public class InputReader {
 				}
 			}
 		} catch (IOException e) {
-			throw e;
+			e.printStackTrace();
+//			throw e;
 		} finally {
 			try {
 				if (br != null) {
 					br.close();
 				}
 			} catch(IOException e2) {
-				throw e2;
+//				throw e2;
+				e2.printStackTrace();
 			}
 		}
 	}

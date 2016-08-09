@@ -1,15 +1,14 @@
 package inputouput;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
 import inputoutput.OutputWriter;
 import junitx.framework.FileAssert;
 import models.Edge;
 import models.Node;
+import org.junit.Test;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by helen on 28/07/2016.
@@ -68,11 +67,15 @@ public class OutputWriterTest {
 		String outputFileName = "outputFile";
 		
 		new OutputWriter(inputNodeList, inputEdgeList, outputFileName);
-		
+
+		//Get working directory
+		String workingDir = System.getProperty("user.dir");
+		String dir = workingDir.substring(0, workingDir.indexOf("/src"));
+
 		//Prepared "expected" file to compare output file against
-		File expected = new File("./src/test/resources/expectedOutput.dot");
+		File expected = new File(dir + "/src/test/resources/expectedOutput.dot");
 		
-		File output = new File("./src/main/resources/" + outputFileName + ".dot");
+		File output = new File( dir + "/src/main/resources/" + outputFileName + ".dot");
 		
 		FileAssert.assertEquals(expected, output);
 	}

@@ -1,3 +1,5 @@
+package main;
+
 import inputoutput.InputReader;
 import inputoutput.OutputWriter;
 import models.Edge;
@@ -48,8 +50,7 @@ public class Main {
         scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
         List<Node> optimalSchedule = scheduler.createSchedule(nodeList);
 
-        OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, "INPUT-output.dot");
-
+        OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, "INPUT-output");
 
     }
 
