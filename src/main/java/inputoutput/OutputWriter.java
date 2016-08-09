@@ -6,7 +6,7 @@ import models.Node;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class OutputWriter {
 	
-	private static HashSet<Node> printedNodes = new HashSet<Node>();
+	private HashMap<String, Node> printedNodes = new HashMap<String, Node>();
 	
 	//main.Main output writer function
 	public OutputWriter(List<Node> scheduleNodes, List<Edge> scheduleEdges, String outputFileName) {
@@ -26,34 +26,31 @@ public class OutputWriter {
 			String dir = ".";
 			if (workingDir.length() > 0 && workingDir.contains("/src")) {
 				dir = workingDir.substring(0, workingDir.indexOf("/src"));
+				System.out.println(dir);
 			}
 
 			//Instantiate PrintWriter object to create and write to file. Set encoding to UTF-8
-			PrintWriter writer = new PrintWriter(dir + "/src/main/resources/" + outputFileName + ".dot", "UTF-8");
+			PrintWriter writer = new PrintWriter(dir + "/src/main/resources/" + outputFileName, "UTF-8");
 			writer.println("digraph \"" + outputFileName + "\" {");
 			
 			//iterate through list and print
 			for(int i = 0; i < scheduleNodes.size(); i++){
 				Node node = scheduleNodes.get(i);
 				writer.println("\t\t" + node.getName() + "\t\t [Weight=" + node.getWeight() + ", Start=" + node.getStartTime() + ", Processor=" + node.getProcessor() + "];");
-				printedNodes.add(node);
+				printedNodes.put(node.getName(), node);
+				for(int j = 0; j < scheduleEdges.size(); j++) {
+					Edge edge = scheduleEdges.get(j);
+					//if start and end nodes of an edge is printed, then print the edge
+					if (printedNodes.containsKey(edge.getStartNode().getName())&&printedNodes.containsKey(edge.getEndNode().getName())) {
+						writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
+						if (i != scheduleNodes.size() - 1) {
+							scheduleEdges.remove(edge);
+							j--;
+						}
+					}
+				}
 			}
-
-			//Commented out as there is a bug with printedNodes.contains() that doesn't recognise cloned nodes as equal
-//			for(int j = 0; j < scheduleEdges.size(); j++) {
-//				Edge edge = scheduleEdges.get(j);
-//				//if start and end nodes of an edge is printed, then print the edge
-//				if ((printedNodes.contains(edge.getStartNode()))&&(printedNodes.contains(edge.getEndNode()))) {
-//					writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
-//					if(i != scheduleNodes.size() - 1){
-//						scheduleEdges.remove(edge);
-//					}
-//				}
-//			}
-
-			for(Edge edge : scheduleEdges) {
-				writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
-			}
+			
 			writer.print("}");
 
 			writer.close();
