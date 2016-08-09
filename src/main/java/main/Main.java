@@ -23,6 +23,38 @@ public class Main {
 			where input.dot is the input file and p is the number of processors
 		 */
 
+        //Flags for optional params
+        boolean hasOutputName = false;
+        boolean visualisation = false;
+        boolean parallelisation = false;
+
+        String outputFile = "";
+        int numThreads;
+
+
+        //If there are extra parameters specified
+        if(args.length > 2) {
+            for(int i = 2; i < args.length; i++) {
+                //If it is a flag param, identify what it is
+                if (args[i].substring(0, 1).equals("-")){
+                    switch (args[i]) {
+                        case "-o":
+                            hasOutputName = true;
+                            outputFile = args[i + 1];
+                            break;
+                        case "-v":
+                            visualisation = true;
+                            break;
+                        case "-p":
+                            parallelisation = true;
+                            numThreads = Integer.parseInt(args[i + 1]);
+                            break;
+                    }
+                }
+
+            }
+        }
+
         File inputFile = new File(args[0]);
 
         int numProcessors;
@@ -50,7 +82,8 @@ public class Main {
         scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
         List<Node> optimalSchedule = scheduler.createSchedule(nodeList);
 
-        OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, "INPUT-output");
+        String outputFileName = (outputFile.length() == 0) ? "INPUT-output" : outputFile;
+        OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, outputFileName);
 
     }
 

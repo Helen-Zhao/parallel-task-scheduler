@@ -33,22 +33,26 @@ public class OutputWriter {
 				Node node = scheduleNodes.get(i);
 				writer.println("\t\t" + node.getName() + "\t\t [Weight=" + node.getWeight() + ", Start=" + node.getStartTime() + ", Processor=" + node.getProcessor() + "];");
 				printedNodes.add(node);
-				for(int j = 0; j < scheduleEdges.size(); j++) {
-					Edge edge = scheduleEdges.get(j);
-					//if start and end nodes of an edge is printed, then print the edge
-					if ((printedNodes.contains(edge.getStartNode()))&&(printedNodes.contains(edge.getEndNode()))) {
-						writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
-						if(i != scheduleNodes.size() - 1){
-							scheduleEdges.remove(edge);
-						}
-					}
-				}
 			}
-			
+
+//			for(int j = 0; j < scheduleEdges.size(); j++) {
+//				Edge edge = scheduleEdges.get(j);
+//				//if start and end nodes of an edge is printed, then print the edge
+//				if ((printedNodes.contains(edge.getStartNode()))&&(printedNodes.contains(edge.getEndNode()))) {
+//					writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
+//					if(i != scheduleNodes.size() - 1){
+//						scheduleEdges.remove(edge);
+//					}
+//				}
+//			}
+
+			for(Edge edge : scheduleEdges) {
+				writer.println("\t\t" + edge.getStartNode().getName() + " -> " + edge.getEndNode().getName() + "\t [Weight=" + edge.getWeight() + "];");
+			}
 			writer.print("}");
-			
+
 			writer.close();
-			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
