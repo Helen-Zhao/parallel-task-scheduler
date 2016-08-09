@@ -55,15 +55,16 @@ public class InputReader {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-//			throw e;
+			throw e;
 		} finally {
 			try {
 				if (br != null) {
 					br.close();
 				}
 			} catch(IOException e2) {
-//				throw e2;
 				e2.printStackTrace();
+				throw e2;
+
 			}
 		}
 	}
