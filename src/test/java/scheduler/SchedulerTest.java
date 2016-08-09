@@ -51,22 +51,16 @@ public class SchedulerTest {
         scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
         List<Node> optimalSchedule = scheduler.createSchedule(nodeList);
 
-        int highestStartTime = Integer.MIN_VALUE;
-        int weightOf = 0;
+        int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            if (node.getStartTime() >= highestStartTime) {
-                if (node.getStartTime() == highestStartTime){
-                    if (node.getWeight() >= weightOf) {
-                        weightOf = node.getWeight();
-                    }
-                } else {
-                    highestStartTime = node.getStartTime();
-                    weightOf = node.getWeight();
-                }
+            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+            int currentEndTime = node.getStartTime() + node.getWeight();
+            if (currentEndTime > latestTime) {
+                latestTime = currentEndTime;
             }
         }
 
-        assertThat(highestStartTime + weightOf, equalTo(28));
+        assertThat(latestTime, equalTo(28));
     }
 
     @Test
