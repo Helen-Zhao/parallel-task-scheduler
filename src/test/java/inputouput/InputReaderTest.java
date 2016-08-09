@@ -1,16 +1,16 @@
 package inputouput;
 
-import static org.junit.Assert.*;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Test;
-
 import inputoutput.InputReader;
 import models.Edge;
 import models.Node;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Created by helen on 28/07/2016.
@@ -20,7 +20,7 @@ public class InputReaderTest {
 	public List<Edge> correctEdgeList = new ArrayList<Edge>();
 	
 	@Test
-	public void FileInputTest() {
+	public void FileInputTest() throws IOException {
 		//Selecting input file
 		File input = new File("./src/test/resources/inputReader.dot");
 		

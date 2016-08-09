@@ -103,4 +103,14 @@ public class Node implements Comparable<Node>, Cloneable {
 		clone.setHasRun(this.hasRun);
 		return clone;
 	}
+
+	@Override
+    public boolean equals(Object n1) {
+        Node n = (Node) n1;
+	    if (n.getName().equals(this.getName())) {
+            return true;
+        }
+
+        return false;
+    }
 }
