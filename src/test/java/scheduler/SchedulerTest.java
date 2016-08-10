@@ -53,7 +53,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -88,7 +88,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -122,7 +122,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -157,7 +157,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -192,7 +192,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -227,7 +227,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -261,7 +261,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -296,7 +296,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -331,7 +331,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
@@ -366,7 +366,7 @@ public class SchedulerTest {
 
         int latestTime = Integer.MIN_VALUE;
         for (Node node : optimalSchedule) {
-            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
+//            System.out.println("name=" + node.getName() + " srtTime=" + node.getStartTime() + " processor=" + node.getProcessor() + " endTime=" + (node.getStartTime() + node.getWeight()));
             int currentEndTime = node.getStartTime() + node.getWeight();
             if (currentEndTime > latestTime) {
                 latestTime = currentEndTime;
