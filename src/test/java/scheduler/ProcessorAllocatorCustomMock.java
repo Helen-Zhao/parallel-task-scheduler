@@ -53,11 +53,5 @@ class processMock implements ProcessorAllocatorInterface {
 			// TODO Auto-generated method stub
 			return 0;
 		}
-
-		@Override
-		public boolean allocateProcessor(List<Node> schedule, Node node, int processorIndex) {
-			// TODO Auto-generated method stub
-			return false;
-		}
 		
 }

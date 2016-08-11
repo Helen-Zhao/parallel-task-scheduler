@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ProcessorAllocatorInterface {
     
-	public boolean allocateProcessor(List<Node> schedule, Node node, int processorIndex);
+	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors);
 	
 	public int findEarliestStartTime(List<Node> schedule, Node node, int processor);
 	

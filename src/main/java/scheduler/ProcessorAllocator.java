@@ -160,9 +160,9 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 		this.numProcessors = numProcessors;
 	}
 	
-	public boolean allocateProcessor(List<Node> schedule, Node node, int processorIndex) {
+	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors) {
 		// There are no available processors for which the node can be assigned to.
-		if (processorIndex > numProcessors) {
+		if (checkedProcessors.size() >= numProcessors) {
 			return false;
 		}
 		
@@ -170,14 +170,16 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 		int tempEarliestStartTime;
 		
 		// Go through every processor and find the best time available for each one
-		for (int i=processorIndex; i<=numProcessors; i++) {
-			// If the specified processor is available, then find the best time for the specified processor
-			tempEarliestStartTime = findEarliestStartTime(schedule, node, i);
-			
-			// Determining and updating the earliest possible start time and respective processor
-			if (tempEarliestStartTime < earliestStartTime) {
-				earliestStartTime = tempEarliestStartTime;
-				bestProcessor = i;
+		for (int i=1; i<=numProcessors; i++) {
+			if (!checkedProcessors.contains(i)) {
+				// If the specified processor is available, then find the best time for the specified processor
+				tempEarliestStartTime = findEarliestStartTime(schedule, node, i);
+				
+				// Determining and updating the earliest possible start time and respective processor
+				if (tempEarliestStartTime < earliestStartTime) {
+					earliestStartTime = tempEarliestStartTime;
+					bestProcessor = i;
+				}
 			}
 		}
 		
