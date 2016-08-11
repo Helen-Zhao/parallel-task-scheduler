@@ -69,12 +69,17 @@ public class OutputWriterTest {
 		new OutputWriter(inputNodeList, inputEdgeList, outputFileName);
 
 		//Get working directory
-		String dir = System.getProperty("user.dir");
+		String workingDir = System.getProperty("user.dir");
+		String dir = workingDir;
+
+		if (!dir.contains("src")) {
+			dir = dir + "/src/test";
+		}
 
 		//Prepared "expected" file to compare output file against
 		File expected = new File(dir + "/resources/expectedOutput2.dot");
 		
-		File output = new File(dir + "/" + outputFileName + ".dot");
+		File output = new File(workingDir + "/" + outputFileName + ".dot");
 		
 		FileAssert.assertEquals(expected, output);
 	}
