@@ -19,7 +19,7 @@ public class InputReader {
 
     // List of nodes and edges compiled from input .dot file. Can be accessible from other classes and methods.
     public List<Node> nodeList = new ArrayList<Node>();
-    public static List<Edge> edgeList = new ArrayList<Edge>();
+    public List<Edge> edgeList = new ArrayList<Edge>();
 
     // main.Main input reader function
     public InputReader(File f) throws IOException {
@@ -78,7 +78,7 @@ public class InputReader {
     }
 
     //Getter for list of edges
-    public static List<Edge> getListOfEdges() {
+    public List<Edge> getListOfEdges() {
         return edgeList;
     }
 

@@ -1,16 +1,17 @@
 package inputouput;
 
-import inputoutput.InputReader;
-import models.Edge;
-import models.Node;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import inputoutput.InputReader;
+import models.Edge;
+import models.Node;
 
 /**
  * Created by helen on 28/07/2016.
@@ -86,9 +87,9 @@ public class InputReaderTest {
 		
 		//checks each edge's properties to it's correct counterpart
 		for(int i = 0; i< correctEdgeList.size(); i++) {
-			assertEquals(correctEdgeList.get(i).getStartNode().getName(), reader.edgeList.get(i).getStartNode().getName());
-			assertEquals(correctEdgeList.get(i).getEndNode().getName(), reader.edgeList.get(i).getEndNode().getName());
-			assertEquals(correctEdgeList.get(i).getWeight(), reader.edgeList.get(i).getWeight());
+			assertEquals(correctEdgeList.get(i).getStartNode().getName(), reader.getListOfEdges().get(i).getStartNode().getName());
+			assertEquals(correctEdgeList.get(i).getEndNode().getName(), reader.getListOfEdges().get(i).getEndNode().getName());
+			assertEquals(correctEdgeList.get(i).getWeight(), reader.getListOfEdges().get(i).getWeight());
 		}
 	}
 }
