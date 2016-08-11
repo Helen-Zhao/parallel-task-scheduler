@@ -23,7 +23,6 @@ public class Main {
             Input params take the form of: input file; number of processors p;
 			where input.dot is the input file and p is the number of processors
 		 */
-
 		if (args.length < 2) {
 			throw new IllegalArgumentException("Error: Not enough parameters. Please use the following argument format: <input-file-path> <number of processors>");
 		}
