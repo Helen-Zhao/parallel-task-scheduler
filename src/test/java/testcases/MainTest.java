@@ -23,7 +23,7 @@ public class MainTest {
 		String workingDir = System.getProperty("user.dir");
 		dir = ".";
 		
-		if (workingDir.length() > 0 && workingDir.contains(File.separator+"src")) {
+		if (workingDir.length() > 0 && workingDir.contains("src")) {
 			dir = workingDir.substring(0, workingDir.indexOf(File.separator+"src"));
 		}
 	}
