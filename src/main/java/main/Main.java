@@ -16,7 +16,8 @@ import java.util.List;
  */
 
 public class Main {
-
+	private static List<Node> optimalSchedule;
+	
 	public static void main(String[] args) throws IllegalArgumentException {
 		/*
             Input params take the form of: input file; number of processors p;
@@ -84,11 +85,15 @@ public class Main {
 		SchedulerInterface scheduler;
 
 		scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
-		List<Node> optimalSchedule = scheduler.createSchedule(nodeList);
+		optimalSchedule = scheduler.createSchedule(nodeList);
 
 		String outputFileName = hasOutputName ? outputFile : "INPUT-output";
 		OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, outputFileName);
 
+	}
+	
+	public static List<Node> getOptimalSchedule() {
+		return optimalSchedule;
 	}
 
 }
