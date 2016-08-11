@@ -42,6 +42,7 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		int currentBound = 0;
 		// Level of the state tree
 		int level = 0;
+		int maxLevel = nodeList.size() - 1;
 		
 		Node node;
 		
@@ -93,15 +94,41 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					continue;
 				}
 				
-				// Update next node index in list of indices
-				nextNodeIndex++;
-				indexStack.set(level, nextNodeIndex);
+				
 				
 				// Allocate node to a processor
-				// TODO consider branches with a node being assigned different processors
-				// Allocating to earliest start time might cause all sensible paths to be hit, 
-				// branches covering all permutations of node order on all processors may not be necessary
-				processorAllocator.allocateProcessor(schedule, node, new ArrayList<Integer>()); // Alter to method that just checks all processors
+				if (!processorAllocator.allocateProcessor(schedule, node, node.getCheckedProcessors())) { // Alter to method that just checks all processors
+					// Update next node index in list of indices
+					nextNodeIndex++;
+					indexStack.set(level, nextNodeIndex);
+					node.resetCheckedProcessors();
+					currentBound = 0;
+					// Return to previous level
+					level--;
+					if(schedule.size() > 0) {
+						// Remove node from the latest level, has no longer been run
+						node = schedule.get(schedule.size()-1);
+						node.setHasRun(false);
+						schedule.remove(schedule.size()-1);
+						for (int i = 0; i < schedule.size(); i++) {
+							int nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
+							if (currentBound < nodeEndTime) {
+								currentBound = nodeEndTime;
+							}
+						}
+						// Reset list of available nodes to state of previous level
+						// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
+						availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
+					}
+					if(level < 0) {
+						break;
+					}
+					continue;
+				}
+				
+				
+				node.addCheckedProcessor(node.getProcessor());
+				
 				
 				// Find when the newly allocated node finishes
 				int nodeEndTime = node.getStartTime()+node.getWeight();
@@ -121,6 +148,11 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					// If worse, abandon path
 					if (currentBound > bestBound) {
 						currentBound = 0;
+						// Reset index of all following levels as are abandoning this path
+						for (int i = level; i < indexStack.size(); i++) {
+							// Reset index of level for new path
+							indexStack.set(i, 0);
+						}
 						// Return to previous level
 						level--;
 						if(schedule.size() > 0) {

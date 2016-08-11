@@ -5,7 +5,7 @@ import java.util.List;
 import models.Node;
 import scheduler.ValidNodeFinderInterface;
 
-	class ValidNodeFinderCustomMock implements ValidNodeFinderInterface {
+	public class ValidNodeFinderCustomMock implements ValidNodeFinderInterface {
 		
 		@Override
 		public List<Node> findRootNodes(List<Node> nodes) {

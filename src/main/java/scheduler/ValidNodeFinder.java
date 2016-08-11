@@ -6,14 +6,14 @@ import java.util.List;
 import models.Edge;
 import models.Node;
 
-public class ValidNodeFinder implements ValidNodeFinderInterface{
+public class ValidNodeFinder implements ValidNodeFinderInterface {
 	
 	// Find nodes with no dependencies (root) by searching for nodes with no incoming edges
 	public List<Node> findRootNodes(List<Node> nodes) {
 		List<Node> rootNodes = new ArrayList<Node>();
 		
-		for(Node node : nodes){
-			if(node.getIncomingEdges() == null || node.getIncomingEdges().size() == 0){
+		for(Node node : nodes) {
+			if(node.getIncomingEdges() == null || node.getIncomingEdges().size() == 0) {
 				rootNodes.add(node);
 			}
 		}
@@ -23,7 +23,7 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	
 	// Check whether children or dependent nodes for particular node is satisfied
 	// If yes, add it to a list of satisfied nodes and return it
-	public List<Node> findSatisfiedChildren(Node node){
+	public List<Node> findSatisfiedChildren(Node node) {
 		// Children will not be satisfied unless input node itself is satisfied
 		if(node.getHasRun() == false) {
 			return new ArrayList<Node>();
@@ -32,9 +32,9 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 		List<Node> satisfiedNodes = new ArrayList<Node>();
 		List<Edge> edges = node.getOutgoingEdges();
 		
-		for(Edge edge: edges){
+		for(Edge edge: edges) {
 			Node endNode = edge.getEndNode();
-			if(isAvailable(endNode)){
+			if(isAvailable(endNode)) {
 				satisfiedNodes.add(endNode);
 			}
 		}
@@ -43,12 +43,12 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	}
 	
 	// Check incoming edges for particular node and determine whether it is available or not 
-	public boolean isAvailable(Node node){
+	public boolean isAvailable(Node node) {
 		List<Edge> edges = node.getIncomingEdges();
 		
-		for(Edge edge: edges){
+		for(Edge edge: edges) {
 			Node startNode = edge.getStartNode();
-			if(startNode.getHasRun() == false){
+			if(startNode.getHasRun() == false) {
 				return false;
 			}
 		}
@@ -57,7 +57,7 @@ public class ValidNodeFinder implements ValidNodeFinderInterface{
 	}
 	
 	// Given a list of nodes, find all of which have their dependencies satisfied
-	public List<Node> findSatisfiedNodes(List<Node> nodes){
+	public List<Node> findSatisfiedNodes(List<Node> nodes) {
 		
 		List<Node> satisfiedNodes = new ArrayList<Node>();
 		for( Node node : nodes){

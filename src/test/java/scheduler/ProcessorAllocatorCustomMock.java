@@ -4,7 +4,7 @@ import java.util.List;
 import models.Node;
 import scheduler.ProcessorAllocatorInterface;
 
-class processMock implements ProcessorAllocatorInterface {
+public class ProcessorAllocatorCustomMock implements ProcessorAllocatorInterface {
 		public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors) {
 			
 			if(node.getName() == "a") {
@@ -39,7 +39,7 @@ class processMock implements ProcessorAllocatorInterface {
 				node.setProcessor(2);
 				node.setHasRun(true);
 			}
-			return true;
+			return false;
 		}
 
 		@Override
@@ -50,8 +50,7 @@ class processMock implements ProcessorAllocatorInterface {
 
 		@Override
 		public int getNumberProcessors() {
-			// TODO Auto-generated method stub
-			return 0;
+			return 2;
 		}
 		
 }

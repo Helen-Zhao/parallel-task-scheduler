@@ -1,118 +1,339 @@
 package testcases;
 
 import main.Main;
+import models.Edge;
+import models.Node;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import junitx.framework.FileAssert;
 
-import java.io.File;
+import static org.junit.Assert.*;
 
+import java.io.File;
+import java.util.List;
 
 public class MainTest {
 
-    String dir;
+	String dir;
 
-    @Before
-    public void setUp() {
-        String workingDir = System.getProperty("user.dir");
-        dir = ".";
-        if (workingDir.length() > 0 && workingDir.contains("/src")) {
-            dir = workingDir.substring(0, workingDir.indexOf("/src"));
-        }
-    }
-
-    @Test
-    public void oneProcSimpleTest() {
-
-        // Expected output file
-        File expected = new File(dir + "/src/main/resources/dotfiles/outputfiles/1_processor_simple-output.dot");
-
-        // TODO
-        /* Varying methods for obtaining the final output file which is to be compared with the expected output file. (Our implementation)
-		  
-		File input = new main.Main.readInput(dir + "/src/main/resources/dot_Files/Input_Files/1_processor_simple.dot");
+	@Before
+	public void setUp() {
+		String workingDir = System.getProperty("user.dir");
+		dir = ".";
 		
-		File output = main.Main.writeOutput();
-		*/
+		if (workingDir.length() > 0 && workingDir.contains("src")) {
+			dir = workingDir.substring(0, workingDir.indexOf(File.separator+"src"));
+		}
+	}
 
-        // FileAssert.assertEquals(expected, output);
-    }
+	@Test
+	public void oneProcSimpleTest() {
 
-    @Test
-    public void twoProcSimpleTest() {
-
-        // Expected output file
-        File expected = new File(dir + "/src/main/resources/dotfiles/outputfiles/2_processor_simple-output.dot");
-
-        // TODO
-		/* Varying methods for obtaining the final output file which is to be compared with the expected output file. (Our implementation)
-		  
-		File input = new main.Main.readInput(dir + "/src/main/resources/dot_Files/Input_Files/1_processor_simple.dot");
+		int expectedEndTime = 10;
 		
-		File output = main.Main.writeOutput();
-		*/
-
-        // FileAssert.assertEquals(expected, output);
-    }
-
-    @Test
-    public void fourProcOneSrcOneDestTest() {
-
-        // Expected output file
-        File expected = new File(dir + "/src/main/resources/dotfiles/outputfiles/4_processor_1_src_1_dest-output.dot");
-
-        // TODO
-		/* Varying methods for obtaining the final output file which is to be compared with the expected output file. (Our implementation)
-		  
-		File input = new main.Main.readInput(dir + "/src/main/resources/dot_Files/Input_Files/1_processor_simple.dot");
+		String[] args = {dir +
+				"/src/main/resources/dotfiles/inputfiles/1_processor_simple.dot",
+				"4", "-o", "1_processor_simple-output"};
 		
-		File output = main.Main.writeOutput();
-		*/
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+	}
 
-        // FileAssert.assertEquals(expected, output);
-    }
+	@Test
+	public void twoProcSimpleTest() {
 
-    @Test
-    public void fourProcOneSrcThreeDestTest() {
-
-        // Expected output file
-        File expected = new File(dir + "/src/main/resources/dotfiles/outputfiles/4_processor_1_src_3_dest-output.dot");
-
-        String[] args = {dir + "/src/main/resources/dotfiles/inputfiles/4_processor_1_src_3_dest.dot", "4", "-o", "4_processor_1_src_3_dest-output"};
-        Main.main(args);
-
-		File output = new File(dir + "/src/main/resources/4_processor_1_src_3_dest-output.dot");
-        //FileAssert.assertEquals(expected, output);
-    }
-
-    @Test
-    public void fourProcThreeSrcOneDestTest() {
-
-        // Expected output file
-        File expected = new File(dir + "/src/main/resources/dotfiles/outputfiles/4_processor_3_src_1_dest-output.dot");
-        String[] args = {dir + "/src/main/resources/dotfiles/inputfiles/4_processor_3_src_1_dest.dot", "4", "-o", "4_processor_3_src_1_dest-output"};
-        //Main.main(args);
-
-        File output = new File(dir + "/src/main/resources/4_processor_3_src_1_dest-output.dot");
-        //FileAssert.assertEquals(expected, output);
-    }
-
-    @Test
-    public void fourProcThreeSrcTwoDestTest() {
-
-        // Expected output file
-
-        File expected = new File(dir + "/src/main/resources/dotfiles/outputfiles/4_processor_3_src_2_dest-output.dot");
-
-        // TODO
-		/* Varying methods for obtaining the final output file which is to be compared with the expected output file. (Our implementation)
-		  
-		File input = new main.Main.readInput(dir + "/src/main/resources/dot_Files/Input_Files/1_processor_simple.dot");
+		int expectedEndTime = 6;
 		
-		File output = main.Main.writeOutput();
-		*/
+		String[] args = {dir +
+				"/src/main/resources/dotfiles/inputfiles/2_processor_simple.dot",
+				"4", "-o", "2_processor_simple-output"};
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+	}
 
-        // FileAssert.assertEquals(expected, output);
-    }
+	@Test
+	public void fourProcOneSrcOneDestTest() {
+
+		int expectedEndTime = 10;
+		
+		String[] args = {dir +
+				"/src/main/resources/dotfiles/inputfiles/4_processor_1_src_1_dest.dot",
+				"4", "-o", "4_processor_1_src_1_dest-output"};
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+	}
+
+	@Test
+	public void fourProcOneSrcThreeDestTest() {
+
+		int expectedEndTime = 14;
+
+		String[] args = {dir +
+		"/src/main/resources/dotfiles/inputfiles/4_processor_1_src_3_dest.dot",
+		"4", "-o", "4_processor_1_src_3_dest-output"};
+		
+
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+
+	}
+
+	@Test
+	public void fourProcThreeSrcOneDestTest() {
+
+		int expectedEndTime = 9;
+		
+		String[] args = { dir + "/src/main/resources/dotfiles/inputfiles/4_processor_3_src_1_dest.dot", "4", "-o",
+				"4_processor_3_src_1_dest-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+	}
+
+	@Test
+	public void fourProcThreeSrcTwoDestTest() {
+
+		int expectedEndTime = 10;
+		
+		String[] args = { dir + "/src/main/resources/dotfiles/inputfiles/4_processor_3_src_2_dest.dot", "4", "-o",
+				"4_processor_3_src_2_dest-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+	}
+	
+	@Test 
+	public void Nodes_7_OutTree_TwoProc_Test(){
+		
+		int expectedEndTime = 28;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_7_OutTree.dot", "2", "-o",
+		"Nodes_7_OutTree_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	
+	@Test 
+	public void Nodes_7_OutTree_FourProc_Test(){
+		
+		int expectedEndTime = 22;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_7_OutTree.dot", "4", "-o",
+		"Nodes_7_OutTree_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	
+	@Test 
+	public void Nodes_8_Random_TwoProc_Test(){
+		
+		int expectedEndTime = 581;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_8_Random.dot", "2", "-o",
+		"Nodes_8_Random_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_8_Random_FourProc_Test(){
+		
+		int expectedEndTime = 581;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_8_Random.dot", "4", "-o",
+		"Nodes_8_Random_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	
+	@Test 
+	public void Nodes_9_SeriesParallel_TwoProc_Test(){
+		
+		int expectedEndTime = 55;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_9_SeriesParallel.dot", "2", "-o",
+		"Nodes_9_SeriesParallel_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_9_SeriesParallel_FourProc_Test(){
+		
+		int expectedEndTime = 55;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_9_SeriesParallel.dot", "4", "-o",
+		"Nodes_9_SeriesParallel_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	
+	@Test 
+	public void Nodes_10_Random_TwoProc_Test(){
+		
+		int expectedEndTime = 50;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_10_Random.dot", "2", "-o",
+		"Nodes_10_Random_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_10_Random_FourProc_Test(){
+		
+		int expectedEndTime = 50;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_10_Random.dot", "4", "-o",
+		"Nodes_10_Random_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	
+	@Test 
+	public void Nodes_11_OutTree_TwoProc_Test(){
+		
+		int expectedEndTime = 350;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_11_OutTree.dot", "2", "-o",
+		"Nodes_11_OutTree_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_11_OutTree_FourProc_Test(){
+		
+		int expectedEndTime = 227;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_11_OutTree.dot", "4", "-o",
+		"Nodes_11_OutTree_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+
+	public int endToEndCheck(List<Node> optimalSchedule) {
+		int latestEndTime = 0;
+
+		for (Node node : optimalSchedule) {
+
+			// Determine end time(duration) of schedule
+			int currentEndTime = node.getStartTime() + node.getWeight();
+			if (currentEndTime > latestEndTime) {
+				latestEndTime = currentEndTime;
+			}
+
+			List<Edge> incomingEdges = node.getIncomingEdges();
+			for (Edge edge : incomingEdges) {
+				Node startNode = edge.getStartNode();
+				int startNodeProcessor = startNode.getProcessor();
+				int currentNodeProcessor = node.getProcessor();
+				int dependencySatisfiedTime;
+
+				// Determine time dependency is completed
+				// If node in same processor ignore communication weight
+				if (startNodeProcessor == currentNodeProcessor) {
+					dependencySatisfiedTime = startNode.getStartTime() + startNode.getWeight();
+				} else {
+					dependencySatisfiedTime = startNode.getStartTime() + startNode.getWeight() + edge.getWeight();
+				}
+
+				// If task starts before dependencies are completed, fail
+				if (node.getStartTime() < dependencySatisfiedTime) {
+					fail();
+				}
+
+			}
+
+			int startTime = node.getStartTime();
+			int endTime = startTime + node.getWeight();
+
+			// Checks for overlaps in tasks
+			// Compare with every other node whether they start during the
+			// processing of this node, on same processor
+			for (Node node2 : optimalSchedule) {
+				// Ignore comparison with self(same node)
+				if (node2 != node) {
+					if (node2.getProcessor() == node.getProcessor()) {
+						int node2StartTime = node2.getStartTime();
+						if ((node2StartTime > startTime) && (node2StartTime < endTime)) {
+							fail();
+						}
+					}
+				}
+			}
+		}
+		
+		return latestEndTime;
+	}
+	
+	
 }
