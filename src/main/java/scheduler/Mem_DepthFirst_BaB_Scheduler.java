@@ -68,6 +68,7 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 				} else { // No new nodes available on this level
 					// Reset index of level for new path
 					indexStack.set(level, 0);
+					currentBound = 0;
 					// Return to previous level
 					level--;
 					if(schedule.size() > 0) {
@@ -75,6 +76,12 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 						node = schedule.get(schedule.size()-1);
 						node.setHasRun(false);
 						schedule.remove(schedule.size()-1);
+						for (int i = 0; i < schedule.size(); i++) {
+							int nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
+							if (currentBound < nodeEndTime) {
+								currentBound = nodeEndTime;
+							}
+						}
 						// Reset list of available nodes to state of previous level
 						// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
 						availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
@@ -99,6 +106,12 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 				// Find when the newly allocated node finishes
 				int nodeEndTime = node.getStartTime()+node.getWeight();
 				
+				// Current path may be better than best known path
+				// Add newly allocated node to current schedule
+				schedule.add(node);
+				// Increment to next level
+				level++;
+				
 				// If end time of node is not greater than bound, there is another node in that finishes after the current node
 				// Only update bound if the end time of node is later than the end time of all other nodes
 				if (nodeEndTime > currentBound) {
@@ -107,6 +120,7 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					// Check if current bound is worse than best known bound
 					// If worse, abandon path
 					if (currentBound > bestBound) {
+						currentBound = 0;
 						// Return to previous level
 						level--;
 						if(schedule.size() > 0) {
@@ -114,6 +128,12 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 							node = schedule.get(schedule.size()-1);
 							node.setHasRun(false);
 							schedule.remove(schedule.size()-1);
+							for (int i = 0; i < schedule.size(); i++) {
+								nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
+								if (currentBound < nodeEndTime) {
+									currentBound = nodeEndTime;
+								}
+							}
 							// Reset list of available nodes to state of previous level
 							// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
 							availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
@@ -122,17 +142,11 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					}
 				}
 				
-				// Current path may be better than best known path
-				// Add newly allocated node to current schedule
-				schedule.add(node);
-				
 				// Update available nodes to new level
 				// TODO Finds satisfied to guarantee list is same as original when reset, better to use findSatisfiedChildren if can reset to exact same list
 				availableNodes = nodeFinder.findSatisfiedNodes(nodeList);
-				
-				// Increment to next level
-				level++;
 			}
+			
 			
 			// End of a path is reached
 			// If bound of new path is better than best known bound, update best bound and store new optimal schedule
@@ -147,12 +161,20 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			}
 			
 			// Return to previous level and find more paths
+			// TODO Place this in a function
 			level--;
+			currentBound = 0;
 			if(schedule.size() > 0) {
 				// Remove node from the latest level, has no longer been run
 				node = schedule.get(schedule.size()-1);
 				node.setHasRun(false);
 				schedule.remove(schedule.size()-1);
+				for (int i = 0; i < schedule.size(); i++) {
+					int nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
+					if (currentBound < nodeEndTime) {
+						currentBound = nodeEndTime;
+					}
+				}
 				// Reset list of available nodes to state of previous level
 				// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
 				availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	

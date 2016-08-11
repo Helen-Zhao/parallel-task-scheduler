@@ -1,5 +1,8 @@
 package inputoutput;
 
+import models.Edge;
+import models.Node;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -8,9 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import models.Edge;
-import models.Node;
 
 /**
  * Created by helen on 28/07/2016.
@@ -21,40 +21,49 @@ public class InputReader {
 	public List<Node> nodeList = new ArrayList<Node>();
 	public List<Edge> edgeList = new ArrayList<Edge>();
 	
-	// Main input reader function
-	public InputReader(File f) {
+	// main.Main input reader function
+	public InputReader(File f) throws IOException {
 		BufferedReader br = null;
 		
 		try {
-			String sCurrentLine;
-			br = new BufferedReader(new FileReader(f));
-			// skips the first line as it has text we don't want to extract
-			br.readLine();
-			
-			while((sCurrentLine = br.readLine()) != null) {
-				if(!(sCurrentLine.contains("}"))){
-					// If the current line does not contain an arrow then it is a node, else it is an edge.
-					if(sCurrentLine.indexOf("->") == -1) {
-						int weight = weightCreator(sCurrentLine);
-						String[] nodeNameParts = sCurrentLine.trim().split("\\s+");
-						String nodeName = nodeNameParts[0];
-						
-						nodeCreator(nodeName, weight);
-					} else {
-						String[] parts = sCurrentLine.trim().split("->");
-						String firstNodeName = parts[0].trim();
-						
-						String[] parts2 = parts[1].trim().split("\\s+");
-						String secondNodeName = parts2[0].trim();
-						
-						int weight = weightCreator(sCurrentLine);
-						
-						edgeCreator(firstNodeName, secondNodeName, weight);
-					}
-				}
-			}
+            String sCurrentLine;
+            br = new BufferedReader(new FileReader(f));
+            // skips the first line as it has text we don't want to extract
+            br.readLine();
+
+            String patternString = "\\[Weight=\\d+\\];";
+            Pattern pattern = Pattern.compile(patternString);
+
+            while ((sCurrentLine = br.readLine()) != null) {
+                if (!(sCurrentLine.contains("}"))) {
+
+                    //If the line contains "[Weight=x];"
+                    if (pattern.matcher(sCurrentLine).find()) {
+
+                        // If the current line does not contain an arrow then it is a node, else it is an edge.
+                        if (sCurrentLine.indexOf("->") == -1) {
+                            int weight = weightCreator(sCurrentLine);
+                            String[] nodeNameParts = sCurrentLine.trim().split("\\s+");
+                            String nodeName = nodeNameParts[0];
+
+                            nodeCreator(nodeName, weight);
+                        } else {
+                            String[] parts = sCurrentLine.trim().split("->");
+                            String firstNodeName = parts[0].trim();
+
+                            String[] parts2 = parts[1].trim().split("\\s+");
+                            String secondNodeName = parts2[0].trim();
+
+                            int weight = weightCreator(sCurrentLine);
+
+                            edgeCreator(firstNodeName, secondNodeName, weight);
+                        }
+                    }
+                }
+}
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw e;
 		} finally {
 			try {
 				if (br != null) {
@@ -62,8 +71,15 @@ public class InputReader {
 				}
 			} catch(IOException e2) {
 				e2.printStackTrace();
+				throw e2;
+
 			}
 		}
+	}
+	
+	//Getter for list of edges
+	public List<Edge> getListOfEdges() {
+		return edgeList;
 	}
 	
 	// Private method used to parse obtained "weight" property into an Integer Type from a String
