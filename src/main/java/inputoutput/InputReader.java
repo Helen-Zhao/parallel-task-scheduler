@@ -26,33 +26,41 @@ public class InputReader {
 		BufferedReader br = null;
 		
 		try {
-			String sCurrentLine;
-			br = new BufferedReader(new FileReader(f));
-			// skips the first line as it has text we don't want to extract
-			br.readLine();
-			
-			while((sCurrentLine = br.readLine()) != null) {
-				if(!(sCurrentLine.contains("}"))){
-					// If the current line does not contain an arrow then it is a node, else it is an edge.
-					if(sCurrentLine.indexOf("->") == -1) {
-						int weight = weightCreator(sCurrentLine);
-						String[] nodeNameParts = sCurrentLine.trim().split("\\s+");
-						String nodeName = nodeNameParts[0];
-						
-						nodeCreator(nodeName, weight);
-					} else {
-						String[] parts = sCurrentLine.trim().split("->");
-						String firstNodeName = parts[0].trim();
-						
-						String[] parts2 = parts[1].trim().split("\\s+");
-						String secondNodeName = parts2[0].trim();
-						
-						int weight = weightCreator(sCurrentLine);
-						
-						edgeCreator(firstNodeName, secondNodeName, weight);
-					}
-				}
-			}
+            String sCurrentLine;
+            br = new BufferedReader(new FileReader(f));
+            // skips the first line as it has text we don't want to extract
+            br.readLine();
+
+            String patternString = "\\[Weight=\\d+\\];";
+            Pattern pattern = Pattern.compile(patternString);
+
+            while ((sCurrentLine = br.readLine()) != null) {
+                if (!(sCurrentLine.contains("}"))) {
+
+                    //If the line contains "[Weight=x];"
+                    if (pattern.matcher(sCurrentLine).find()) {
+
+                        // If the current line does not contain an arrow then it is a node, else it is an edge.
+                        if (sCurrentLine.indexOf("->") == -1) {
+                            int weight = weightCreator(sCurrentLine);
+                            String[] nodeNameParts = sCurrentLine.trim().split("\\s+");
+                            String nodeName = nodeNameParts[0];
+
+                            nodeCreator(nodeName, weight);
+                        } else {
+                            String[] parts = sCurrentLine.trim().split("->");
+                            String firstNodeName = parts[0].trim();
+
+                            String[] parts2 = parts[1].trim().split("\\s+");
+                            String secondNodeName = parts2[0].trim();
+
+                            int weight = weightCreator(sCurrentLine);
+
+                            edgeCreator(firstNodeName, secondNodeName, weight);
+                        }
+                    }
+                }
+}
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;
