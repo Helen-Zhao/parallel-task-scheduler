@@ -23,7 +23,6 @@ public class Main {
 			where input.dot is the input file and p is the number of processors
 		 */
 
-        if (args.length < 2) {
             if (args.length < 2) {
                 throw new IllegalArgumentException("Error: Not enough parameters. Please use the following argument format: <input-file-path> <number of processors>");
             }
@@ -87,10 +86,9 @@ public class Main {
             scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
             List<Node> optimalSchedule = scheduler.createSchedule(nodeList);
 
-            String outputFileName = hasOutputName ? "INPUT-output" : outputFile;
+            String outputFileName = hasOutputName ? outputFile : "INPUT-output";
             OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, outputFileName);
 
         }
-    }
 
 }

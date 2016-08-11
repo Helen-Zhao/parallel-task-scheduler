@@ -88,7 +88,7 @@ public class MainTest {
     public void fourProcThreeSrcOneDestTest() {
 
         // Expected output file
-        File expected = new File("/src/main/resources/dotfiles/outputfiles/4_processor_3_src_1_dest-output.dot");
+        File expected = new File(dir + "/src/main/resources/dotfiles/outputfiles/4_processor_3_src_1_dest-output.dot");
         String[] args = {dir + "/src/main/resources/dotfiles/inputfiles/4_processor_3_src_1_dest.dot", "4", "-o", "4_processor_1_src_1_dest-output"};
         Main.main(args);
 
