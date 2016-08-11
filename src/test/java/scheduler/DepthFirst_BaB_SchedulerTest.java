@@ -13,7 +13,7 @@ import models.Node;
 public class DepthFirst_BaB_SchedulerTest {
 	
 	@Test
-	public void simpleLectureTest() {
+	public void simpleLitmusTest() {
 		SchedulerInterface sched = new Mem_DepthFirst_BaB_Scheduler(new ValidNodeFinderCustomMock(), new ProcessorAllocatorCustomMock());
 		
 		List<Node> nodes = new ArrayList<Node>();
