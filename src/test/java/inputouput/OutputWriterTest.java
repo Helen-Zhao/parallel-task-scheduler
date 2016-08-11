@@ -76,7 +76,7 @@ public class OutputWriterTest {
 		}
 
 		//Prepared "expected" file to compare output file against
-		File expected = new File(dir + "/src/test/resources/expectedOutput2.dot");
+		File expected = new File(dir + "/src/test/resources/expectedOutput.dot");
 		
 		File output = new File(dir + "/src/main/resources/" + outputFileName + ".dot");
 		
