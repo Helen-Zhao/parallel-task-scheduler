@@ -96,7 +96,7 @@ public class Main {
 	}
 
 	private static String format(String rawInputName) {
-		return rawInputName.substring(0, rawInputName.indexOf(".dot"));
+		return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));
 	}
 
 }
