@@ -98,15 +98,22 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 	
 	public int findEarliestStartTime(List<Node> schedule, Node node, int processor) {
 		List<Edge> edges = node.getIncomingEdges();
-		int shortestEndTime = 0;
+		int earliestStartTimeForProc = 0;
 		int endTime, dependentNodeProc;
+		int latestEndTimeForProcessor = 0;
 		
 		// Comparison with already scheduled items for finding minimum starting time
 		for (Node scheduledNode : schedule) {
-			boolean hasEdges = false;
+			
+			
+			int endTimeForNode = scheduledNode.getStartTime() + scheduledNode.getWeight();
+			if (scheduledNode.getProcessor() == processor) {
+				if (endTimeForNode > latestEndTimeForProcessor) {
+					latestEndTimeForProcessor = endTimeForNode;
+				}
+			}
 			// Loops through all the dependency nodes
 			for (Edge edge : edges) {
-				hasEdges = true;
 				Node dependentNode = edge.getStartNode();
 				dependentNodeProc = dependentNode.getProcessor();
 				
@@ -114,28 +121,33 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 				if((dependentNode.equals(scheduledNode)) && (dependentNodeProc == processor)) {
 					// No communication time required
 					endTime = dependentNode.getStartTime() + dependentNode.getWeight();
-					if (endTime > shortestEndTime) {
-						shortestEndTime = endTime;
+					if (endTime > earliestStartTimeForProc) {
+						earliestStartTimeForProc = endTime;
 					}
 				} 
 				// If the dependent node does not occur in the specified processor
 				else if ((dependentNode.equals(scheduledNode)) && (dependentNodeProc != processor)) {
 					// Communication time is required
 					endTime = dependentNode.getStartTime() + dependentNode.getWeight() + edge.getWeight();
-					if (endTime > shortestEndTime) {
-						shortestEndTime = endTime;
+					if (endTime > earliestStartTimeForProc) {
+						earliestStartTimeForProc = endTime;
 					}
 				}
 				// If something is already scheduled in the specified processor, then minimum starting time can occur immediately after, as there is no dependency
 				else if (scheduledNode.getProcessor() == processor) {
 					endTime = scheduledNode.getStartTime() + scheduledNode.getWeight();
-					if (endTime > shortestEndTime) {
-						shortestEndTime = endTime;
+					if (endTime > earliestStartTimeForProc) {
+						earliestStartTimeForProc = endTime;
 					}
 				}
 			}
+			
 		}
-		return shortestEndTime;
+		
+		if (edges.size() == 0) {
+			earliestStartTimeForProc = latestEndTimeForProcessor;
+		}
+		return earliestStartTimeForProc;
 	}
 
 	public int getNumberProcessors() {
