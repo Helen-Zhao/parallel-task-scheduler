@@ -19,14 +19,10 @@ public class OutputWriter {
 		
 		try {
 			//Get working directory
-			String workingDir = System.getProperty("user.dir");
-			String dir = ".";
-			if (workingDir.length() > 0 && workingDir.contains("/src")) {
-				dir = workingDir.substring(0, workingDir.indexOf("/src"));
-			}
+			String dir = System.getProperty("user.dir");
 
 			//Instantiate PrintWriter object to create and write to file. Set encoding to UTF-8
-			PrintWriter writer = new PrintWriter(dir + "/src/main/resources/" + outputFileName + ".dot", "UTF-8");
+			PrintWriter writer = new PrintWriter(dir + "/" + outputFileName + ".dot", "UTF-8");
 			writer.println("digraph \"" + outputFileName + "\" {");
 			
 			//iterate through list and print
