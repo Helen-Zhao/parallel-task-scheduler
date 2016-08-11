@@ -15,6 +15,7 @@ public class Node implements Comparable<Node>, Cloneable {
     private int startTime;
     private boolean hasRun;
     private int processor;
+    private int processorIndex = 1;
 
     public Node(String name, int weight) {
 
@@ -90,6 +91,18 @@ public class Node implements Comparable<Node>, Cloneable {
 
     public void setProcessor(int processor) {
         this.processor = processor;
+    }
+    
+    public int getProcessorIndex() {
+    	return processorIndex;
+    }
+    
+    public void incrementProcessorIndex() {
+    	processorIndex++;
+    }
+    
+    public void resetProcessorIndex() {
+    	processorIndex = 1;
     }
 
 	public int compareTo(Node node) {

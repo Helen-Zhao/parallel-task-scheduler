@@ -63,7 +63,7 @@ public class ProcessorAllocatorTest {
 		
 		int expectedProcessor = 1;
 		
-		processorAllocator.allocateProcessor(schedule, c, unavailableProcessors);
+		processorAllocator.allocateProcessor(schedule, c, 1);
 		int actualProcessor = c.getProcessor();
 		
 		assertEquals(expectedProcessor, actualProcessor);
@@ -77,7 +77,7 @@ public class ProcessorAllocatorTest {
 		
 		int expectedStartTime = 3;
 		
-		processorAllocator.allocateProcessor(schedule, c, unavailableProcessors);
+		processorAllocator.allocateProcessor(schedule, c, 1);
 		int actualStartTime = c.getStartTime();
 		
 		assertEquals(expectedStartTime, actualStartTime);
@@ -93,7 +93,7 @@ public class ProcessorAllocatorTest {
 		schedule.add(c);
 		int expectedProcessor = 2;
 		
-		processorAllocator.allocateProcessor(schedule, d, unavailableProcessors);
+		processorAllocator.allocateProcessor(schedule, d, 1);
 		int actualProcessor = d.getProcessor();
 		
 		assertEquals(expectedProcessor, actualProcessor);
@@ -110,7 +110,7 @@ public class ProcessorAllocatorTest {
 		schedule.add(c);
 		int expectedStartTime = 5;
 		
-		processorAllocator.allocateProcessor(schedule, d, unavailableProcessors);
+		processorAllocator.allocateProcessor(schedule, d, 1);
 		int actualStartTime = d.getStartTime();
 		
 		assertEquals(expectedStartTime, actualStartTime);
