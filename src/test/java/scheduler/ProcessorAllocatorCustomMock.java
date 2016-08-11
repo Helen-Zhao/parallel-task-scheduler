@@ -39,7 +39,7 @@ class processMock implements ProcessorAllocatorInterface {
 				node.setProcessor(2);
 				node.setHasRun(true);
 			}
-			return true;
+			return false;
 		}
 
 		@Override
