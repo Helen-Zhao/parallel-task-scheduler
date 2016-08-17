@@ -16,9 +16,9 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 		this.numProcessors = numProcessors;
 	}
 	
-	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> unavailableProcessors) {
+	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors) {
 		// There are no available processors for which the node can be assigned to.
-		if (unavailableProcessors.size() == numProcessors) {
+		if (checkedProcessors.size() >= numProcessors) {
 			return false;
 		}
 		
@@ -27,10 +27,10 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 		
 		// Go through every processor and find the best time available for each one
 		for (int i=1; i<=numProcessors; i++) {
-			// If the specified processor is available, then find the best time for the specified processor
-			if (!unavailableProcessors.contains(i)) {
+			if (!checkedProcessors.contains(i)) {
+				// If the specified processor is available, then find the best time for the specified processor
 				tempEarliestStartTime = findEarliestStartTime(schedule, node, i);
-
+				
 				// Determining and updating the earliest possible start time and respective processor
 				if (tempEarliestStartTime < earliestStartTime) {
 					earliestStartTime = tempEarliestStartTime;
@@ -49,44 +49,64 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 	}
 
 	public int findEarliestStartTime(List<Node> schedule, Node node, int processor) {
-		List<Edge> edges = node.getIncomingEdges();
-		int shortestEndTime = 0;
-		int endTime, dependentNodeProc;
+		List<Edge> dependencies = node.getIncomingEdges();
+		int earliestValidStart = 0;
+		int earliestValidEnd = node.getWeight();
 		
-		// Comparison with already scheduled items for finding minimum starting time
-		for (Node scheduledNode : schedule) {
-			
-			// Loops through all the dependency nodes
-			for (Edge edge : edges) {
-				Node dependentNode = edge.getStartNode();
-				dependentNodeProc = dependentNode.getProcessor();
-				
-				// If  the dependent node occurs in the specified processor
-				if((dependentNode.equals(scheduledNode)) && (dependentNodeProc == processor)) {
-					// No communication time required
-					endTime = dependentNode.getStartTime() + dependentNode.getWeight();
-					if (endTime > shortestEndTime) {
-						shortestEndTime = endTime;
-					}
-				} 
-				// If the dependent node does not occur in the specified processor
-				else if ((dependentNode.equals(scheduledNode)) && (dependentNodeProc != processor)) {
-					// Communication time is required
-					endTime = dependentNode.getStartTime() + dependentNode.getWeight() + edge.getWeight();
-					if (endTime > shortestEndTime) {
-						shortestEndTime = endTime;
-					}
+		int foundStartTime = 0;
+		int foundEndTime = 0;
+		
+		// Assumed all dependencies are satisfied
+		// Find earliest start based on dependencies
+		for (Edge edge : dependencies) {
+			if (edge.getStartNode().getProcessor() == processor) {
+				// Start new node after dependency
+				int earliestDependencyStart = edge.getStartNode().getStartTime() + edge.getStartNode().getWeight();
+				if (earliestDependencyStart > earliestValidStart) {
+					earliestValidStart = earliestDependencyStart;
+					earliestValidEnd = earliestValidStart + node.getWeight();
 				}
-				// If something is already scheduled in the specified processor, then minimum starting time can occur immediately after, as there is no dependency
-				else if (scheduledNode.getProcessor() == processor) {
-					endTime = scheduledNode.getStartTime() + scheduledNode.getWeight();
-					if (endTime > shortestEndTime) {
-						shortestEndTime = endTime;
+			} else {
+				// Start new node after dependency and comms time
+				int earliestDependencyStart = edge.getStartNode().getStartTime() + edge.getStartNode().getWeight() + edge.getWeight();
+				if (earliestDependencyStart > earliestValidStart) {
+					earliestValidStart = earliestDependencyStart;
+					earliestValidEnd = earliestValidStart + node.getWeight();
+				}
+			}
+		}
+		
+		boolean startChanged = true;
+		while (startChanged) {
+			startChanged = false;
+			// Find earliest start based on allocated nodes
+			for (Node snode : schedule) {
+				// If scheduled node is in another processor we don't care when it starts
+				if (snode.getProcessor() == processor) {
+					foundStartTime = snode.getStartTime();
+					foundEndTime = foundStartTime + snode.getWeight();
+					// Current earliest valid start time overlaps another task
+					if (earliestValidStart >= foundStartTime && earliestValidStart < foundEndTime) {
+						// Start new node after found node
+						earliestValidStart = foundEndTime;
+						earliestValidEnd = earliestValidStart + node.getWeight();
+						startChanged = true;
+					// Current earliest valid end time overlaps another task
+					} else if (earliestValidEnd > foundStartTime && earliestValidEnd <= foundEndTime) {
+						earliestValidStart = foundEndTime;
+						earliestValidEnd = earliestValidStart + node.getWeight();
+						startChanged = true;
+					// Current allocated times are enveloping another task
+					} else if (foundStartTime >= earliestValidStart && foundStartTime < earliestValidEnd) {
+						earliestValidStart = foundEndTime;
+						earliestValidEnd = earliestValidStart + node.getWeight();
+						startChanged = true;
 					}
 				}
 			}
 		}
-		return shortestEndTime;
+		
+		return earliestValidStart;
 	}
 
 	public int getNumberProcessors() {

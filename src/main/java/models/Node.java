@@ -15,6 +15,7 @@ public class Node implements Comparable<Node>, Cloneable {
     private int startTime;
     private boolean hasRun;
     private int processor;
+    private List<Integer> checkedProcessors = new ArrayList<Integer>(4);
 
     public Node(String name, int weight) {
 
@@ -90,6 +91,18 @@ public class Node implements Comparable<Node>, Cloneable {
 
     public void setProcessor(int processor) {
         this.processor = processor;
+    }
+    
+    public List<Integer> getCheckedProcessors() {
+    	return checkedProcessors;
+    }
+    
+    public void addCheckedProcessor(int num) {
+    	checkedProcessors.add(num);
+    }
+    
+    public void resetCheckedProcessors() {
+    	checkedProcessors.clear();
     }
 
 	public int compareTo(Node node) {
