@@ -14,7 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author Helen Zhao
  */
 public class SchedulerTest {
     String dir;
@@ -33,13 +33,13 @@ public class SchedulerTest {
         int numProcessors = 2;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_7_OutTree.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -68,13 +68,13 @@ public class SchedulerTest {
         int numProcessors = 4;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_7_OutTree.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -102,13 +102,13 @@ public class SchedulerTest {
         int numProcessors = 2;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_8_Random.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -137,13 +137,13 @@ public class SchedulerTest {
         int numProcessors = 4;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_8_Random.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -172,13 +172,13 @@ public class SchedulerTest {
         int numProcessors = 2;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_9_SeriesParallel.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -207,13 +207,13 @@ public class SchedulerTest {
         int numProcessors = 4;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_9_SeriesParallel.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -241,13 +241,14 @@ public class SchedulerTest {
         int numProcessors = 2;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_10_Random.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -276,13 +277,13 @@ public class SchedulerTest {
         int numProcessors = 4;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_10_Random.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -311,13 +312,13 @@ public class SchedulerTest {
         int numProcessors = 2;
 
         List<Node> nodeList;
-        List<Edge> edgeList;
 
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_11_OutTree.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }
@@ -351,8 +352,9 @@ public class SchedulerTest {
         File inputFile = new File(dir + "/src/test/resources/dotfiles/input/Nodes_11_OutTree.dot");
 
         try {
-            InputReader inputReader = new InputReader(inputFile);
-            nodeList = inputReader.nodeList;
+            InputReader inputReader = new InputReader();
+            inputReader.readFile(inputFile);
+            nodeList = inputReader.getNodeList();
         } catch (IOException io) {
             throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
         }

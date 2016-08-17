@@ -72,9 +72,10 @@ public class Main {
 		List<Edge> edgeList;
 
 		try {
-			InputReader inputReader = new InputReader(inputFile);
-			nodeList = inputReader.nodeList;
-			edgeList = inputReader.getListOfEdges();
+			InputReader inputReader = new InputReader();
+			inputReader.readFile(inputFile);
+			nodeList = inputReader.getNodeList();
+			edgeList = inputReader.getEdgeList();
 		} catch (IOException io) {
 			throw new IllegalArgumentException("Error: invalid input .dot file or location/filepath");
 		}
@@ -87,7 +88,8 @@ public class Main {
 		optimalSchedule = scheduler.createSchedule(nodeList);
 
 		String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
-		OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, outputFileName);
+		OutputWriter outputWriter = new OutputWriter();
+		outputWriter.writeFile(optimalSchedule, edgeList, outputFileName);
 
 	}
 	

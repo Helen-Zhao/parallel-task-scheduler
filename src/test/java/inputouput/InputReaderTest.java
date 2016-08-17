@@ -1,20 +1,19 @@
 package inputouput;
 
-import static org.junit.Assert.*;
+import inputoutput.InputReader;
+import models.Edge;
+import models.Node;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
-
-import inputoutput.InputReader;
-import models.Edge;
-import models.Node;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author William Lin
  */
 public class InputReaderTest {
 	public List<Node> correctNodeList = new ArrayList<Node>();
@@ -59,16 +58,17 @@ public class InputReaderTest {
 		
 		InputReader reader;
 		try {
-			reader = new InputReader(input);
+			reader = new InputReader();
+			reader.readFile(input);
 
 			//checks each node's properties to it's correct counterpart
 			for(int i = 0; i < correctNodeList.size(); i++){
-				assertEquals(correctNodeList.get(i).getName(), reader.nodeList.get(i).getName());
-				assertEquals(correctNodeList.get(i).getWeight(), reader.nodeList.get(i).getWeight());
-				assertEquals(correctNodeList.get(i).getNumberIncomingEdges(), reader.nodeList.get(i).getNumberIncomingEdges());
-				assertEquals(correctNodeList.get(i).getNumberOutgoingEdges(), reader.nodeList.get(i).getNumberOutgoingEdges());
+				assertEquals(correctNodeList.get(i).getName(), reader.getNodeList().get(i).getName());
+				assertEquals(correctNodeList.get(i).getWeight(), reader.getNodeList().get(i).getWeight());
+				assertEquals(correctNodeList.get(i).getNumberIncomingEdges(), reader.getNodeList().get(i).getNumberIncomingEdges());
+				assertEquals(correctNodeList.get(i).getNumberOutgoingEdges(), reader.getNodeList().get(i).getNumberOutgoingEdges());
 
-				List<Edge> readerNodeListIncEdge = reader.nodeList.get(i).getIncomingEdges();
+				List<Edge> readerNodeListIncEdge = reader.getNodeList().get(i).getIncomingEdges();
 				List<Edge> correctNodeListIncEdge = correctNodeList.get(i).getIncomingEdges();
 				//checking each node's incoming edges list to it's correct counterpart
 				for(int j = 0; j < correctNodeListIncEdge.size(); j++) {
@@ -77,7 +77,7 @@ public class InputReaderTest {
 					assertEquals(correctNodeListIncEdge.get(j).getWeight(), readerNodeListIncEdge.get(j).getWeight());
 				}
 
-				List<Edge> readerNodeListOutEdge = reader.nodeList.get(i).getOutgoingEdges();
+				List<Edge> readerNodeListOutEdge = reader.getNodeList().get(i).getOutgoingEdges();
 				List<Edge> correctNodeListOutEdge = correctNodeList.get(i).getOutgoingEdges();
 				//checking each node's outgoing edges list to it's correct counterpart
 				for(int k = 0; k < correctNodeListOutEdge.size(); k++) {
@@ -89,9 +89,9 @@ public class InputReaderTest {
 
 			//checks each edge's properties to it's correct counterpart
 			for(int i = 0; i< correctEdgeList.size(); i++) {
-				assertEquals(correctEdgeList.get(i).getStartNode().getName(), reader.getListOfEdges().get(i).getStartNode().getName());
-				assertEquals(correctEdgeList.get(i).getEndNode().getName(), reader.getListOfEdges().get(i).getEndNode().getName());
-				assertEquals(correctEdgeList.get(i).getWeight(), reader.getListOfEdges().get(i).getWeight());
+				assertEquals(correctEdgeList.get(i).getStartNode().getName(), reader.getEdgeList().get(i).getStartNode().getName());
+				assertEquals(correctEdgeList.get(i).getEndNode().getName(), reader.getEdgeList().get(i).getEndNode().getName());
+				assertEquals(correctEdgeList.get(i).getWeight(), reader.getEdgeList().get(i).getWeight());
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

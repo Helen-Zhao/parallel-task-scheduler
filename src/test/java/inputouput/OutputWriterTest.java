@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author William Lin
  */
 public class OutputWriterTest {
 	
@@ -66,7 +66,8 @@ public class OutputWriterTest {
 		//Name of output file hard coded as "outputFile"
 		String outputFileName = "outputFile";
 		
-		new OutputWriter(inputNodeList, inputEdgeList, outputFileName);
+		OutputWriter ow = new OutputWriter();
+		ow.writeFile(inputNodeList, inputEdgeList, outputFileName);
 
 		//Get working directory
 		String workingDir = System.getProperty("user.dir");
