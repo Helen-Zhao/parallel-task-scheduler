@@ -9,8 +9,14 @@ import scheduler.ValidNodeFinderInterface;
 		
 		@Override
 		public List<Node> findRootNodes(List<Node> nodes) {
-			// TODO Auto-generated method stub
-			return null;
+			List<Node> snodes = new ArrayList<Node>();
+			for(Node node : nodes) {
+				if (node.getName() == "a" && !(node.getHasRun())) {
+					snodes.add(node);
+					return snodes;
+				}
+			}
+			return snodes;
 		}
 
 		@Override
