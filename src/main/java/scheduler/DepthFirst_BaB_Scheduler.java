@@ -2,18 +2,20 @@ package scheduler;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import models.Node;
 
 /**
  * Implementation of depth first branch and bound scheduler using while loops
+ * Optimized to reduce memory use through minimal persistent memory objects
  * 
- * TODO : Consider branches where one node is assigned a different processor
  * @author Jay
  *
  */
-public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
+public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
 	int currentBound = 0;
 	int bestBound = 0;
@@ -23,16 +25,13 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	List<Node> optimalSchedule = new ArrayList<Node>();
 	
 	int level = 0;
-	int nextNodeIndex;
-	// TODO Optimization: Change indexStack list of indices to list of queues for Spd implementation
-	List<Integer> indexStack;
-	List<Node> availableNodes;
+	List<Queue<Node>> nodeStack;
 	
 	Node node;
 	ValidNodeFinderInterface nodeFinder;
 	ProcessorAllocatorInterface processorAllocator;
 	
-	public Mem_DepthFirst_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
+	public DepthFirst_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
 		  this.nodeFinder = nodeFinder;
 		  this.processorAllocator = processAllocator;
 	}
@@ -46,23 +45,23 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			bestBound += n.getWeight();
 		}
 		
-		availableNodes = nodeFinder.findRootNodes(nodeList);
-		indexStack = new ArrayList<Integer>(Collections.nCopies(nodeList.size(), 0));
+		nodeStack = new ArrayList<Queue<Node>>(nodeList.size());
+		nodeStack.set(0, new LinkedList<Node>(nodeFinder.findRootNodes(nodeList)));
+		
+		
 		
 		// While not all paths have been searched (not all paths from level 0 have been searched)
 		while (level > -1) {
-			// While a complete path has not been found (not all nodes allocated/unavailable)
-			while (availableNodes.size() > 0) {
-				// Get next node to allocate on this level
-				nextNodeIndex = indexStack.get(level);
-				
+			// While a complete path has not been found (not all nodes allocated)
+			while (schedule.size() < nodeList.size()) {
 				// If a node is available at this index, get it for allocation
-				if (nextNodeIndex < availableNodes.size()) {
-					node = availableNodes.get(nextNodeIndex);
+				if (nodeStack.get(level).size() > 0) {
+					node = nodeStack.get(level).peek();
 				// If a node is not available, all paths from the last scheduled node have been searched
 				} else {
 					// Return to previous level
 					returnToPreviousLevel();
+					
 					if (level < 0) {
 						// Just finished all paths, break loop
 						break;
@@ -77,8 +76,7 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					// Reset checked processors for this node
 					node.resetCheckedProcessors();
 					// Increment index to next node (all paths from this node have been searched)
-					nextNodeIndex++;
-					indexStack.set(level, nextNodeIndex);
+					nodeStack.get(level).remove();
 					// This node was not valid, find next node on this level
 					continue;
 				}
@@ -102,7 +100,7 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 				}
 				
 				level++;
-				availableNodes = nodeFinder.findSatisfiedNodes(nodeList);
+				nodeStack.set(level, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
 			}
 			
 			if (currentBound < bestBound && level > -1) {
@@ -146,20 +144,13 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	}
 	
 	private void returnToPreviousLevel() {
-		if (level < indexStack.size() && level > -1) {
-			// Reset index of this level
-			indexStack.set(level, 0);
-		}
-		
+	
 		removeLastNodeFromSchedule();
 		
 		updateCurrentBound();
 		
 		// Reduce level
 		level--;
-		
-		// Find previous available nodes
-		availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
 	}
 }
 

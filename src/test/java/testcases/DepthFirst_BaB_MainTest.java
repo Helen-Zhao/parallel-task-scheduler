@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.List;
 
-public class MainTest {
+public class DepthFirst_BaB_MainTest {
 
 	String dir;
 

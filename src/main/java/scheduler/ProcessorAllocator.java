@@ -35,6 +35,10 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
 				if (tempEarliestStartTime < earliestStartTime) {
 					earliestStartTime = tempEarliestStartTime;
 					bestProcessor = i;
+				} else if (tempEarliestStartTime == earliestStartTime) {
+					// If equal each placement mirrors the other, pre-emptively regard as checked
+					// TODO Need a more substantial check of mirroring, eg. placement relative to other dependencies
+					node.addCheckedProcessor(i);
 				}
 			}
 		}
