@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author Helen Zhao
+ *         <p>
+ *         Node models a node in a DAG.
  */
 public class Node implements Comparable<Node>, Cloneable {
 
@@ -38,35 +40,35 @@ public class Node implements Comparable<Node>, Cloneable {
     }
 
     public Edge getIncomingEdge(int i) {
-    	return incomingEdges.get(i);
+        return incomingEdges.get(i);
     }
-    
+
     public List<Edge> getIncomingEdges() {
-    	return incomingEdges;
+        return incomingEdges;
     }
-    
+
     public void addIncomingEdge(Edge edge) {
-    	incomingEdges.add(edge);
+        incomingEdges.add(edge);
     }
-    
+
     public int getNumberIncomingEdges() {
-    	return incomingEdges.size();
+        return incomingEdges.size();
     }
-    
+
     public Edge getOutgoingEdge(int i) {
-    	return outgoingEdges.get(i);
+        return outgoingEdges.get(i);
     }
-    
+
     public List<Edge> getOutgoingEdges() {
-    	return outgoingEdges;
+        return outgoingEdges;
     }
-    
+
     public void addOutgoingEdge(Edge edge) {
-    	outgoingEdges.add(edge);
+        outgoingEdges.add(edge);
     }
-    
+
     public int getNumberOutgoingEdges() {
-    	return outgoingEdges.size();
+        return outgoingEdges.size();
     }
 
     public int getStartTime() {
@@ -92,28 +94,28 @@ public class Node implements Comparable<Node>, Cloneable {
     public void setProcessor(int processor) {
         this.processor = processor;
     }
-    
+
     public List<Integer> getCheckedProcessors() {
-    	return checkedProcessors;
-    }
-    
-    public void addCheckedProcessor(int num) {
-    	checkedProcessors.add(num);
-    }
-    
-    public void resetCheckedProcessors() {
-    	checkedProcessors.clear();
+        return checkedProcessors;
     }
 
-	public int compareTo(Node node) {
-		return node.getWeight() - this.weight;
-	}
-	
-	public Node clone() {
-		Node clone = new Node(this.name, this.weight);
-		clone.setStartTime(this.startTime);
-		clone.setProcessor(this.processor);
-		clone.setHasRun(this.hasRun);
-		return clone;
-	}
+    public void addCheckedProcessor(int num) {
+        checkedProcessors.add(num);
+    }
+
+    public void resetCheckedProcessors() {
+        checkedProcessors.clear();
+    }
+
+    public int compareTo(Node node) {
+        return node.getWeight() - this.weight;
+    }
+
+    public Node clone() {
+        Node clone = new Node(this.name, this.weight);
+        clone.setStartTime(this.startTime);
+        clone.setProcessor(this.processor);
+        clone.setHasRun(this.hasRun);
+        return clone;
+    }
 }

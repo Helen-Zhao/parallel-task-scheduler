@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author Helen Zhao
  */
 public class NodeTest {
 
