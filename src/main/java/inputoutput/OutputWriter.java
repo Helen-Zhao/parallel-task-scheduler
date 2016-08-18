@@ -16,11 +16,6 @@ import java.util.List;
  */
 public class OutputWriter {
 
-    //main.Main output writer function
-    public OutputWriter() {
-
-    }
-
     public void writeFile(List<Node> scheduleNodes, List<Edge> scheduleEdges, String outputFileName) {
         try {
             //Get working directory
