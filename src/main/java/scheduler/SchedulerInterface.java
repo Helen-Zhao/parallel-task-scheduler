@@ -1,14 +1,12 @@
 package scheduler;
-
-import models.Node;
-
 import java.util.List;
 
+import models.Node;
 /**
- * @author Helen Zhao
+ * Created by helen on 28/07/2016.
  */
 public interface SchedulerInterface {
-
-    List<Node> createSchedule(List<Node> nodeList);
-
+	
+    public List<Node> createSchedule(List<Node> nodeList);
+    
 }
