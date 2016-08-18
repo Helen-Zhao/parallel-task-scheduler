@@ -1,6 +1,7 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import models.Node;
@@ -14,12 +15,20 @@ import models.Node;
  */
 public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
+	int currentBound = 0;
 	int bestBound = 0;
+	
+	List<Node> nodeList;
+	List<Node> schedule = new ArrayList<Node>();
 	List<Node> optimalSchedule = new ArrayList<Node>();
 	
-	List<Node> schedule = new ArrayList<Node>();
-	List<Integer> indexStack = new ArrayList<Integer>();
+	int level = 0;
+	int nextNodeIndex;
+	// TODO Optimization: Change indexStack list of indices to list of queues for Spd implementation
+	List<Integer> indexStack;
+	List<Node> availableNodes;
 	
+	Node node;
 	ValidNodeFinderInterface nodeFinder;
 	ProcessorAllocatorInterface processorAllocator;
 	
@@ -28,191 +37,129 @@ public class Mem_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		  this.processorAllocator = processAllocator;
 	}
 	
-	public List<Node> createSchedule(List<Node> nodeList) {
+	@Override
+	public List<Node> createSchedule(List<Node> nodes) {
+		// Initialize availability
+		nodeList = nodes;
 		
-		// Bound initialized 
-		for (Node node : nodeList) {
-			bestBound += node.getWeight();
+		for (Node n : nodeList) {
+			bestBound += n.getWeight();
 		}
 		
-		// Find initial set of available nodes
-		List<Node> availableNodes = nodeFinder.findSatisfiedNodes(nodeList);
+		availableNodes = nodeFinder.findRootNodes(nodeList);
+		indexStack = new ArrayList<Integer>(Collections.nCopies(nodeList.size(), 0));
 		
-		// Current max weight of the schedule
-		int currentBound = 0;
-		// Level of the state tree
-		int level = 0;
-		int maxLevel = nodeList.size() - 1;
-		
-		Node node;
-		
-		// While all paths from level 0 have not been explored, continue finding paths
+		// While not all paths have been searched (not all paths from level 0 have been searched)
 		while (level > -1) {
-			
-			// While there are nodes still to be allocated, continue to allocate
-			// When there are no more available nodes, end of a path has been reached
-			while(availableNodes.size() != 0) {
-				// Get the index of the next node in the current level to explore from the available nodes
-				int nextNodeIndex;
-				if (level < indexStack.size()) {
-					nextNodeIndex = indexStack.get(level);
-				} else { // this level has not yet been reached
-					// next node in new level is the first available node
-					nextNodeIndex = 0;
-					// add index of new level to list of indices
-					indexStack.add(level, 0);
-				}
+			// While a complete path has not been found (not all nodes allocated/unavailable)
+			while (availableNodes.size() > 0) {
+				// Get next node to allocate on this level
+				nextNodeIndex = indexStack.get(level);
 				
-				// Get the next available node
+				// If a node is available at this index, get it for allocation
 				if (nextNodeIndex < availableNodes.size()) {
 					node = availableNodes.get(nextNodeIndex);
-				} else { // No new nodes available on this level
-					// Reset index of level for new path
-					indexStack.set(level, 0);
-					currentBound = 0;
+				// If a node is not available, all paths from the last scheduled node have been searched
+				} else {
 					// Return to previous level
-					level--;
-					if(schedule.size() > 0) {
-						// Remove node from the latest level, has no longer been run
-						node = schedule.get(schedule.size()-1);
-						node.setHasRun(false);
-						schedule.remove(schedule.size()-1);
-						for (int i = 0; i < schedule.size(); i++) {
-							int nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
-							if (currentBound < nodeEndTime) {
-								currentBound = nodeEndTime;
-							}
-						}
-						// Reset list of available nodes to state of previous level
-						// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
-						availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
-					}
-					// TODO Optimize out the need for this, some restructure necessary
-					if(level < 0) {
+					returnToPreviousLevel();
+					if (level < 0) {
+						// Just finished all paths, break loop
 						break;
 					}
+					// Find next node on previous level
 					continue;
 				}
 				
-				
-				
-				// Allocate node to a processor
-				if (!processorAllocator.allocateProcessor(schedule, node, node.getCheckedProcessors())) { // Alter to method that just checks all processors
-					// Update next node index in list of indices
+				// Try to allocate a processor to the node
+				// If returns false, no processors available to allocate
+				if (!processorAllocator.allocateProcessor(nodeList, node, node.getCheckedProcessors())) {
+					// Reset checked processors for this node
+					node.resetCheckedProcessors();
+					// Increment index to next node (all paths from this node have been searched)
 					nextNodeIndex++;
 					indexStack.set(level, nextNodeIndex);
-					node.resetCheckedProcessors();
-					currentBound = 0;
-					// Return to previous level
-					level--;
-					if(schedule.size() > 0) {
-						// Remove node from the latest level, has no longer been run
-						node = schedule.get(schedule.size()-1);
-						node.setHasRun(false);
-						schedule.remove(schedule.size()-1);
-						for (int i = 0; i < schedule.size(); i++) {
-							int nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
-							if (currentBound < nodeEndTime) {
-								currentBound = nodeEndTime;
-							}
-						}
-						// Reset list of available nodes to state of previous level
-						// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
-						availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
-					}
-					if(level < 0) {
-						break;
-					}
+					// This node was not valid, find next node on this level
 					continue;
 				}
 				
-				
+				// Add newly allocated processor to list of processors already attempted
 				node.addCheckedProcessor(node.getProcessor());
 				
-				
-				// Find when the newly allocated node finishes
-				int nodeEndTime = node.getStartTime()+node.getWeight();
-				
-				// Current path may be better than best known path
-				// Add newly allocated node to current schedule
 				schedule.add(node);
-				// Increment to next level
-				level++;
 				
-				// If end time of node is not greater than bound, there is another node in that finishes after the current node
-				// Only update bound if the end time of node is later than the end time of all other nodes
-				if (nodeEndTime > currentBound) {
-					currentBound = nodeEndTime;
-					
-					// Check if current bound is worse than best known bound
-					// If worse, abandon path
-					if (currentBound > bestBound) {
-						currentBound = 0;
-						// Reset index of all following levels as are abandoning this path
-						for (int i = level; i < indexStack.size(); i++) {
-							// Reset index of level for new path
-							indexStack.set(i, 0);
-						}
-						// Return to previous level
-						level--;
-						if(schedule.size() > 0) {
-							// Remove node from the latest level, has no longer been run
-							node = schedule.get(schedule.size()-1);
-							node.setHasRun(false);
-							schedule.remove(schedule.size()-1);
-							for (int i = 0; i < schedule.size(); i++) {
-								nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
-								if (currentBound < nodeEndTime) {
-									currentBound = nodeEndTime;
-								}
-							}
-							// Reset list of available nodes to state of previous level
-							// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
-							availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
-						}			
+				// Check end time of new node against current bound
+				int nBound = node.getStartTime() + node.getWeight();
+				// If end time of new node is greater than current bound, it is the new bound
+				if (nBound > currentBound) {
+					// Check new bound does not exceed best bound; if it does, it will never be better than best
+					if (nBound > bestBound) {
+						removeLastNodeFromSchedule();
 						continue;
+					} else {
+						currentBound = nBound;
 					}
 				}
 				
-				// Update available nodes to new level
-				// TODO Finds satisfied to guarantee list is same as original when reset, better to use findSatisfiedChildren if can reset to exact same list
+				level++;
 				availableNodes = nodeFinder.findSatisfiedNodes(nodeList);
 			}
 			
-			
-			// End of a path is reached
-			// If bound of new path is better than best known bound, update best bound and store new optimal schedule
-			if ((currentBound <= bestBound) && (level > -1)) { // TODO alter check to MasterSchedule for parallelization
+			if (currentBound < bestBound && level > -1) {
 				bestBound = currentBound;
-				// TODO Is there a more memory/speed efficient way of keeping track of optimal schedule?  Map?
-				// Clone current schedule -- clone to prevent alteration
 				optimalSchedule.clear();
 				for (int i = 0; i < schedule.size(); i++) {
 					optimalSchedule.add(schedule.get(i).clone());
 				}
-			}
-			
-			// Return to previous level and find more paths
-			// TODO Place this in a function
-			level--;
-			currentBound = 0;
-			if(schedule.size() > 0) {
-				// Remove node from the latest level, has no longer been run
-				node = schedule.get(schedule.size()-1);
-				node.setHasRun(false);
-				schedule.remove(schedule.size()-1);
+			} else if (currentBound == bestBound && optimalSchedule.size() == 0 && level > -1) {
 				for (int i = 0; i < schedule.size(); i++) {
-					int nodeEndTime = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
-					if (currentBound < nodeEndTime) {
-						currentBound = nodeEndTime;
-					}
+					optimalSchedule.add(schedule.get(i).clone());
 				}
-				// Reset list of available nodes to state of previous level
-				// TODO Find more efficient way of resetting available nodes -- add previous node back into available (not at/after nextNodeIndex), remove children of previous node
-				availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
 			}
+			returnToPreviousLevel();
 		}
-
+		
 		return optimalSchedule;
 	}
+	
+	private void removeLastNodeFromSchedule() {
+		if (schedule.size() > 0) {
+			// Get the last scheduled node (node allocated on current level)
+			Node lastNode = schedule.get(schedule.size() - 1);
+			// Node has no longer been allocated
+			lastNode.setHasRun(false);
+			// Remove the node from the schedule
+			schedule.remove(schedule.size() - 1);
+		}
+	}
+	
+	private void updateCurrentBound() {
+		// TODO Potential Optimization: Resetting current bound
+		// Reset the current bound
+		currentBound = 0;
+		for (Node n : schedule) {
+			int nBound = n.getStartTime() + n.getWeight();
+			if (nBound > currentBound) {
+				currentBound = nBound;
+			}
+		}
+	}
+	
+	private void returnToPreviousLevel() {
+		if (level < indexStack.size() && level > -1) {
+			// Reset index of this level
+			indexStack.set(level, 0);
+		}
+		
+		removeLastNodeFromSchedule();
+		
+		updateCurrentBound();
+		
+		// Reduce level
+		level--;
+		
+		// Find previous available nodes
+		availableNodes = nodeFinder.findSatisfiedNodes(nodeList);	
+	}
 }
+

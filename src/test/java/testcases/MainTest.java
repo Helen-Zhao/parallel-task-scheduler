@@ -279,6 +279,156 @@ public class MainTest {
 		assertEquals(expectedEndTime, latestEndTime);
 		
 	}
+	@Test 
+	public void Nodes_10_SeriesParallel_TwoProc_Test(){
+		
+		int expectedEndTime = 484;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_10_SeriesParallel.dot", "2", "-o",
+		"Nodes_10_OutTree_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_10_SeriesParallel_FourProc_Test(){
+		
+		int expectedEndTime = 422;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_10_SeriesParallel.dot", "4", "-o",
+		"Nodes_10_OutTree_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_11_SeriesParallel_TwoProc_Test(){
+		
+		int expectedEndTime = 51;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_11_SeriesParallel.dot", "2", "-o",
+		"Nodes_11_OutTree_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_11_SeriesParallel_FourProc_Test(){
+		
+		int expectedEndTime = 50;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_11_SeriesParallel.dot", "4", "-o",
+		"Nodes_11_OutTree_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_7_SeriesParallel_TwoProc_Test(){
+		
+		int expectedEndTime = 301;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_7_SeriesParallel.dot", "2", "-o",
+		"Nodes_7_OutTree_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_7_SeriesParallel_FourProc_Test(){
+		
+		int expectedEndTime = 301;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_7_SeriesParallel.dot", "4", "-o",
+		"Nodes_7_OutTree_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_8_Pipeline_TwoProc_Test(){
+		
+		int expectedEndTime = 40;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_8_Pipeline.dot", "2", "-o",
+		"Nodes_8_Pipeline_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_8_Pipeline_FourProc_Test(){
+		
+		int expectedEndTime = 40;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_8_Pipeline.dot", "4", "-o",
+		"Nodes_8_Pipeline_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_9_Stencil_TwoProc_Test(){
+		
+		int expectedEndTime = 56;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_9_Stencil.dot", "2", "-o",
+		"Nodes_9_Stencil_TwoProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
+	@Test 
+	public void Nodes_9_Stencil_FourProc_Test(){
+		
+		int expectedEndTime = 56;
+		
+		String[] args = { dir + "/src/test/resources/dotfiles/input/Nodes_9_Stencil.dot", "4", "-o",
+		"Nodes_9_Stencil_FourProc-output" };
+		
+		Main.main(args);
+		List<Node> optimalSchedule = Main.getOptimalSchedule();
+		int latestEndTime = endToEndCheck(optimalSchedule);
+		// Compare optimal time with calculated time
+		assertEquals(expectedEndTime, latestEndTime);
+		
+	}
 
 	public int endToEndCheck(List<Node> optimalSchedule) {
 		int latestEndTime = 0;
