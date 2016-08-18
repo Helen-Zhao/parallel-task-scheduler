@@ -9,10 +9,11 @@ import java.util.Queue;
 import models.Node;
 
 /**
+ *  @author Jay
+ *  
  * Implementation of depth first branch and bound scheduler using while loops
- * Optimized to reduce memory use through minimal persistent memory objects
- * 
- * @author Jay
+ * Scheduler takes a list of node objects and creates a valid schedule with the lowest total run time from them,
+ * returned in the form of a list with set start times and processors for each node.
  *
  */
 public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
@@ -65,6 +66,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			while (schedule.size() < nodeList.size()) {
 				// If a node is available at this index, get it for allocation
 				if (nodeStack.get(level).size() > 0) {
+					// TODO Visualize: Nodes could be visualized on appraisal
 					node = nodeStack.get(level).peek();
 				// If a node is not available, all paths from the last scheduled node have been searched
 				} else {
@@ -79,6 +81,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					continue;
 				}
 				
+				// TODO Visualize: Processors could be visualized on selection
 				// Try to allocate a processor to the node
 				// If returns false, no processors available to allocate
 				if (!processorAllocator.allocateProcessor(nodeList, node, node.getCheckedProcessors())) {
@@ -93,6 +96,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 				// Add newly allocated processor to list of processors already attempted
 				node.addCheckedProcessor(node.getProcessor());
 				
+				// TODO Visualize: Newly selected node could be visualized here
 				schedule.add(node);
 				
 				// Check end time of new node against current bound
@@ -112,6 +116,8 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 				nodeStack.set(level, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
 			}
 			
+			// TODO Parallelization: BestBound should be hooked into MasterScheduler; 
+			// Eg. bestBound = checkWithMaster(currentBound, schedule)
 			if (currentBound < bestBound && level > -1) {
 				bestBound = currentBound;
 				optimalSchedule.clear();
@@ -129,22 +135,26 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		return optimalSchedule;
 	}
 	
+	/*
+	 * Removes the last node in the schedule and sets it as having not run
+	 */
 	private void removeLastNodeFromSchedule() {
 		if (schedule.size() > 0) {
-			// Get the last scheduled node (node allocated on current level)
-			Node lastNode = schedule.get(schedule.size() - 1);
+			// Remove the last scheduled node (node allocated on current level)
+			Node lastNode = schedule.remove(schedule.size() - 1);
 			// Node has no longer been allocated
 			lastNode.setHasRun(false);
-			// Remove the node from the schedule
-			schedule.remove(schedule.size() - 1);
 		}
 	}
 	
+	/*
+	 * Calculates the appropriate max runtime for the schedule
+	 */
 	private void updateCurrentBound() {
-		// TODO Potential Optimization: Resetting current bound
 		// Reset the current bound
 		currentBound = 0;
-		for (Node n : schedule) {
+		for (int i = schedule.size() - 1; i > 0; i--) {
+			Node n = schedule.get(i);
 			int nBound = n.getStartTime() + n.getWeight();
 			if (nBound > currentBound) {
 				currentBound = nBound;
@@ -152,6 +162,11 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		}
 	}
 	
+	// TODO visualize going back up the state tree
+	/*
+	 * Decrements the level and performs necessary functions for when returning to a previous level,
+	 * including resetting node and updating the current bound
+	 */
 	private void returnToPreviousLevel() {
 	
 		removeLastNodeFromSchedule();
