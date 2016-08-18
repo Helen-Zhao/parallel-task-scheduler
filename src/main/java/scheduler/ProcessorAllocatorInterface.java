@@ -5,15 +5,15 @@ import models.Node;
 import java.util.List;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author Helen Zhao
  */
 
 public interface ProcessorAllocatorInterface {
-    
-	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors);
-	
-	public int findEarliestStartTime(List<Node> schedule, Node node, int processor);
-	
-	public int getNumberProcessors();
+
+    boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors);
+
+    int findEarliestStartTime(List<Node> schedule, Node node, int processor);
+
+    int getNumberProcessors();
 
 }
