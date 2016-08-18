@@ -84,9 +84,10 @@ public class Main {
 		SchedulerInterface scheduler;
 
 		scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+
 		optimalSchedule = scheduler.createSchedule(nodeList);
 
-		String outputFileName = hasOutputName ? outputFile : "INPUT-output";
+		String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
 		OutputWriter outputWriter = new OutputWriter(optimalSchedule, edgeList, outputFileName);
 
 	}
@@ -94,5 +95,10 @@ public class Main {
 	public static List<Node> getOptimalSchedule() {
 		return optimalSchedule;
 	}
+
+	private static String format(String rawInputName) {
+		return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));
+	}
+
 
 }
