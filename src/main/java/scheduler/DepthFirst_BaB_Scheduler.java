@@ -38,6 +38,9 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	
 	@Override
 	public List<Node> createSchedule(List<Node> nodes) {
+		
+		if (nodes.size() == 0) return new ArrayList<Node>();
+		
 		// Initialize availability
 		nodeList = nodes;
 		
@@ -45,7 +48,13 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			bestBound += n.getWeight();
 		}
 		
-		nodeStack = new ArrayList<Queue<Node>>(nodeList.size());
+		nodeStack = new ArrayList<Queue<Node>>(nodeList.size()+1);
+		
+		// Initialize nodeStack
+		for (int i = 0; i < nodeList.size()+1; i++) {
+			nodeStack.add(null);
+		}
+		
 		nodeStack.set(0, new LinkedList<Node>(nodeFinder.findRootNodes(nodeList)));
 		
 		
