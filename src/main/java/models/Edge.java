@@ -1,7 +1,9 @@
 package models;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author Helen Zhao
+ *         <p>
+ *         Edge models an edge in a DAG with a start node, end node and weight
  */
 public class Edge {
     private Node startNode;

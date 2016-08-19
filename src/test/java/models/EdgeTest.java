@@ -6,7 +6,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 /**
- * Created by helen on 28/07/2016.
+ * @author Helen Zhao
  */
 public class EdgeTest {
 

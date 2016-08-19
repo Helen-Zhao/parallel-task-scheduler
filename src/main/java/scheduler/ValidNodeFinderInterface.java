@@ -1,13 +1,18 @@
 package scheduler;
 
-import java.util.List;
 import models.Node;
+
+import java.util.List;
+
+/**
+ * @author Helen Zhao
+ */
 
 public interface ValidNodeFinderInterface {
 
-	public List<Node> findRootNodes(List<Node> nodes);
+	List<Node> findRootNodes(List<Node> nodes);
 	
-	public List<Node> findSatisfiedChildren(Node node);
+	List<Node> findSatisfiedChildren(Node node);
 	
-	public List<Node> findSatisfiedNodes(List<Node> nodes);
+	List<Node> findSatisfiedNodes(List<Node> nodes);
 }
