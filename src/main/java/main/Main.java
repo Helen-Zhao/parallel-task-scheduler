@@ -86,7 +86,7 @@ public class Main {
         ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator(numProcessors);
         SchedulerInterface scheduler;
 
-        scheduler = new Mem_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+        scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
         optimalSchedule = scheduler.createSchedule(nodeList);
 
         String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
@@ -102,5 +102,4 @@ public class Main {
     private static String format(String rawInputName) {
         return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));
     }
-
 }

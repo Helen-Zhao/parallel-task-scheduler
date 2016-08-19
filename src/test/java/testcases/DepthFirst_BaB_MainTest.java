@@ -5,14 +5,13 @@ import models.Edge;
 import models.Node;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-public class MainTest {
+public class DepthFirst_BaB_MainTest {
 
     String dir;
 
@@ -32,7 +31,7 @@ public class MainTest {
         int expectedEndTime = 10;
 
         String[] args = {dir +
-                "/src/main/resources/dotfiles/inputfiles/1_processor_simple.dot",
+                "/src/test/resources/dotfiles/input/1_processor_simple.dot",
                 "4", "-o", "1_processor_simple-output"};
 
         Main.main(args);
@@ -48,7 +47,7 @@ public class MainTest {
         int expectedEndTime = 6;
 
         String[] args = {dir +
-                "/src/main/resources/dotfiles/inputfiles/2_processor_simple.dot",
+                "/src/test/resources/dotfiles/input/2_processor_simple.dot",
                 "4", "-o", "2_processor_simple-output"};
 
         Main.main(args);
@@ -64,7 +63,7 @@ public class MainTest {
         int expectedEndTime = 10;
 
         String[] args = {dir +
-                "/src/main/resources/dotfiles/inputfiles/4_processor_1_src_1_dest.dot",
+                "/src/test/resources/dotfiles/input/4_processor_1_src_1_dest.dot",
                 "4", "-o", "4_processor_1_src_1_dest-output"};
 
         Main.main(args);
@@ -80,7 +79,7 @@ public class MainTest {
         int expectedEndTime = 14;
 
         String[] args = {dir +
-                "/src/main/resources/dotfiles/inputfiles/4_processor_1_src_3_dest.dot",
+                "/src/test/resources/dotfiles/input/4_processor_1_src_3_dest.dot",
                 "4", "-o", "4_processor_1_src_3_dest-output"};
 
 
@@ -97,7 +96,7 @@ public class MainTest {
 
         int expectedEndTime = 9;
 
-        String[] args = {dir + "/src/main/resources/dotfiles/inputfiles/4_processor_3_src_1_dest.dot", "4", "-o",
+        String[] args = {dir + "/src/test/resources/dotfiles/input/4_processor_3_src_1_dest.dot", "4", "-o",
                 "4_processor_3_src_1_dest-output"};
 
         Main.main(args);
@@ -112,7 +111,7 @@ public class MainTest {
 
         int expectedEndTime = 10;
 
-        String[] args = {dir + "/src/main/resources/dotfiles/inputfiles/4_processor_3_src_2_dest.dot", "4", "-o",
+        String[] args = {dir + "/src/test/resources/dotfiles/input/4_processor_3_src_2_dest.dot", "4", "-o",
                 "4_processor_3_src_2_dest-output"};
 
         Main.main(args);
@@ -336,6 +335,4 @@ public class MainTest {
 
         return latestEndTime;
     }
-
-
 }
