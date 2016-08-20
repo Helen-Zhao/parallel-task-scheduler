@@ -33,4 +33,37 @@ public class JoinGraphTest {
         Main.main(args);
 
     }
+
+    @Test
+    public void testJoinGraph6() {
+
+        String[] args = {dir +
+                "/src/test/resources/dotfiles/input/join-graph-6.dot",
+                "4"};
+
+        Main.main(args);
+
+    }
+
+    @Test
+    public void testJoinGraph7() {
+
+        String[] args = {dir +
+                "/src/test/resources/dotfiles/input/join-graph-7.dot",
+                "4"};
+
+        Main.main(args);
+
+    }
+
+    @Test
+    public void testJoinGraph8() {
+
+        String[] args = {dir +
+                "/src/test/resources/dotfiles/input/join-graph-8.dot",
+                "4"};
+
+        Main.main(args);
+
+    }
 }
