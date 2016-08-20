@@ -14,6 +14,7 @@ public class Node implements Comparable<Node>, Cloneable {
     private int weight;
     private List<Edge> incomingEdges;
     private List<Edge> outgoingEdges;
+    private int criticalPathLength = 0;
     private int startTime;
     private boolean hasRun;
     private int processor;
@@ -69,6 +70,14 @@ public class Node implements Comparable<Node>, Cloneable {
 
     public int getNumberOutgoingEdges() {
         return outgoingEdges.size();
+    }
+    
+    public void setCriticalPathLength(int i) {
+    	this.criticalPathLength = i;
+    }
+    
+    public int getCriticalPathLength() {
+    	return criticalPathLength;
     }
 
     public int getStartTime() {

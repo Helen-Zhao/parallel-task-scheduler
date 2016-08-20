@@ -13,37 +13,43 @@ public class Processor {
 	}
 	
 	public int findEarliestStartTime(Node node, int earliestValidStart, int earliestValidEnd) {
-        int foundStartTime = 0;
-        int foundEndTime = 0;
+//        int foundStartTime = 0;
+//        int foundEndTime = 0;
 
-        boolean startChanged = true;
-        while (startChanged) {
-            startChanged = false;
-            // Find earliest start based on allocated nodes
-            for (Node snode : allocatedNodes) {
-                foundStartTime = snode.getStartTime();
-                foundEndTime = foundStartTime + snode.getWeight();
-                // Current earliest valid start time overlaps another task
-                if (earliestValidStart >= foundStartTime && earliestValidStart < foundEndTime) {
-                    // Start new node after found node
-                    earliestValidStart = foundEndTime;
-                    earliestValidEnd = earliestValidStart + node.getWeight();
-                    startChanged = true;
-                    // Current earliest valid end time overlaps another task
-                } else if (earliestValidEnd > foundStartTime && earliestValidEnd <= foundEndTime) {
-                    earliestValidStart = foundEndTime;
-                    earliestValidEnd = earliestValidStart + node.getWeight();
-                    startChanged = true;
-                    // Current allocated times are enveloping another task
-                } else if (foundStartTime >= earliestValidStart && foundStartTime < earliestValidEnd) {
-                    earliestValidStart = foundEndTime;
-                    earliestValidEnd = earliestValidStart + node.getWeight();
-                    startChanged = true;
-                }
-            }
+        if (earliestValidStart > endTime) { 
+        	return earliestValidStart; 
+        } else { 
+        	return endTime; 
         }
         
-        return earliestValidStart;
+//        boolean startChanged = true;
+//        while (startChanged) {
+//            startChanged = false;
+//            // Find earliest start based on allocated nodes
+//            for (Node snode : allocatedNodes) {
+//                foundStartTime = snode.getStartTime();
+//                foundEndTime = foundStartTime + snode.getWeight();
+//                // Current earliest valid start time overlaps another task
+//                if (earliestValidStart >= foundStartTime && earliestValidStart < foundEndTime) {
+//                    // Start new node after found node
+//                    earliestValidStart = foundEndTime;
+//                    earliestValidEnd = earliestValidStart + node.getWeight();
+//                    startChanged = true;
+//                    // Current earliest valid end time overlaps another task
+//                } else if (earliestValidEnd > foundStartTime && earliestValidEnd <= foundEndTime) {
+//                    earliestValidStart = foundEndTime;
+//                    earliestValidEnd = earliestValidStart + node.getWeight();
+//                    startChanged = true;
+//                    // Current allocated times are enveloping another task
+//                } else if (foundStartTime >= earliestValidStart && foundStartTime < earliestValidEnd) {
+//                    earliestValidStart = foundEndTime;
+//                    earliestValidEnd = earliestValidStart + node.getWeight();
+//                    startChanged = true;
+//                }
+//            }
+//        }
+//        
+//        return earliestValidStart;
 	}
 	
 	public void addNode(Node node) {

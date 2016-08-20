@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import models.Edge;
 import models.Node;
 
 /**
@@ -43,7 +44,7 @@ public class PnV_DepthFirst_BaB_Scheduler implements ParallelSchedulerInterface 
 	}
 	
 	@Override
-	public void initiateNewSubtree(List<Node> nodes, List<Queue<Node>> initialNodeStack, int initialBestBound) {
+	public void initiateNewSubtree(List<Node> nodes, List<Edge> edges, List<Queue<Node>> initialNodeStack, int initialBestBound) {
 		
 		bestBound = initialBestBound;
 		
@@ -52,13 +53,13 @@ public class PnV_DepthFirst_BaB_Scheduler implements ParallelSchedulerInterface 
 		
 		nodeStack = initialNodeStack;
 		
-		createSchedule(nodes);
+		createSchedule(nodes, edges);
 		
 //		notifyMasterDone();
 	}
 	
 	@Override
-	public List<Node> createSchedule(List<Node> nodes) {
+	public List<Node> createSchedule(List<Node> nodes, List<Edge> edges) {
 		
 		if (nodes.size() == 0) return new ArrayList<Node>();
 		

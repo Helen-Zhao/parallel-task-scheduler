@@ -1,11 +1,11 @@
 package scheduler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import models.Edge;
 import models.Node;
 
 /**
@@ -18,10 +18,10 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
 	int currentBound = 0;
 	int bestBound = 0;
-	int heuristicValue = 0;
-	int heuristicBound = 0;
 	
-	int testValue = 0;
+	int heuristicValue = 0;
+	int criticalPathLength = 0;
+	int heuristicBound = 0;
 	
 	List<Node> nodeList;
 	List<Node> schedule = new ArrayList<Node>();
@@ -40,7 +40,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	}
 	
 	@Override
-	public List<Node> createSchedule(List<Node> nodes) {
+	public List<Node> createSchedule(List<Node> nodes, List<Edge> edgeList) {
 		
 		if (nodes.size() == 0) return new ArrayList<Node>();
 		
@@ -52,6 +52,26 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		}
 		heuristicValue = bestBound / processorAllocator.getNumberProcessors();
 		heuristicBound = heuristicValue;
+		
+		// Estimate heuristic costs
+		boolean hasDistanceChanged = true;
+		while (hasDistanceChanged) {
+			hasDistanceChanged = false;
+			for (Edge edge : edgeList) {
+				int newCritPathLength = edge.getEndNode().getCriticalPathLength() + edge.getStartNode().getWeight();
+				if (newCritPathLength > edge.getStartNode().getCriticalPathLength()) {
+					edge.getStartNode().setCriticalPathLength(newCritPathLength);
+					hasDistanceChanged = true;
+				}
+			}
+		}
+		
+		for (int i = 0; i < nodeList.size(); i++) {
+			int newCritPathLength = nodeList.get(i).getCriticalPathLength();
+			if (newCritPathLength > criticalPathLength) {
+				criticalPathLength = newCritPathLength;
+			}
+		}
 		
 		nodeStack = new ArrayList<Queue<Node>>(nodeList.size()+1);
 		
@@ -81,7 +101,6 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			returnToPreviousLevel();
 		}
 		
-		System.out.println("TEST VALUE: " + testValue);
 		return optimalSchedule;
 	}
 	
@@ -134,7 +153,6 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			
 			if (heuristicBound > bestBound) {
 				removeLastNodeFromSchedule();
-				testValue++;
 				continue;
 			}
 			
@@ -146,10 +164,28 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	private void updateHeurisitic(Node node, boolean isAllocated) {
 		if (isAllocated) {
 			heuristicValue -= node.getWeight() / processorAllocator.getNumberProcessors();
+			if (node.getCriticalPathLength() == criticalPathLength) {
+				criticalPathLength = 0;
+				for (int i = 0; i < nodeList.size(); i++) {
+					if (!nodeList.get(i).getHasRun()) {
+						int newCritPathLength = nodeList.get(i).getCriticalPathLength();
+						if (newCritPathLength > criticalPathLength) {
+							criticalPathLength = newCritPathLength;
+						}
+					}
+				}
+			}
 		} else {
 			heuristicValue += node.getWeight() / processorAllocator.getNumberProcessors();
+			if (node.getCriticalPathLength() > criticalPathLength) {
+				criticalPathLength = node.getCriticalPathLength();
+			}
 		}
-		heuristicBound = heuristicValue + processorAllocator.getEarliestProcessorEndTime();
+		
+		heuristicBound = Math.max(
+				heuristicValue + processorAllocator.getEarliestProcessorEndTime(),
+				criticalPathLength + processorAllocator.getEarliestProcessorEndTime()
+				);
 	}
 	
 	private void removeLastNodeFromSchedule() {
@@ -166,11 +202,10 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	}
 	
 	private void updateCurrentBound() {
-		// TODO Potential Optimization: Resetting current bound
 		// Reset the current bound
 		currentBound = 0;
-		for (Node n : schedule) {
-			int nBound = n.getStartTime() + n.getWeight();
+		for (int i = schedule.size() - 1; i > -1; i--) {
+			int nBound = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
 			if (nBound > currentBound) {
 				currentBound = nBound;
 			}
