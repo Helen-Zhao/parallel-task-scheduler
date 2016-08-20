@@ -16,4 +16,10 @@ public interface ProcessorAllocatorInterface {
 	
 	public int getNumberProcessors();
 
+	public void removeFromProcessor(Node node, int processor);
+	
+	public void addToProcessor(Node node, int processor);
+	
+	public int getEarliestProcessorEndTime();
+
 }

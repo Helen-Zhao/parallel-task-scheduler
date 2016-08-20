@@ -10,7 +10,6 @@ import models.Node;
 
 /**
  * Implementation of depth first branch and bound scheduler using while loops
- * Optimized to reduce memory use through minimal persistent memory objects
  * 
  * @author Jay
  *
@@ -19,6 +18,10 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
 	int currentBound = 0;
 	int bestBound = 0;
+	int heuristicValue = 0;
+	int heuristicBound = 0;
+	
+	int testValue = 0;
 	
 	List<Node> nodeList;
 	List<Node> schedule = new ArrayList<Node>();
@@ -47,6 +50,8 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		for (Node n : nodeList) {
 			bestBound += n.getWeight();
 		}
+		heuristicValue = bestBound / processorAllocator.getNumberProcessors();
+		heuristicBound = heuristicValue;
 		
 		nodeStack = new ArrayList<Queue<Node>>(nodeList.size()+1);
 		
@@ -57,60 +62,10 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		
 		nodeStack.set(0, new LinkedList<Node>(nodeFinder.findRootNodes(nodeList)));
 		
-		
-		
 		// While not all paths have been searched (not all paths from level 0 have been searched)
 		while (level > -1) {
-			// While a complete path has not been found (not all nodes allocated)
-			while (schedule.size() < nodeList.size()) {
-				// If a node is available at this index, get it for allocation
-				if (nodeStack.get(level).size() > 0) {
-					node = nodeStack.get(level).peek();
-				// If a node is not available, all paths from the last scheduled node have been searched
-				} else {
-					// Return to previous level
-					returnToPreviousLevel();
-					
-					if (level < 0) {
-						// Just finished all paths, break loop
-						break;
-					}
-					// Find next node on previous level
-					continue;
-				}
-				
-				// Try to allocate a processor to the node
-				// If returns false, no processors available to allocate
-				if (!processorAllocator.allocateProcessor(nodeList, node, node.getCheckedProcessors())) {
-					// Reset checked processors for this node
-					node.resetCheckedProcessors();
-					// Increment index to next node (all paths from this node have been searched)
-					nodeStack.get(level).remove();
-					// This node was not valid, find next node on this level
-					continue;
-				}
-				
-				// Add newly allocated processor to list of processors already attempted
-				node.addCheckedProcessor(node.getProcessor());
-				
-				schedule.add(node);
-				
-				// Check end time of new node against current bound
-				int nBound = node.getStartTime() + node.getWeight();
-				// If end time of new node is greater than current bound, it is the new bound
-				if (nBound > currentBound) {
-					// Check new bound does not exceed best bound; if it does, it will never be better than best
-					if (nBound > bestBound) {
-						removeLastNodeFromSchedule();
-						continue;
-					} else {
-						currentBound = nBound;
-					}
-				}
-				
-				level++;
-				nodeStack.set(level, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
-			}
+			
+			findNewPath();
 			
 			if (currentBound < bestBound && level > -1) {
 				bestBound = currentBound;
@@ -126,7 +81,75 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			returnToPreviousLevel();
 		}
 		
+		System.out.println("TEST VALUE: " + testValue);
 		return optimalSchedule;
+	}
+	
+	private void findNewPath() {
+		// While a complete path has not been found (not all nodes allocated)
+		while (schedule.size() < nodeList.size()) {
+			// If a node is available at this index, get it for allocation
+			if (nodeStack.get(level).size() > 0) {
+				node = nodeStack.get(level).peek();
+			// If a node is not available, all paths from the last scheduled node have been searched
+			} else {
+				// Return to previous level
+				returnToPreviousLevel();
+				
+				if (level < 0) {
+					// Just finished all paths, break loop
+					break;
+				}
+				// Find next node on previous level
+				continue;
+			}
+			
+			processorAllocator.removeFromProcessor(node, node.getProcessor());
+			// Try to allocate a processor to the node
+			// If returns false, no processors available to allocate
+			if (!processorAllocator.allocateProcessor(nodeList, node, node.getCheckedProcessors())) {
+				// Reset checked processors for this node
+				node.resetCheckedProcessors();
+				// Increment index to next node (all paths from this node have been searched)
+				nodeStack.get(level).remove();
+				// This node was not valid, find next node on this level
+				continue;
+			}
+			
+			schedule.add(node);
+			updateHeurisitic(node, true);
+			
+			// Check end time of new node against current bound
+			int nBound = node.getStartTime() + node.getWeight();
+			// If end time of new node is greater than current bound, it is the new bound
+			if (nBound > currentBound) {
+				// Check new bound does not exceed best bound; if it does, it will never be better than best
+				if (nBound > bestBound) {
+					removeLastNodeFromSchedule();
+					continue;
+				} else {
+					currentBound = nBound;
+				}
+			}
+			
+			if (heuristicBound > bestBound) {
+				removeLastNodeFromSchedule();
+				testValue++;
+				continue;
+			}
+			
+			level++;
+			nodeStack.set(level, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
+		}
+	}
+	
+	private void updateHeurisitic(Node node, boolean isAllocated) {
+		if (isAllocated) {
+			heuristicValue -= node.getWeight() / processorAllocator.getNumberProcessors();
+		} else {
+			heuristicValue += node.getWeight() / processorAllocator.getNumberProcessors();
+		}
+		heuristicBound = heuristicValue + processorAllocator.getEarliestProcessorEndTime();
 	}
 	
 	private void removeLastNodeFromSchedule() {
@@ -137,6 +160,8 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			lastNode.setHasRun(false);
 			// Remove the node from the schedule
 			schedule.remove(schedule.size() - 1);
+			
+			updateHeurisitic(lastNode, false);
 		}
 	}
 	
