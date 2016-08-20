@@ -29,6 +29,8 @@ public class Main {
             throw new IllegalArgumentException("Error: Not enough parameters. Please use the following argument format: <input-file-path> <number of processors>");
         }
 
+        String inputName = args[0];
+
         //Flags for optional params
         boolean hasOutputName = false;
         boolean visualisation = false;
@@ -61,7 +63,9 @@ public class Main {
             }
         }
 
-        File inputFile = new File(args[0]);
+        System.out.println("Processing...");
+
+        File inputFile = new File(inputName);
 
         int numProcessors;
         try {
@@ -89,9 +93,10 @@ public class Main {
         scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
         optimalSchedule = scheduler.createSchedule(nodeList);
 
-        String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
+        String outputFileName = hasOutputName ? outputFile : format(inputName) + "-output";
         OutputWriter outputWriter = new OutputWriter();
         outputWriter.writeFile(optimalSchedule, edgeList, outputFileName);
+        System.out.println("Completed.");
 
     }
 
@@ -100,6 +105,10 @@ public class Main {
     }
 
     private static String format(String rawInputName) {
-        return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));
+        if (rawInputName.contains(File.separator)){
+            return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));
+        } else {
+            return rawInputName.substring(0, rawInputName.indexOf(".dot"));
+        }
     }
 }
