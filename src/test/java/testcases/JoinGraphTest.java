@@ -1,6 +1,7 @@
 package testcases;
 
 import main.Main;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +15,8 @@ public class JoinGraphTest {
 
     @Before
     public void setUp() {
+        boolean testingExecutionTime = false;
+        Assume.assumeTrue(testingExecutionTime);
         String workingDir = System.getProperty("user.dir");
         dir = ".";
 
