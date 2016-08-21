@@ -1,7 +1,6 @@
 package scheduler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -10,8 +9,6 @@ import models.Edge;
 import models.Node;
 
 /**
- *  @author Jay
- *  
  * Implementation of depth first branch and bound scheduler using while loops
  * Scheduler takes a list of node objects and creates a valid schedule with the lowest total run time from them,
  * returned in the form of a list with set start times and processors for each node.
@@ -241,6 +238,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		} else {
 			heuristicValue += node.getWeight() / processorAllocator.getNumberProcessors();
 			if (node.getCriticalPathLength() > criticalPathLength) {
+				criticalPathLength = node.getCriticalPathLength();
 			}
 		}
 		
@@ -269,9 +267,6 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	private void updateCurrentBound() {
 		// Reset the current bound
 		currentBound = 0;
-		for (int i = schedule.size() - 1; i > 0; i--) {
-			Node n = schedule.get(i);
-			int nBound = n.getStartTime() + n.getWeight();
 		for (int i = schedule.size() - 1; i > -1; i--) {
 			int nBound = schedule.get(i).getStartTime() + schedule.get(i).getWeight();
 			if (nBound > currentBound) {
