@@ -1,4 +1,4 @@
-package testcases;
+package scheduler;
 
 import main.Main;
 import models.Edge;

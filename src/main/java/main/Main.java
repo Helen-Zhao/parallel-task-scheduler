@@ -21,6 +21,7 @@ import java.util.List;
  */
 
 public class Main {
+	
     private static List<Node> optimalSchedule;
 
     public static void main(String[] args) throws IllegalArgumentException {
@@ -87,7 +88,7 @@ public class Main {
         SchedulerInterface scheduler;
 
         scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
-        optimalSchedule = scheduler.createSchedule(nodeList);
+        optimalSchedule = scheduler.createSchedule(nodeList, edgeList);
 
         String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
         OutputWriter outputWriter = new OutputWriter();

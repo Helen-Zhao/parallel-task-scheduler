@@ -2,6 +2,8 @@ package scheduler;
 
 import models.Edge;
 import models.Node;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,13 +54,15 @@ public class ProcessorAllocatorTest {
         unavailableProcessors = new ArrayList<Integer>();
 
         processorAllocator = new ProcessorAllocator(2);
+        
+        processorAllocator.addToProcessor(a, 1);
+        processorAllocator.addToProcessor(b, 1);
     }
 
     @Test
     // Tests when processor 2 is unavailable, leaving only 1 processor available
     // Tests that the correct Processor is generated
     public void allocateProcessorTest1() {
-        List<Integer> unavailableProcessors = new ArrayList<Integer>();
         unavailableProcessors.add(2);
 
         int expectedProcessor = 1;
