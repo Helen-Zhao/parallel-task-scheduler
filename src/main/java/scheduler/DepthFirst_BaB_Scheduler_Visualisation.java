@@ -19,6 +19,8 @@ import models.Edge;
 
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
+import org.graphstream.ui.spriteManager.Sprite;
+import org.graphstream.ui.spriteManager.SpriteManager;
 import org.graphstream.ui.view.View;
 import org.graphstream.ui.view.Viewer;
 
@@ -63,8 +65,11 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 		
 		// Create Graph of current available nodes
 		for (Node n : nodeList) {
-			graph.addNode(n.getName());
+			org.graphstream.graph.Node graphNode = graph.addNode(n.getName());
+			graphNode.addAttribute("ui.label", n.getName());
 		}
+		setAttributeMethod(graph);
+		
 		
 		// Creating edges for graph
 		for (Node n : nodeList) {
@@ -74,7 +79,6 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 				graph.addEdge(edgeName, e.getStartNode().getName(), e.getEndNode().getName(), true);
 			}
 		}
-		
 		graph.display();
 
 		for (Node n : nodeList) {
@@ -96,14 +100,13 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 		while (level > -1) {
 			// While a complete path has not been found (not all nodes allocated)
 			while (schedule.size() < nodeList.size()) {
+				sleepFunction(20);
+				Main.gui.printOptimalLabel(2);
+
 				// If a node is available at this index, get it for allocation
 				if (nodeStack.get(level).size() > 0) {
 					node = nodeStack.get(level).peek();
-					try {
-					    Thread.sleep(1);                 //1000 milliseconds is one second.
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
+					sleepFunction(1);
 
 					graph.addAttribute("ui.stylesheet", "node#" + node.getName() + " { fill-color: red; }");
 
@@ -129,11 +132,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 					nodeStack.get(level).remove();
 					// This node was not valid, find next node on this level
 					
-					try {
-					    Thread.sleep(1);                 //1000 milliseconds is one second.
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
+					sleepFunction(1);
 					
 					graph.addAttribute("ui.stylesheet", "node#" + node.getName() + " { fill-color: black; }");
 					continue;
@@ -144,24 +143,16 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 				
 				schedule.add(node);
 				
-				try {
-				    Thread.sleep(1);                 //1000 milliseconds is one second.
-				} catch(InterruptedException ex) {
-				    Thread.currentThread().interrupt();
-				}
+				sleepFunction(1);
 				
 				graph.addAttribute("ui.stylesheet", "node#" + node.getName() + " { fill-color: red; }");
 				List<Edge> nodeEdges = node.getIncomingEdges();
 				for (Edge e : nodeEdges) {
 					Node startNode = e.getStartNode();
 					
-					try {
-					    Thread.sleep(1);                 //1000 milliseconds is one second.
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
+					sleepFunction(1);
 					
-					graph.addAttribute("ui.stylesheet", "edge#Edge" + startNode.getName() + "Edge" + node.getName() + " { fill-color: red; }");
+					graph.addAttribute("ui.stylesheet", "edge#Edge" + startNode.getName() + "Edge" + node.getName() + " { fill-color: rgba(255,0,0,50); }");
 				}
 
 				
@@ -173,11 +164,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 					if (nBound > bestBound) {
 						removeLastNodeFromSchedule();
 						
-						try {
-						    Thread.sleep(1);                 //1000 milliseconds is one second.
-						} catch(InterruptedException ex) {
-						    Thread.currentThread().interrupt();
-						}
+						sleepFunction(1);
 						
 						graph.addAttribute("ui.stylesheet", "node#" + node.getName() + " { fill-color: black; }");
 						
@@ -185,11 +172,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 						for (Edge e : nodeEdges2) {
 							Node startNode = e.getStartNode();
 							
-							try {
-							    Thread.sleep(1);                 //1000 milliseconds is one second.
-							} catch(InterruptedException ex) {
-							    Thread.currentThread().interrupt();
-							}
+							sleepFunction(1);
 							
 							graph.addAttribute("ui.stylesheet", "edge#Edge" + startNode.getName() + "Edge" + node.getName() + " { fill-color: black; }");
 						}						
@@ -197,6 +180,8 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 						continue;
 					} else {
 						currentBound = nBound;
+						sleepFunction(15);
+						Main.gui.calculateHeuristic(currentBound, bestBound);
 					}
 				}
 				
@@ -206,145 +191,55 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 			
 			if (currentBound < bestBound && level > -1) {
 				bestBound = currentBound;
+				sleepFunction(15);
+				Main.gui.calculateHeuristic(currentBound, bestBound);
 				optimalSchedule.clear();
 				//graph.removeAttribute("ui.stylesheet");
 				for (int i = 0; i < schedule.size(); i++) {
 					optimalSchedule.add(schedule.get(i).clone());
 				}
-							
-				
-				
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.println("New Optimal Schedule Found");
+
+				Main.gui.printOptimalLabel(1);
 				Main.gui.setOptimalSchedule(optimalSchedule);
 				
-				graph.removeAttribute("ui.stylesheet");
-				HashMap<String, Node> matchedNodes = new HashMap<String, Node>();
-				for (int i = 0; i < optimalSchedule.size(); i++) {
-					
-					if (i == 0) {
-						Node n = optimalSchedule.get(i);
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						graph.addAttribute("ui.stylesheet", "node#" + n.getName() + " { fill-color: red; }");
-						matchedNodes.put(n.getName(), n);
-					}
-					else {
-						Node n = optimalSchedule.get(i);
-						List<Edge> optimalEdgeList = new ArrayList<Edge>();
-						for (Node nl : nodeList) {
-							if (n.getName().equals(nl.getName())) {
-								optimalEdgeList = nl.getIncomingEdges();
-								break;
-							}
-						}
-						for (Edge e : optimalEdgeList) {
-							Node incomingNode = e.getStartNode();
-							if (matchedNodes.containsKey(incomingNode.getName())) {
-								//HEAT MAP ME
-								try {
-									Thread.sleep(500);
-								} catch (InterruptedException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: red; }");
-								graph.addAttribute("ui.stylesheet", "node#" + n.getName() + " { fill-color: red; }");
-							}
-						}
-						matchedNodes.put(n.getName(), n);
-					}
-				}
-				
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				optimalSchedulePath(graph);
 				
 			} else if (currentBound == bestBound && optimalSchedule.size() == 0 && level > -1) {
 				for (int i = 0; i < schedule.size(); i++) {
 					optimalSchedule.add(schedule.get(i).clone());
 
 				}
-				System.out.println("New Optimal Schedule Found");
+				
+				Main.gui.printOptimalLabel(1);
 				Main.gui.setOptimalSchedule(optimalSchedule);
 				
-				graph.removeAttribute("ui.stylesheet");
-				HashMap<String, Node> matchedNodes = new HashMap<String, Node>();
-				for (int i = 0; i < optimalSchedule.size(); i++) {
-					
-					if (i == 0) {
-						Node n = optimalSchedule.get(i);
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						graph.addAttribute("ui.stylesheet", "node#" + n.getName() + " { fill-color: red; }");
-						matchedNodes.put(n.getName(), n);
-					}
-					else {
-						Node n = optimalSchedule.get(i);
-						List<Edge> optimalEdgeList = new ArrayList<Edge>();
-						for (Node nl : nodeList) {
-							if (n.getName().equals(nl.getName())) {
-								optimalEdgeList = nl.getIncomingEdges();
-								break;
-							}
-						}
-						for (Edge e : optimalEdgeList) {
-							Node incomingNode = e.getStartNode();
-							if (matchedNodes.containsKey(incomingNode.getName())) {
-								//HEAT MAP ME
-								try {
-									Thread.sleep(500);
-								} catch (InterruptedException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: red; }");
-								graph.addAttribute("ui.stylesheet", "node#" + n.getName() + " { fill-color: red; }");
-							}
-						}
-						matchedNodes.put(n.getName(), n);
-					}
-				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				optimalSchedulePath(graph);
 
 			}
+			
 			returnToPreviousLevel();
 		}
 		
-		System.out.println("Final Optimal Schedule");
+		Main.gui.printOptimalLabel(0);
+		sleepFunction(15);
+		Main.gui.calculateHeuristic(currentBound, bestBound);
+		optimalSchedulePath(graph);
+		
+		
+		return optimalSchedule;
+	}
+	
+	private void optimalSchedulePath(Graph graph){
 		graph.removeAttribute("ui.stylesheet");
+		setAttributeMethod(graph);
+
 		HashMap<String, Node> matchedNodes = new HashMap<String, Node>();
+		sleepFunction(250);
 		for (int i = 0; i < optimalSchedule.size(); i++) {
 			
 			if (i == 0) {
 				Node n = optimalSchedule.get(i);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				sleepFunction(250);
 				graph.addAttribute("ui.stylesheet", "node#" + n.getName() + " { fill-color: red; }");
 				matchedNodes.put(n.getName(), n);
 			}
@@ -361,27 +256,21 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 					Node incomingNode = e.getStartNode();
 					if (matchedNodes.containsKey(incomingNode.getName())) {
 						//HEAT MAP ME
-						try {
-							Thread.sleep(500);
-						} catch (InterruptedException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: red; }");
-						graph.addAttribute("ui.stylesheet", "node#" + n.getName() + " { fill-color: red; }");
+						sleepFunction(250);
+						graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: rgba(255,0,0,128); }");
+						
 					}
 				}
+				graph.addAttribute("ui.stylesheet", "node#" + n.getName() + " { fill-color: red; }");
 				matchedNodes.put(n.getName(), n);
 			}
 		}
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return optimalSchedule;
+		sleepFunction(250);
+	}
+	
+	private void setAttributeMethod(Graph graph) {
+		graph.setAttribute("ui.stylesheet", "node{text-color: blue; text-size: 20px; size: 20px;}");
+		graph.setAttribute("ui.stylesheet", "edge{size: 2.5px;}");
 	}
 	
 	private void removeLastNodeFromSchedule() {
@@ -398,11 +287,19 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 	private void updateCurrentBound() {
 		// TODO Potential Optimization: Resetting current bound
 		// Reset the current bound
+		
+		
 		currentBound = 0;
+		if (schedule.isEmpty()) {
+			currentBound = bestBound;
+		}
 		for (Node n : schedule) {
 			int nBound = n.getStartTime() + n.getWeight();
 			if (nBound > currentBound) {
 				currentBound = nBound;
+				sleepFunction(15);
+				Main.gui.calculateHeuristic(currentBound, bestBound);
+
 			}
 		}
 	}
@@ -415,6 +312,14 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 		
 		// Reduce level
 		level--;
+	}
+	
+	private void sleepFunction(int sleepTime) {
+		try {
+		    Thread.sleep(sleepTime);
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
 	}
 }
 

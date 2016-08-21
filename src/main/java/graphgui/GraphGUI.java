@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -32,6 +33,11 @@ public class GraphGUI extends JFrame {
 	ArrayList<Node> optimal;
 	int numProcessors;
 	DefaultTableModel model;
+	int finalEndTime = 0;
+	int heuristic = 0;
+	JLabel progressLabel;
+	JLabel endTimeLabel;
+	JLabel optimalLabel;
 	
 
 	public GraphGUI(int numProcessors) {
@@ -48,7 +54,7 @@ public class GraphGUI extends JFrame {
         };
         model.addColumn("Time");
         for (int i = 0; i < numProcessors; i++) {
-        	model.addColumn("Processor " + Integer.toString(i+1));
+        	model.addColumn("Proc " + Integer.toString(i+1));
         }
         model.setRowCount(0);
         
@@ -60,9 +66,22 @@ public class GraphGUI extends JFrame {
         
         promptPanel = new JPanel();
         
+        //Prompt Panel Components
+        optimalLabel = new JLabel("Optimal Schedule");
+        
+        promptPanel.add(optimalLabel);
+        
         
         chartPanel = new JPanel(new BorderLayout());
         statsPanel = new JPanel();
+        
+        //Stats Panel components
+        endTimeLabel = new JLabel("End Time: " + finalEndTime);
+        progressLabel = new JLabel("Progress: " + heuristic + "%");
+        
+        statsPanel.add(endTimeLabel);
+        statsPanel.add(progressLabel);
+        
         chart = new JTable(model);
         chart.setShowHorizontalLines(false);
         chartScrollPane = new JScrollPane(chart);
@@ -80,11 +99,12 @@ public class GraphGUI extends JFrame {
 	
 	public void setOptimalSchedule(List<Node> optimal) {
 		model.setRowCount(0);
-		int finalEndTime = 0;
+		finalEndTime = 0;
 		for (Node n : optimal) {
 			int endTime = n.getStartTime() + n.getWeight();
 			if (endTime > finalEndTime) {
 				finalEndTime = endTime;
+				endTimeLabel.setText("End Time: " + finalEndTime);
 			}
 		}
 		
@@ -104,8 +124,24 @@ public class GraphGUI extends JFrame {
 				model.setValueAt(nodeName, j, processor);
 			}
 		}
+	}
+	
+	public void calculateHeuristic(int currentBound, int bestBound) {
+		heuristic = (currentBound * 100)/(bestBound);
+		progressLabel.setText("Progress: " + heuristic + "%");
+	}
+	
+	public void printOptimalLabel(int optimalFinal) {
+		if (optimalFinal == 0) {
+			optimalLabel.setText("Final Optimal Schedule");
+		}
+		else if (optimalFinal == 1) {
+			optimalLabel.setText("New Optimal Schedule Found");
+		}
+		else {
+			optimalLabel.setText("Calculating Next Schedule...");
+		}
 		
-		chartPanel.repaint();
 	}
 
 
