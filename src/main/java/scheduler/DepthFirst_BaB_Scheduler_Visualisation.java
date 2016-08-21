@@ -57,7 +57,6 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 	public List<Node> createSchedule(List<Node> nodes) {
 		
 		Graph graph = new MultiGraph("Schedule 1");
-		
 		if (nodes.size() == 0) return new ArrayList<Node>();
 		
 		// Initialize availability
@@ -68,7 +67,6 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 			org.graphstream.graph.Node graphNode = graph.addNode(n.getName());
 			graphNode.addAttribute("ui.label", n.getName());
 		}
-		setAttributeMethod(graph);
 		
 		
 		// Creating edges for graph
@@ -80,6 +78,8 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 			}
 		}
 		graph.display();
+		setAttributeMethod(graph);
+
 
 		for (Node n : nodeList) {
 			bestBound += n.getWeight();
@@ -269,8 +269,8 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 	}
 	
 	private void setAttributeMethod(Graph graph) {
-		graph.setAttribute("ui.stylesheet", "node{text-color: blue; text-size: 20px; size: 20px;}");
-		graph.setAttribute("ui.stylesheet", "edge{size: 2.5px;}");
+		graph.addAttribute("ui.stylesheet", "node{text-color: blue; text-size: 20px; size: 20px;}");
+		graph.addAttribute("ui.stylesheet", "edge{size: 2.5px;}");
 	}
 	
 	private void removeLastNodeFromSchedule() {
