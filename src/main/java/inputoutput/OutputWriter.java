@@ -2,10 +2,12 @@ package inputoutput;
 
 import models.Edge;
 import models.Node;
+import models.NodeTuple;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ import java.util.List;
  */
 public class OutputWriter {
 
-    public void writeFile(List<Node> scheduleNodes, List<Edge> scheduleEdges, String outputFileName) {
+    public void writeFile(List<Node> nodes, HashMap<String, NodeTuple> nodeInfo, List<Edge> scheduleEdges, String outputFileName) {
         try {
             //Get working directory
             String dir = System.getProperty("user.dir");
@@ -26,9 +28,9 @@ public class OutputWriter {
             writer.println("digraph \"" + outputFileName + "\" {");
 
             //iterate through list and print
-            for (int i = 0; i < scheduleNodes.size(); i++) {
-                Node node = scheduleNodes.get(i);
-                writer.println("\t\t" + node.getName() + "\t\t [Weight=" + node.getWeight() + ", Start=" + node.getStartTime() + ", Processor=" + node.getProcessor() + "];");
+            for (int i = 0; i < nodes.size(); i++) {
+                Node node = nodes.get(i);
+                writer.println("\t\t" + node.getName() + "\t\t [Weight=" + node.getWeight() + ", Start=" + nodeInfo.get(node.getName()).getStartTime() + ", Processor=" + nodeInfo.get(node.getName()).getProcessor() + "];");
             }
 
             for (Edge edge : scheduleEdges) {

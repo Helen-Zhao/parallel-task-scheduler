@@ -1,7 +1,9 @@
 package scheduler;
 
 import models.Node;
+import models.NodeTuple;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -10,7 +12,9 @@ import java.util.List;
 
 public interface ProcessorAllocatorInterface {
     
-	public boolean allocateProcessor(List<Node> schedule, Node node, List<Integer> checkedProcessors);
+	public void addNodeInfo(HashMap<String, NodeTuple> nodeInfo);
+	
+	public boolean allocateProcessor(List<Node> schedule, Node node);
 	
 	public int findEarliestStartTime(List<Node> schedule, Node node, int processor);
 	

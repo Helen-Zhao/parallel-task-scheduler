@@ -4,10 +4,12 @@ import inputoutput.InputReader;
 import inputoutput.OutputWriter;
 import models.Edge;
 import models.Node;
+import models.NodeTuple;
 import scheduler.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -22,7 +24,8 @@ import java.util.List;
 
 public class Main {
 	
-    private static List<Node> optimalSchedule;
+    private static List<Node> nodeList;
+    private static HashMap<String, NodeTuple> optimalInfo;
 
     public static void main(String[] args) throws IllegalArgumentException {
 
@@ -71,7 +74,6 @@ public class Main {
             throw new IllegalArgumentException("Error: Argument 2 (Number of Processors) " + args[1] + " is not a number.");
         }
 
-        List<Node> nodeList;
         List<Edge> edgeList;
 
         try {
@@ -88,16 +90,21 @@ public class Main {
         SchedulerInterface scheduler;
 
         scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
-        optimalSchedule = scheduler.createSchedule(nodeList, edgeList);
+        scheduler.createSchedule(nodeList, edgeList);
+        optimalInfo = scheduler.getSchedule();
 
         String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
         OutputWriter outputWriter = new OutputWriter();
-        outputWriter.writeFile(optimalSchedule, edgeList, outputFileName);
+        outputWriter.writeFile(nodeList, optimalInfo, edgeList, outputFileName);
 
     }
 
-    public static List<Node> getOptimalSchedule() {
-        return optimalSchedule;
+    public static HashMap<String, NodeTuple> getOptimalSchedule() {
+        return optimalInfo;
+    }
+    
+    public static List<Node> getNodeList() {
+    	return nodeList;
     }
 
     private static String format(String rawInputName) {
