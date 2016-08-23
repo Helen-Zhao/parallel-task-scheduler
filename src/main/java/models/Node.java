@@ -14,10 +14,7 @@ public class Node implements Comparable<Node>, Cloneable {
     private int weight;
     private List<Edge> incomingEdges;
     private List<Edge> outgoingEdges;
-    private int startTime;
-    private boolean hasRun;
-    private int processor;
-    private List<Integer> checkedProcessors = new ArrayList<Integer>(4);
+    private int criticalPathLength = 0;
 
     public Node(String name, int weight) {
 
@@ -25,9 +22,6 @@ public class Node implements Comparable<Node>, Cloneable {
         this.weight = weight;
         this.incomingEdges = new ArrayList<Edge>();
         this.outgoingEdges = new ArrayList<Edge>();
-        this.startTime = -1;
-        this.hasRun = false;
-        this.processor = -1;
 
     }
 
@@ -70,52 +64,25 @@ public class Node implements Comparable<Node>, Cloneable {
     public int getNumberOutgoingEdges() {
         return outgoingEdges.size();
     }
+    
+    public void setCriticalPathLength(int i) {
+    	this.criticalPathLength = i;
+	}
 
-    public int getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(int startTime) {
-        this.startTime = startTime;
-    }
-
-    public boolean getHasRun() {
-        return hasRun;
-    }
-
-    public void setHasRun(boolean hasRun) {
-        this.hasRun = hasRun;
-    }
-
-    public int getProcessor() {
-        return processor;
-    }
-
-    public void setProcessor(int processor) {
-        this.processor = processor;
-    }
-
-    public List<Integer> getCheckedProcessors() {
-        return checkedProcessors;
-    }
-
-    public void addCheckedProcessor(int num) {
-        checkedProcessors.add(num);
-    }
-
-    public void resetCheckedProcessors() {
-        checkedProcessors.clear();
-    }
+	public int getCriticalPathLength() {
+		return criticalPathLength;
+	}
+   
 
     public int compareTo(Node node) {
         return node.getWeight() - this.weight;
     }
 
-    public Node clone() {
-        Node clone = new Node(this.name, this.weight);
-        clone.setStartTime(this.startTime);
-        clone.setProcessor(this.processor);
-        clone.setHasRun(this.hasRun);
-        return clone;
-    }
+//    public Node clone() {
+//        Node clone = new Node(this.name, this.weight);
+//        clone.setStartTime(this.startTime);
+//        clone.setProcessor(this.processor);
+//        clone.setHasRun(this.hasRun);
+//        return clone;
+//    }
 }
