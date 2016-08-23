@@ -38,9 +38,6 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
     public boolean allocateProcessor(List<Node> schedule, Node node) {
         // There are no available processors for which the node can be assigned to.
         if (nodeInfo.get(node.getName()).getCheckedProcessors().size() >= numProcessors) {
-        	for (int i = 1; i < numProcessors; i++) {
-        		removeFromProcessor(node, i);
-        	}
             return false;
         }
 
@@ -66,13 +63,10 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
         }
 
         // Allocates the start time, which processor to use, and sets it to have run as it will be placed into the Scheduler.
-        List<Integer> cP = nodeInfo.get(node.getName()).getCheckedProcessors();
-        cP.add(bestProcessor);
-        nodeInfo.put(node.getName(), new NodeTuple(earliestStartTime, bestProcessor, cP, true));
-//        nodeInfo.get(node.getName()).addCheckedProcessor(bestProcessor);
-//        nodeInfo.get(node.getName()).setStartTime(earliestStartTime);
-//        nodeInfo.get(node.getName()).setProcessor(bestProcessor);
-//        nodeInfo.get(node.getName()).setHasRun(true);
+        nodeInfo.get(node.getName()).addCheckedProcessor(bestProcessor);
+        nodeInfo.get(node.getName()).setStartTime(earliestStartTime);
+        nodeInfo.get(node.getName()).setProcessor(bestProcessor);
+        nodeInfo.get(node.getName()).setHasRun(true);
         processors.get(bestProcessor - 1).addNode(node, nodeInfo.get(node.getName()));
 
         // Node has been assigned a Processor and startTime

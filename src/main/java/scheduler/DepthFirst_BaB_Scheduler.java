@@ -111,6 +111,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					continue;
 				}
 				
+				processorAllocator.removeFromProcessor(node, scheduleInfo.get(node.getName()).getProcessor());
 				// Try to allocate a processor to the node
 				// If returns false, no processors available to allocate
 				if (!processorAllocator.allocateProcessor(nodeList, node)) {

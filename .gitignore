@@ -1,1 +1,7 @@
 /target/
+*output*
+.classpath
+.project
+.settings/
+bin/
+.gitignore
