@@ -1,14 +1,20 @@
 package main;
 
+import graphgui.GraphGUI;
 import inputoutput.InputReader;
 import inputoutput.OutputWriter;
 import models.Edge;
 import models.Node;
 import scheduler.*;
 
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * @author Helen Zhao
@@ -22,9 +28,10 @@ import java.util.List;
 
 public class Main {
     private static List<Node> optimalSchedule;
+    public static GraphGUI gui;
 
     public static void main(String[] args) throws IllegalArgumentException {
-
+    	
         if (args.length < 2) {
             throw new IllegalArgumentException("Error: Not enough parameters. Please use the following argument format: <input-file-path> <number of processors>");
         }
@@ -86,7 +93,25 @@ public class Main {
         ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator(numProcessors);
         SchedulerInterface scheduler;
 
-        scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+        if (visualisation) {
+        	EventQueue.invokeLater(new Runnable() {
+        		public void run() {
+        			try {
+                		gui = new GraphGUI(numProcessors);
+                		gui.setVisible(true);
+                	} catch (Exception e) {
+                		e.printStackTrace();
+                	}
+        		}
+        	});
+        	
+        	
+            scheduler = new DepthFirst_BaB_Scheduler_Visualisation(validNodeFinder, processorAllocator);
+            
+        }
+        else {
+        	scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+        }
         optimalSchedule = scheduler.createSchedule(nodeList);
 
         String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
