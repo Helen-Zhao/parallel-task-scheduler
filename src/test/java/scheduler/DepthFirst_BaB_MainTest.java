@@ -3,12 +3,15 @@ package scheduler;
 import main.Main;
 import models.Edge;
 import models.Node;
+import models.NodeTuple;
+
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 public class DepthFirst_BaB_MainTest {
@@ -35,8 +38,9 @@ public class DepthFirst_BaB_MainTest {
                 "4", "-o", "1_processor_simple-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
     }
@@ -51,8 +55,9 @@ public class DepthFirst_BaB_MainTest {
                 "4", "-o", "2_processor_simple-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
     }
@@ -67,8 +72,9 @@ public class DepthFirst_BaB_MainTest {
                 "4", "-o", "4_processor_1_src_1_dest-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
     }
@@ -84,8 +90,9 @@ public class DepthFirst_BaB_MainTest {
 
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -100,8 +107,9 @@ public class DepthFirst_BaB_MainTest {
                 "4_processor_3_src_1_dest-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
     }
@@ -115,8 +123,9 @@ public class DepthFirst_BaB_MainTest {
                 "4_processor_3_src_2_dest-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
     }
@@ -130,8 +139,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_7_OutTree_TwoProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -146,8 +156,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_7_OutTree_FourProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -162,8 +173,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_8_Random_TwoProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -178,8 +190,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_8_Random_FourProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -194,8 +207,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_9_SeriesParallel_TwoProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -210,8 +224,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_9_SeriesParallel_FourProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -226,8 +241,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_10_Random_TwoProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -242,8 +258,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_10_Random_FourProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -258,8 +275,9 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_11_OutTree_TwoProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
@@ -274,20 +292,21 @@ public class DepthFirst_BaB_MainTest {
                 "Nodes_11_OutTree_FourProc-output"};
 
         Main.main(args);
-        List<Node> optimalSchedule = Main.getOptimalSchedule();
-        int latestEndTime = endToEndCheck(optimalSchedule);
+        HashMap<String, NodeTuple> optimalSchedule = Main.getOptimalSchedule();
+        List<Node> nodeList = Main.getNodeList();
+        int latestEndTime = endToEndCheck(nodeList, optimalSchedule);
         // Compare optimal time with calculated time
         assertEquals(expectedEndTime, latestEndTime);
 
     }
 
-    public int endToEndCheck(List<Node> optimalSchedule) {
+    public int endToEndCheck(List<Node> nodeList, HashMap<String, NodeTuple> optimalInfo) {
         int latestEndTime = 0;
 
-        for (Node node : optimalSchedule) {
+        for (Node node : nodeList) {
 
             // Determine end time(duration) of schedule
-            int currentEndTime = node.getStartTime() + node.getWeight();
+            int currentEndTime = optimalInfo.get(node.getName()).getStartTime() + node.getWeight();
             if (currentEndTime > latestEndTime) {
                 latestEndTime = currentEndTime;
             }
@@ -295,36 +314,36 @@ public class DepthFirst_BaB_MainTest {
             List<Edge> incomingEdges = node.getIncomingEdges();
             for (Edge edge : incomingEdges) {
                 Node startNode = edge.getStartNode();
-                int startNodeProcessor = startNode.getProcessor();
-                int currentNodeProcessor = node.getProcessor();
+                int startNodeProcessor = optimalInfo.get(startNode.getName()).getProcessor();
+                int currentNodeProcessor = optimalInfo.get(node.getName()).getProcessor();
                 int dependencySatisfiedTime;
 
                 // Determine time dependency is completed
                 // If node in same processor ignore communication weight
                 if (startNodeProcessor == currentNodeProcessor) {
-                    dependencySatisfiedTime = startNode.getStartTime() + startNode.getWeight();
+                    dependencySatisfiedTime = optimalInfo.get(startNode.getName()).getStartTime() + startNode.getWeight();
                 } else {
-                    dependencySatisfiedTime = startNode.getStartTime() + startNode.getWeight() + edge.getWeight();
+                    dependencySatisfiedTime = optimalInfo.get(startNode.getName()).getStartTime() + startNode.getWeight() + edge.getWeight();
                 }
 
                 // If task starts before dependencies are completed, fail
-                if (node.getStartTime() < dependencySatisfiedTime) {
+                if (optimalInfo.get(node.getName()).getStartTime() < dependencySatisfiedTime) {
                     fail();
                 }
 
             }
 
-            int startTime = node.getStartTime();
+            int startTime = optimalInfo.get(node.getName()).getStartTime();
             int endTime = startTime + node.getWeight();
 
             // Checks for overlaps in tasks
             // Compare with every other node whether they start during the
             // processing of this node, on same processor
-            for (Node node2 : optimalSchedule) {
+            for (Node node2 : nodeList) {
                 // Ignore comparison with self(same node)
                 if (node2 != node) {
-                    if (node2.getProcessor() == node.getProcessor()) {
-                        int node2StartTime = node2.getStartTime();
+                    if (optimalInfo.get(node.getName()).getProcessor() == optimalInfo.get(node2.getName()).getProcessor()) {
+                        int node2StartTime = optimalInfo.get(node2.getName()).getStartTime();
                         if ((node2StartTime > startTime) && (node2StartTime < endTime)) {
                             fail();
                         }

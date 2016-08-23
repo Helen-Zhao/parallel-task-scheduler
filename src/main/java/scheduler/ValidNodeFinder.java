@@ -2,8 +2,10 @@ package scheduler;
 
 import models.Edge;
 import models.Node;
+import models.NodeTuple;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -15,6 +17,13 @@ import java.util.List;
 
 public class ValidNodeFinder implements ValidNodeFinderInterface {
 
+	HashMap<String, NodeTuple> nodeInfo;
+	
+	@Override
+	public void addNodeInfo(HashMap<String, NodeTuple> nodeInfo) {
+		this.nodeInfo = nodeInfo;		
+	}
+	
     // Find nodes with no dependencies (root) by searching for nodes with no incoming edges
     public List<Node> findRootNodes(List<Node> nodes) {
         List<Node> rootNodes = new ArrayList<Node>();
@@ -32,7 +41,7 @@ public class ValidNodeFinder implements ValidNodeFinderInterface {
     // If yes, add it to a list of satisfied nodes and return it
     public List<Node> findSatisfiedChildren(Node node) {
         // Children will not be satisfied unless input node itself is satisfied
-        if (node.getHasRun() == false) {
+        if (nodeInfo.get(node.getName()).getHasRun() == false) {
             return new ArrayList<Node>();
         }
 
@@ -55,7 +64,7 @@ public class ValidNodeFinder implements ValidNodeFinderInterface {
 
         for (Edge edge : edges) {
             Node startNode = edge.getStartNode();
-            if (startNode.getHasRun() == false) {
+            if (nodeInfo.get(startNode.getName()).getHasRun() == false) {
                 return false;
             }
         }
@@ -68,7 +77,7 @@ public class ValidNodeFinder implements ValidNodeFinderInterface {
 
         List<Node> satisfiedNodes = new ArrayList<Node>();
         for (Node node : nodes) {
-            if (isAvailable(node) && !(node.getHasRun())) {
+            if (isAvailable(node) && !(nodeInfo.get(node.getName()).getHasRun())) {
                 satisfiedNodes.add(node);
             }
         }

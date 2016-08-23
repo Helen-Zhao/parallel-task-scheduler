@@ -1,0 +1,17 @@
+digraph "4_processor_3_src_2_dest-output" {
+		a		 [Weight=1, Start=0, Processor=1];
+		b		 [Weight=2, Start=0, Processor=2];
+		c		 [Weight=1, Start=2, Processor=2];
+		d		 [Weight=3, Start=4, Processor=1];
+		e		 [Weight=2, Start=3, Processor=2];
+		f		 [Weight=2, Start=8, Processor=2];
+		g		 [Weight=3, Start=7, Processor=1];
+		b -> d	 [Weight=2];
+		a -> e	 [Weight=2];
+		b -> e	 [Weight=2];
+		c -> e	 [Weight=5];
+		d -> f	 [Weight=1];
+		e -> f	 [Weight=3];
+		d -> g	 [Weight=4];
+		e -> g	 [Weight=2];
+}

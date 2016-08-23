@@ -1,12 +1,14 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Processor {
 
 	int endTime = 0;
 	List<Node> allocatedNodes = new ArrayList<Node>();
+	HashMap<String, Integer> allocatedNodeInfo = new HashMap<String, Integer>();
 	
 	public int getEndTime() {
 		return endTime;
@@ -15,19 +17,19 @@ public class Processor {
 	public int findEarliestStartTime(Node node, int earliestValidStart, int earliestValidEnd) {
 //        int foundStartTime = 0;
 //        int foundEndTime = 0;
-
+//
         if (earliestValidStart > endTime) { 
         	return earliestValidStart; 
         } else { 
         	return endTime; 
         }
-        
+//        
 //        boolean startChanged = true;
 //        while (startChanged) {
 //            startChanged = false;
 //            // Find earliest start based on allocated nodes
 //            for (Node snode : allocatedNodes) {
-//                foundStartTime = snode.getStartTime();
+//                foundStartTime = allocatedNodeInfo.get(snode.getName());
 //                foundEndTime = foundStartTime + snode.getWeight();
 //                // Current earliest valid start time overlaps another task
 //                if (earliestValidStart >= foundStartTime && earliestValidStart < foundEndTime) {
@@ -52,26 +54,25 @@ public class Processor {
 //        return earliestValidStart;
 	}
 	
-	public void addNode(Node node) {
+	public void addNode(Node node, NodeTuple tuple) {
+		allocatedNodeInfo.put(node.getName(), tuple.getStartTime());
 		allocatedNodes.add(node);
-		int nodeEndTime = node.getStartTime() + node.getWeight();
+		int nodeEndTime = tuple.getStartTime() + node.getWeight();
 		if (nodeEndTime > endTime) {
 			endTime = nodeEndTime;
 		}
 	}
 	
-	public void removeNode(Node node) {
+	public void removeNode(Node node, NodeTuple tuple) {
 		allocatedNodes.remove(node);
-		int nodeEndTime = node.getStartTime() + node.getWeight();
-		if (nodeEndTime == endTime) {
-			endTime = 0;
-			for (int i = allocatedNodes.size() - 1; i > -1; i--) {
-				nodeEndTime = allocatedNodes.get(i).getStartTime() + allocatedNodes.get(i).getWeight();
-				if (nodeEndTime > endTime) {
-					endTime = nodeEndTime;
-				}
+		allocatedNodeInfo.remove(node.getName());
+		endTime = 0;
+		for (int i = allocatedNodes.size() - 1; i > -1; i--) {
+			int nodeEndTime = allocatedNodeInfo.get(allocatedNodes.get(i).getName()) + allocatedNodes.get(i).getWeight();
+			if (nodeEndTime > endTime) {
+				endTime = nodeEndTime;
 			}
-		}		
+		}
 	}
 	
 	public boolean isEmpty() {
