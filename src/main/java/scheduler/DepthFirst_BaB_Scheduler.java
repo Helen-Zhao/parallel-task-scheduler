@@ -1,9 +1,11 @@
 package scheduler;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 import models.Edge;
@@ -25,6 +27,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	
 	int heuristicValue = 0;
 	int criticalPathLength = 0;
+	PriorityQueue<Node> criticalQueue = new PriorityQueue<Node>(new CriticalNodeComparator());
 	int heuristicBound = 0;
 	
 	List<Node> nodeList;
@@ -43,7 +46,6 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		  this.nodeFinder = nodeFinder;
 		  this.processorAllocator = processAllocator;
 		  
-		  // TODO May move
 		  processorAllocator.addNodeInfo(scheduleInfo);
 		  nodeFinder.addNodeInfo(scheduleInfo);
 	}
@@ -74,12 +76,8 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 			}
 		}
 		
-		// TODO Use priority queue instead
 		for (int i = 0; i < nodeList.size(); i++) {
-			int newCritPathLength = nodeList.get(i).getCriticalPathLength();
-			if (newCritPathLength > criticalPathLength) {
-				criticalPathLength = newCritPathLength;
-			}
+			criticalQueue.add(nodeList.get(i));
 		}
 		
 		nodeStack = new ArrayList<Queue<Node>>(nodeList.size()+1);
@@ -151,7 +149,6 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 				nodeStack.set(level, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
 			}
 			
-			// Eg. bestBound = checkWithMaster(currentBound, schedule)
 			if (currentBound < bestBound && level > -1) {
 				bestBound = currentBound;
 				optimalSchedule = scheduleInfo;
@@ -176,24 +173,28 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		return;
 	}
 	
+	@Override
+	public HashMap<String, NodeTuple> getSchedule() {
+		return optimalSchedule;
+	}
+	
 	private void updateHeurisitic(Node node, boolean isAllocated) {
 		if (isAllocated) {
 			heuristicValue -= node.getWeight() / processorAllocator.getNumberProcessors();
-			if (node.getCriticalPathLength() == criticalPathLength) {
-				criticalPathLength = 0;
-				for (int i = 0; i < nodeList.size(); i++) {
-					if (!scheduleInfo.get(nodeList.get(i).getName()).getHasRun()) {
-						int newCritPathLength = nodeList.get(i).getCriticalPathLength();
-						if (newCritPathLength > criticalPathLength) {
-							criticalPathLength = newCritPathLength;
-						}
-					}
-				}
+			while (criticalQueue.size() > 0 && scheduleInfo.get(criticalQueue.peek().getName()).getHasRun()) {
+				criticalQueue.remove();
 			}
+			if (criticalQueue.size() > 0) {
+				criticalPathLength = criticalQueue.peek().getCriticalPathLength();
+			} else {
+				criticalPathLength = 0;
+			}			
 		} else {
 			heuristicValue += node.getWeight() / processorAllocator.getNumberProcessors();
-			if (node.getCriticalPathLength() > criticalPathLength) {
-				criticalPathLength = node.getCriticalPathLength();
+			criticalQueue.add(node);
+			int newCriticalPathLength = criticalQueue.peek().getCriticalPathLength();
+			if (newCriticalPathLength > criticalPathLength) {
+				criticalPathLength = newCriticalPathLength;
 			}
 		}
 		
@@ -242,9 +243,15 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 		level--;
 	}
 
-	@Override
-	public HashMap<String, NodeTuple> getSchedule() {
-		return optimalSchedule;
+	private class CriticalNodeComparator implements Comparator<Node> {
+
+		@Override
+		public int compare(Node n1, Node n2) {
+			return n2.getCriticalPathLength() - n1.getCriticalPathLength();
+		}
+		
 	}
+	
+	
 }
 
