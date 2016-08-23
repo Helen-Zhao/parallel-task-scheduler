@@ -1,0 +1,28 @@
+digraph "/join-graph-8-output" {
+		entry		 [Weight=3, Start=0, Processor=1];
+		0		 [Weight=1, Start=3, Processor=1];
+		1		 [Weight=2, Start=4, Processor=1];
+		3		 [Weight=4, Start=7, Processor=2];
+		2		 [Weight=3, Start=6, Processor=3];
+		4		 [Weight=5, Start=8, Processor=4];
+		5		 [Weight=6, Start=9, Processor=3];
+		6		 [Weight=7, Start=6, Processor=1];
+		7		 [Weight=8, Start=13, Processor=1];
+		exit		 [Weight=5, Start=21, Processor=1];
+		entry -> 0	 [Weight=1];
+		0 -> exit	 [Weight=1];
+		entry -> 1	 [Weight=2];
+		1 -> exit	 [Weight=2];
+		entry -> 2	 [Weight=3];
+		2 -> exit	 [Weight=3];
+		entry -> 3	 [Weight=4];
+		3 -> exit	 [Weight=4];
+		entry -> 4	 [Weight=5];
+		4 -> exit	 [Weight=5];
+		entry -> 5	 [Weight=6];
+		5 -> exit	 [Weight=6];
+		entry -> 6	 [Weight=7];
+		6 -> exit	 [Weight=7];
+		entry -> 7	 [Weight=8];
+		7 -> exit	 [Weight=8];
+}

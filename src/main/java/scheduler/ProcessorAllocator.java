@@ -58,6 +58,7 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
                 } else if (tempEarliestStartTime == earliestStartTime && processors.get(bestProcessor - 1).isEmpty() && processors.get(i - 1).isEmpty()) {
 					// If equal each placement mirrors the other, pre-emptively regard as checked
                 	nodeInfo.get(node.getName()).addCheckedProcessor(i);
+
 				}
             }
         }

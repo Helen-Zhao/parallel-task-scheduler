@@ -14,8 +14,6 @@ import models.NodeTuple;
 
 /**
  * Implementation of depth first branch and bound scheduler using while loops
- * Scheduler takes a list of node objects and creates a valid schedule with the lowest total run time from them,
- * returned in the form of a list with set start times and processors for each node.
  * 
  * @author Jay
  *
@@ -52,6 +50,7 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 	
 	@Override
 	public void createSchedule(List<Node> nodes, List<Edge> edgeList) {
+
 		
 		// Initialize availability
 		nodeList = nodes;
@@ -120,9 +119,6 @@ public class DepthFirst_BaB_Scheduler implements SchedulerInterface {
 					// This node was not valid, find next node on this level
 					continue;
 				}
-				
-				// Add newly allocated processor to list of processors already attempted
-//				scheduleInfo.get(node.getName()).addCheckedProcessor(scheduleInfo.get(node.getName()).getProcessor());
 
 				scheduledNodes.add(node);
 				updateHeurisitic(node, true);

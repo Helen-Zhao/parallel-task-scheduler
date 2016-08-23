@@ -1,0 +1,22 @@
+digraph "/join-graph-6-output" {
+		entry		 [Weight=3, Start=0, Processor=1];
+		0		 [Weight=1, Start=3, Processor=1];
+		1		 [Weight=2, Start=5, Processor=2];
+		2		 [Weight=3, Start=6, Processor=3];
+		3		 [Weight=4, Start=7, Processor=2];
+		4		 [Weight=5, Start=4, Processor=1];
+		5		 [Weight=6, Start=9, Processor=1];
+		exit		 [Weight=5, Start=15, Processor=1];
+		entry -> 0	 [Weight=1];
+		0 -> exit	 [Weight=1];
+		entry -> 1	 [Weight=2];
+		1 -> exit	 [Weight=2];
+		entry -> 2	 [Weight=3];
+		2 -> exit	 [Weight=3];
+		entry -> 3	 [Weight=4];
+		3 -> exit	 [Weight=4];
+		entry -> 4	 [Weight=5];
+		4 -> exit	 [Weight=5];
+		entry -> 5	 [Weight=6];
+		5 -> exit	 [Weight=6];
+}
