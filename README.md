@@ -1,9 +1,9 @@
 # softeng-306-p1: Team 4, NP-Easy
 
 ## Team Members
-| Name             | AUID          | UPI   | GitHub       |
+| Name             | UPI          | AUID   | GitHub       |
 | ---------------- |:-------------:| -----:| ------------:|
-| Benjamin Collins | 9168328 | bcol602 | @MizdaCollinz |
+| Benjamin Collins | bcol602 | 9168328 | @MizdaCollinz |
 | Helen Zhao | hzha587 | 6913580 | @Helen-Zhao |
 | Jay Gradon | jgra718 | 6320267 | @jaygradon |
 | William Lin | wlin943 | 6820093 | @OphielOM |
