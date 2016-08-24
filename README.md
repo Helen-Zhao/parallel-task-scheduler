@@ -4,12 +4,12 @@
 A Directed Acyclic Graph in dot file form is used to model tasks and dependencies between tasks. This program schedules
 tasks with a start time, and assigns it to a processor so as to return the schedule with the lowest overall run time.
 
-Inputs: <input-file-name> <number of processors> <optional-flags>
+Inputs: 	&#60;input-file-name&#62; 	&#60;number of processors&#62; 	&#60;optional-flags&#62;
 Optional Flags:
 
 &nbsp;&nbsp;&nbsp;&nbsp;-o OUTPUTNAME&nbsp;&nbsp;&nbsp;&nbsp;Specify output name of choice. Default is input name with -output appended.
 
-&nbsp;&nbsp;&nbsp;&nbsp;-v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visualise the scheduling process
+&nbsp;&nbsp;&nbsp;&nbsp;-v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;Visualise the scheduling process
 
 &nbsp;&nbsp;&nbsp;&nbsp;-p NUMTHREADS&nbsp;&nbsp;&nbsp;&nbsp;Parallelise the process by using multiple cores/threads
 
@@ -32,9 +32,12 @@ ProjectPlan folder on GitHub:
  - Algorithm plans
 
 ### Team Members (upi, AUID, github handle)
- - Helen Zhao (hzha587, 6913580, @Helen-Zhao)
- - Jay Gradon (jgra718, 6320267, @jaygradon)
- - William Lin (wlin943, 6820093, @OphielOM)
- - Jacky Mai (jmai871, 8572038, @JackyMai)
- - Benjamin Collins (bcol602, 9168328, @MizdaCollinz)
- - Henry Wu (hwu668, 9076300, @HellScytheX)
+| Name             | AUID          | UPI   | GitHub       |
+| ---------------- |:-------------:| -----:| ------------:|
+| Benjamin Collins | 9168328 | bcol602 | @MizdaCollinz |
+| Helen Zhao | hzha587 | 6913580 | @Helen-Zhao |
+| Jay Gradon | jgra718 | 6320267 | @jaygradon |
+| William Lin | wlin943 | 6820093 | @OphielOM |
+| Jacky Mai | jmai871 | 8572038 | @JackyMai |
+| Benjamin Collins | bcol602 | 9168328 | @MizdaCollinz |
+| Henry Wu | hwu668 | 9076300 | @HellScytheX |
