@@ -80,7 +80,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 			}
 		}
 		
-		//Graph ONE
+		// Generates viewable graph to display
 		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.addDefaultView(false);   
 		viewer.enableAutoLayout();
@@ -132,6 +132,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 			// While a complete path has not been found (not all nodes allocated)
 			while (scheduledNodes.size() < nodeList.size()) {
 				sleepFunction(20);
+				// Shows current status of program in chart
 				Main.gui.printOptimalLabel(2);
 				
 				// If a node is available at this index, get it for allocation
@@ -240,9 +241,13 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 					scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
 				}
 				
+				// Shows current status of program in chart
 				Main.gui.printOptimalLabel(1);
+				
+				// Updates chart with new optimal schedule
 				Main.gui.setOptimalSchedule(scheduledNodes, optimalSchedule);
 				
+				// Draws optimal path on graph
 				optimalSchedulePath(graph);
 				
 			} else if (optimalSchedule == null && level > -1) {
@@ -254,15 +259,19 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 					scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
 				}
 				
+				// Shows current status of program in chart
 				Main.gui.printOptimalLabel(1);
-				Main.gui.setOptimalSchedule(scheduledNodes, optimalSchedule);
 				
+				// Updates chart with new optimal schedule
+				Main.gui.setOptimalSchedule(scheduledNodes, optimalSchedule);
+
+				// Draws optimal path on graph
 				optimalSchedulePath(graph);
 				
 			}
 			returnToPreviousLevel();
 		}
-		
+		// Prints final optimal schedule onto chart and graph
 		Main.gui.printOptimalLabel(0);
 		sleepFunction(15);
 		Main.gui.calculateHeuristic(currentBound, bestBound, heuristicBound);
@@ -350,15 +359,15 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 		
 	}
 	
-	// Prints the optimal path
+	// Prints the optimal path found, while also displaying dependencies being satisfied
 	private void optimalSchedulePath(Graph graph){
 		graph.removeAttribute("ui.stylesheet");
 		setAttributeMethod(graph);
 
 		HashMap<String, Node> matchedNodes = new HashMap<String, Node>();
 		sleepFunction(250);
+		
 		for (int i = 0; i < optimalSchedule.size(); i++) {
-			
 			if (i == 0) {
 				Node n = scheduledNodes.get(i);
 				sleepFunction(250);
@@ -377,7 +386,6 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 				for (Edge e : optimalEdgeList) {
 					Node incomingNode = e.getStartNode();
 					if (matchedNodes.containsKey(incomingNode.getName())) {
-						//HEAT MAP ME
 						sleepFunction(250);
 						graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: #16a085; }");
 					}
@@ -390,7 +398,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 		
 	}
 	
-	// Prints the final optimal path
+	// Prints the final optimal path, while also displaying dependencies being satisfied
 	private void finalOptimalSchedulePath(Graph graph){
 		graph.removeAttribute("ui.stylesheet");
 		setAttributeMethod(graph);
@@ -400,6 +408,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 		sleepFunction(250);
 		Node earliestNode = nodeList.get(0);
 		
+		// Generates ordered schedule according to node start times, to be used to draw graph
 		while (true) {
 			if (orderArray.size() == nodeList.size()) {
 				break;
@@ -422,6 +431,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 			
 		}
 		
+		// Updates graph with final optimal schedule found
 		for (int i = 0; i < orderArray.size(); i++) {
 			
 			if (i == 0) {
@@ -442,7 +452,6 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 				for (Edge e : optimalEdgeList) {
 					Node incomingNode = e.getStartNode();
 					if (matchedNodes.containsKey(incomingNode.getName())) {
-						//HEAT MAP ME
 						sleepFunction(250);
 						graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: #16a085; }");
 						
@@ -455,6 +464,7 @@ public class DepthFirst_BaB_Scheduler_Visualisation implements SchedulerInterfac
 		sleepFunction(250);
 	}
 	
+	// Sets default styling for graph
 	private void setAttributeMethod(Graph graph) {
 		graph.addAttribute("ui.stylesheet", "node{text-color: blue; text-size: 20px; size: 20px; fill-color: #2c3e50;}");
 		graph.addAttribute("ui.stylesheet", "edge{size: 2.5px; fill-color: #7f8c8d;}");

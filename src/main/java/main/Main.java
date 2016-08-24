@@ -95,6 +95,7 @@ public class Main {
         ValidNodeFinderInterface validNodeFinder = new ValidNodeFinder();
         ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator(numProcessors);
         
+        // Checks what mode to run program in, depending on input arguments
         if(parallelisation) {
         	if(visualisation) {
         		EventQueue.invokeLater(new Runnable() {
@@ -141,6 +142,7 @@ public class Main {
             }  
         }
 
+        // Generates output file
         String outputFileName = hasOutputName ? outputFile : format(inputName) + "-output";
         OutputWriter outputWriter = new OutputWriter();
         try {
@@ -160,6 +162,7 @@ public class Main {
     	return nodeList;
     }
 
+    // Formats output name
     private static String format(String rawInputName) {
         if (rawInputName.contains(File.separator)){
             return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));

@@ -101,6 +101,7 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 		List<Runnable> runnableList = new ArrayList<Runnable>(traverseThreads);
 
 		for (int i = 0; i < traverseThreads; i++) {
+			// Gives identification for each thread which will generate its own graph
 			int graphId = i;
 			
 			runnableList.add(new Runnable() {
@@ -126,7 +127,8 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 			checkQueue();
 		}
 		checkQueue();
-				
+		
+		Main.gui.printOptimalLabel(0);
 		Main.gui.calculateHeuristic(bestBound, bestBound, bestBound);
 	}
 	
@@ -139,15 +141,17 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			// Displays status of program in chart
 			Main.gui.printOptimalLabel(1);
 
+			// Updates graph visualisation
 			Main.gui.orderSchedule(nodeList, optimalSchedule);
 			try {
 				Thread.sleep(20);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}			
+			}
+			// Displays status of program in chart
 			Main.gui.printOptimalLabel(2);
 		}
 		

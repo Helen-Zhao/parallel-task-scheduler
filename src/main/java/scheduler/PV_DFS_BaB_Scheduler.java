@@ -104,6 +104,8 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 				graph.addEdge(edgeName, "foo" + e.getStartNode().getName() + "foo", "foo" + e.getEndNode().getName() + "foo", true);
 			}
 		}
+		
+		// Determines where graph is displayed on screen when using multiple threads
 		int x = 0;
 		int y = 0;
 		switch(graphId) {
@@ -131,7 +133,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 				break;
 		}
 		
-		//Graph ONE
+		//Viewer for graph being instantiated and displayed
 		Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
 		viewer.addDefaultView(false);   
 		viewer.enableAutoLayout();
@@ -375,6 +377,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 	
 	private void notifyMaster(){
 		MasterSchedulerInterface masterScheduler = VMasterScheduler.getInstance();
+		// Closes graph
 		myJFrame.dispose();
 		masterScheduler.initiateNewSubpathTuple(this);
 	}
@@ -388,7 +391,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 		}
 		
 	}
-	// Prints the optimal path
+	// Prints the optimal path, while displaying the dependencies being satisfied
 	private void optimalSchedulePath(Graph graph){
 		graph.removeAttribute("ui.stylesheet");
 		setAttributeMethod(graph);
@@ -427,6 +430,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 		
 	}
 	
+	// Sets default styling for graph
 	private void setAttributeMethod(Graph graph) {
 		graph.addAttribute("ui.stylesheet", "node{text-color: blue; text-size: 20px; size: 20px; fill-color: #2c3e50;}");
 		graph.addAttribute("ui.stylesheet", "edge{size: 2.5px; fill-color: #7f8c8d;}");
