@@ -4,11 +4,13 @@ import inputoutput.OutputWriter;
 import junitx.framework.FileAssert;
 import models.Edge;
 import models.Node;
+import models.NodeTuple;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * @author William Lin
@@ -17,6 +19,7 @@ public class OutputWriterTest {
 
     public List<Node> inputNodeList = new ArrayList<Node>();
     public List<Edge> inputEdgeList = new ArrayList<Edge>();
+    private HashMap<String, NodeTuple> inputNodeInfo = new HashMap<String, NodeTuple>();
 
     @Test
     public void OutputFileTest() {
@@ -43,14 +46,10 @@ public class OutputWriterTest {
         fourthNode.addIncomingEdge(fourthEdge);
 
         //Adding correct input node properties
-        firstNode.setStartTime(0);
-        firstNode.setProcessor(1);
-        secondNode.setStartTime(2);
-        secondNode.setProcessor(1);
-        thirdNode.setStartTime(4);
-        thirdNode.setProcessor(2);
-        fourthNode.setStartTime(7);
-        fourthNode.setProcessor(2);
+        inputNodeInfo.put(firstNode.getName(), new NodeTuple(0, 1, new ArrayList<Integer>(), true));
+        inputNodeInfo.put(secondNode.getName(), new NodeTuple(2, 1, new ArrayList<Integer>(), true));
+        inputNodeInfo.put(thirdNode.getName(), new NodeTuple(4, 2, new ArrayList<Integer>(), true));
+        inputNodeInfo.put(fourthNode.getName(), new NodeTuple(7, 2, new ArrayList<Integer>(), true));
 
         //Adding nodes and edges into their respective lists to pass into OutputWriter
         inputNodeList.add(firstNode);
@@ -67,7 +66,7 @@ public class OutputWriterTest {
         String outputFileName = "outputFile";
 
         OutputWriter ow = new OutputWriter();
-        ow.writeFile(inputNodeList, inputEdgeList, outputFileName);
+        ow.writeFile(inputNodeList, inputNodeInfo, inputEdgeList, outputFileName);
 
         //Get working directory
         String workingDir = System.getProperty("user.dir");

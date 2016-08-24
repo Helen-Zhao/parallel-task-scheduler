@@ -5,12 +5,14 @@ import inputoutput.InputReader;
 import inputoutput.OutputWriter;
 import models.Edge;
 import models.Node;
+import models.NodeTuple;
 import scheduler.*;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.JFrame;
@@ -29,12 +31,17 @@ import javax.swing.JPanel;
 public class Main {
     private static List<Node> optimalSchedule;
     public static GraphGUI gui;
+	
+    private static List<Node> nodeList;
+    private static HashMap<String, NodeTuple> optimalInfo;
 
     public static void main(String[] args) throws IllegalArgumentException {
     	
         if (args.length < 2) {
             throw new IllegalArgumentException("Error: Not enough parameters. Please use the following argument format: <input-file-path> <number of processors>");
         }
+
+        String inputName = args[0];
 
         //Flags for optional params
         boolean hasOutputName = false;
@@ -68,7 +75,9 @@ public class Main {
             }
         }
 
-        File inputFile = new File(args[0]);
+        System.out.println("Processing...");
+
+        File inputFile = new File(inputName);
 
         int numProcessors;
         try {
@@ -77,7 +86,6 @@ public class Main {
             throw new IllegalArgumentException("Error: Argument 2 (Number of Processors) " + args[1] + " is not a number.");
         }
 
-        List<Node> nodeList;
         List<Edge> edgeList;
 
         try {
@@ -112,19 +120,30 @@ public class Main {
         else {
         	scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
         }
-        optimalSchedule = scheduler.createSchedule(nodeList);
+        
+        scheduler.createSchedule(nodeList, edgeList);
+        optimalInfo = scheduler.getSchedule();
 
-        String outputFileName = hasOutputName ? outputFile : format(args[0]) + "-output";
+        String outputFileName = hasOutputName ? outputFile : format(inputName) + "-output";
         OutputWriter outputWriter = new OutputWriter();
-        outputWriter.writeFile(optimalSchedule, edgeList, outputFileName);
+        outputWriter.writeFile(nodeList, optimalInfo, edgeList, outputFileName);
+        System.out.println("Completed.");
 
     }
 
-    public static List<Node> getOptimalSchedule() {
-        return optimalSchedule;
+    public static HashMap<String, NodeTuple> getOptimalSchedule() {
+        return optimalInfo;
+    }
+    
+    public static List<Node> getNodeList() {
+    	return nodeList;
     }
 
     private static String format(String rawInputName) {
-        return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));
+        if (rawInputName.contains(File.separator)){
+            return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));
+        } else {
+            return rawInputName.substring(0, rawInputName.indexOf(".dot"));
+        }
     }
 }
