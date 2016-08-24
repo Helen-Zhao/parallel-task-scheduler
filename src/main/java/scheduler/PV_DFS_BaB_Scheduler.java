@@ -246,7 +246,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 						continue;
 					} else {
 						currentBound = nBound;
-						sleepFunction(50);
+						sleepFunction(40);
 						Main.gui.calculateHeuristic(currentBound, bestBound, heuristicBound);
 					}
 				}
@@ -263,7 +263,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 			if (scheduledNodes.size() == nodeList.size() && setBestBound(currentBound) && level >= initialLevel) {	
 				optimalSchedule = scheduleInfo;
 				
-				sleepFunction(15);
+				sleepFunction(1);
 				Main.gui.calculateHeuristic(currentBound, bestBound, heuristicBound);
 				
 				scheduleInfo = new HashMap<String, NodeTuple>();
@@ -273,8 +273,6 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 					scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
 				}
 				masterScheduler.compare(optimalSchedule, bestBound);
-
-				optimalSchedulePath(graph);
 				
 			} else if (currentBound == bestBound && optimalSchedule == null && level >= initialLevel) {
 				optimalSchedule = scheduleInfo;
@@ -285,8 +283,6 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 					scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
 				}
 				masterScheduler.compare(optimalSchedule, bestBound);
-
-				optimalSchedulePath(graph);
 			}
 			
 			returnToPreviousLevel();

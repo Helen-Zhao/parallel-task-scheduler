@@ -155,6 +155,7 @@ public class GraphGUI extends JFrame {
 			
 		}
 		
+		// Prints optimal schedule to the chart
 		setOptimalSchedule(orderArray, optimal);
 	}
 	

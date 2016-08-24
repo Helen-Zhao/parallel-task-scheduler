@@ -124,6 +124,7 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 		executorService.shutdown();
 		
 		while(executorService.isTerminated() == false || comparisonQueue.isEmpty() == false) {
+			
 			checkQueue();
 		}
 		checkQueue();
@@ -178,7 +179,7 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 
 	private synchronized void notifyAllSchedulers(int bestBound) {
 		for (ParallelSchedulerInterface scheduler : schedulerList) {
-			 scheduler.setBestBound(bestBound);
+			scheduler.setBestBound(bestBound);
 		}
 	}
 
