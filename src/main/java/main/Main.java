@@ -49,7 +49,8 @@ public class Main {
         boolean parallelisation = false;
 
         String outputFile = "";
-        int numThreads;
+        int numProcessors;
+        int numCores = 1;
 
 
         //If there are extra parameters specified
@@ -67,7 +68,7 @@ public class Main {
                             break;
                         case "-p":
                             parallelisation = true;
-                            numThreads = Integer.parseInt(args[i + 1]);
+                            numCores = Integer.parseInt(args[i + 1]);
                             break;
                     }
                 }
@@ -79,7 +80,6 @@ public class Main {
 
         File inputFile = new File(inputName);
 
-        int numProcessors;
         try {
             numProcessors = Integer.parseInt(args[1]);
         } catch (NumberFormatException nfe) {
@@ -99,33 +99,61 @@ public class Main {
 
         ValidNodeFinderInterface validNodeFinder = new ValidNodeFinder();
         ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator(numProcessors);
-        SchedulerInterface scheduler;
-
-        if (visualisation) {
-        	EventQueue.invokeLater(new Runnable() {
-        		public void run() {
-        			try {
-                		gui = new GraphGUI(numProcessors);
-                		gui.setVisible(true);
-                	} catch (Exception e) {
-                		e.printStackTrace();
-                	}
-        		}
-        	});
-        	
-        	
-            scheduler = new DepthFirst_BaB_Scheduler_Visualisation(validNodeFinder, processorAllocator);
-            
-        }
-        else {
-        	scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
-        }
         
-        scheduler.createSchedule(nodeList, edgeList);
-        optimalInfo = scheduler.getSchedule();
+        if(parallelisation) {
+        	if(visualisation) {
+        		EventQueue.invokeLater(new Runnable() {
+            		public void run() {
+            			try {
+                    		gui = new GraphGUI(numProcessors);
+                    		gui.setVisible(true);
+                    	} catch (Exception e) {
+                    		e.printStackTrace();
+                    	}
+            		}
+            	});
+        		MasterSchedulerInterface scheduler = VMasterScheduler.getInstance(numCores, numProcessors);
+            	scheduler.createSchedule(nodeList, edgeList);
+            	optimalInfo = scheduler.getSchedule();
+        	}
+        	else {
+        		MasterSchedulerInterface scheduler = MasterScheduler.getInstance(numCores, numProcessors);
+            	scheduler.createSchedule(nodeList, edgeList);
+            	optimalInfo = scheduler.getSchedule();
+        	}
+        } else {
+        	if (visualisation) {
+            	EventQueue.invokeLater(new Runnable() {
+            		public void run() {
+            			try {
+                    		gui = new GraphGUI(numProcessors);
+                    		gui.setVisible(true);
+                    	} catch (Exception e) {
+                    		e.printStackTrace();
+                    	}
+            		}
+            	});
+            	
+            	SchedulerInterface scheduler = new DepthFirst_BaB_Scheduler_Visualisation(validNodeFinder, processorAllocator);
+            	scheduler.createSchedule(nodeList, edgeList);
+                optimalInfo = scheduler.getSchedule();
+                
+            }
+            else {
+            	SchedulerInterface scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+            	scheduler.createSchedule(nodeList, edgeList);
+                optimalInfo = scheduler.getSchedule();
+            }  
+        }
 
         String outputFileName = hasOutputName ? outputFile : format(inputName) + "-output";
         OutputWriter outputWriter = new OutputWriter();
+        try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         outputWriter.writeFile(nodeList, optimalInfo, edgeList, outputFileName);
         System.out.println("Completed.");
 
