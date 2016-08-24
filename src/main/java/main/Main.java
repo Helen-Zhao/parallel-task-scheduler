@@ -132,7 +132,7 @@ public class Main {
             		}
             	});
             	
-            	SchedulerInterface scheduler = new Visual_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+            	SchedulerInterface scheduler = new Visual_DFS_BaB_Scheduler(validNodeFinder, processorAllocator);
             	scheduler.createSchedule(nodeList, edgeList);
                 optimalInfo = scheduler.getSchedule();
                 

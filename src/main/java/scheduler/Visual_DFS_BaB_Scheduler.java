@@ -19,7 +19,7 @@ import java.util.*;
  *
  * @author Henry, William - modifying original scheduler by Jay
  */
-public class Visual_DepthFirst_BaB_Scheduler implements SchedulerInterface {
+public class Visual_DFS_BaB_Scheduler implements SchedulerInterface {
 
     int currentBound = 0;
     int bestBound = 0;
@@ -41,7 +41,7 @@ public class Visual_DepthFirst_BaB_Scheduler implements SchedulerInterface {
     ValidNodeFinderInterface nodeFinder;
     ProcessorAllocatorInterface processorAllocator;
 
-    public Visual_DepthFirst_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
+    public Visual_DFS_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
         this.nodeFinder = nodeFinder;
         this.processorAllocator = processAllocator;
 
