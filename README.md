@@ -8,7 +8,6 @@
 | Jay Gradon | jgra718 | 6320267 | @jaygradon |
 | William Lin | wlin943 | 6820093 | @OphielOM |
 | Jacky Mai | jmai871 | 8572038 | @JackyMai |
-| Benjamin Collins | bcol602 | 9168328 | @MizdaCollinz |
 | Henry Wu | hwu668 | 9076300 | @HellScytheX |
 
 ## Overview
