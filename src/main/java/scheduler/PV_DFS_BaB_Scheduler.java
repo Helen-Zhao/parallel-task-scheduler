@@ -110,24 +110,24 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 			case 0:
 				break;
 			case 1:
-				y = 500;
+				y = 400;
 				break;
 			case 2:
-				x = 500;
+				x = 400;
 				break;
 			case 3:
-				x = 500;
-				y = 500;
+				x = 400;
+				y = 400;
 				break;
 			case 4:
-				x = 1000;
+				x = 800;
 				break;
 			case 5:
-				x = 1000;
-				y = 500;
+				x = 800;
+				y = 400;
 				break;
 			case 6:
-				x = 1500;
+				x = 1200;
 				break;
 		}
 		
@@ -136,9 +136,9 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 		viewer.addDefaultView(false);   
 		viewer.enableAutoLayout();
 		View defaultView = viewer.getDefaultView();
-		defaultView.setSize(400, 400);
+		defaultView.setSize(350, 350);
 		myJFrame = new JFrame();
-		myJFrame.setBounds(x, y, 500, 500);
+		myJFrame.setBounds(x, y, 400, 400);
 		myJFrame.setVisible(true);
 		myJFrame.add(defaultView);
 		myJFrame.validate();

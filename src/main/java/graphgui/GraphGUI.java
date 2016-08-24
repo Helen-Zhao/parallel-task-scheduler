@@ -39,7 +39,7 @@ public class GraphGUI extends JFrame {
 	public GraphGUI(int numProcessors) {
 		this.numProcessors = numProcessors;
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(1400, 300, 350, 500);
+		setBounds(1400, 450, 350, 500);
         //setLayout(new BorderLayout());
         
         model = new DefaultTableModel() {
