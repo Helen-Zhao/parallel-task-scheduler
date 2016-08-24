@@ -1,6 +1,6 @@
 # softeng-306-p1: Team 4, NP-Easy
 
-## Team Members (upi, AUID, github handle)
+## Team Members
 | Name             | AUID          | UPI   | GitHub       |
 | ---------------- |:-------------:| -----:| ------------:|
 | Benjamin Collins | 9168328 | bcol602 | @MizdaCollinz |
@@ -19,9 +19,7 @@ Inputs: 	&#60;input-file-name&#62; 	&#60;number of processors&#62; 	&#60;optiona
 Optional Flags:
 
 &nbsp;&nbsp;&nbsp;&nbsp;-o OUTPUTNAME&nbsp;&nbsp;&nbsp;&nbsp;Specify output name of choice. Default is input name with -output appended.
-
 &nbsp;&nbsp;&nbsp;&nbsp;-v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visualise the scheduling process
-
 &nbsp;&nbsp;&nbsp;&nbsp;-p NUMTHREADS&nbsp;&nbsp;&nbsp;&nbsp;Parallelise the process by using multiple cores/threads
 
 ## Building Project from Source Code
