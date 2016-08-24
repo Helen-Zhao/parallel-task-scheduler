@@ -7,11 +7,11 @@ tasks with a start time, and assigns it to a processor so as to return the sched
 Inputs: <input-file-name> <number of processors> <optional-flags>
 Optional Flags:
 
--o OUTPUTNAME    Specify output name of choice. Default is input name with -output appended.
+&nbsp;&nbsp;&nbsp;&nbsp;-o OUTPUTNAME&nbsp;&nbsp;&nbsp;&nbsp;Specify output name of choice. Default is input name with -output appended.
 
--v               Visualise the scheduling process
+&nbsp;&nbsp;&nbsp;&nbsp;-v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visualise the scheduling process
 
--p NUMTHREADS    Parallelise the process by using multiple cores/threads
+&nbsp;&nbsp;&nbsp;&nbsp;-p NUMTHREADS&nbsp;&nbsp;&nbsp;&nbsp;Parallelise the process by using multiple cores/threads
 
 ### Building Project from Source Code
 In an IDE with Maven installed, run the Maven clean and install goals. This will generate a .jar file in the target folder.
@@ -25,8 +25,8 @@ This jar is ready to run.
  - Documentation on the classes, their functions and their purposes
  - Dependencies (External Libraries) used
  - Development Workflow
-
- ProjectPlan folder on GitHub:
+  
+ProjectPlan folder on GitHub:
  - Project Plan diagrams
  - UML diagrams
  - Algorithm plans
