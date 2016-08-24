@@ -25,6 +25,8 @@ Optional Flags:
 
 &nbsp;&nbsp;&nbsp;&nbsp;-p NUMTHREADS&nbsp;&nbsp;&nbsp;&nbsp;Parallelise the process by using multiple cores/threads
 
+This program will output a dot file to the current working directory with fields for the start time and processor number it was allocated to. If running from a jar, this will be the directory the jar is placed in.
+
 ## Building Project from Source Code
 In an IDE with Maven installed, run the Maven clean and install goals. This will generate a .jar file in the target folder.
 This jar is ready to run.
