@@ -16,7 +16,7 @@ public class MasterScheduler implements MasterSchedulerInterface {
 	private static MasterSchedulerInterface masterScheduler;
 	private List<ParallelSchedulerInterface> schedulerList;
 	private List<Node> nodeList;
-	private HashMap<String, NodeTuple> optimalSchedule = new HashMap<String,NodeTuple>();
+	private HashMap<String, NodeTuple> optimalSchedule;
 	private HashMap<String, NodeTuple> scheduleInfo = new HashMap<String, NodeTuple>();
 	private int bestBound = 0;
 	private static int traverseThreads;
@@ -24,11 +24,10 @@ public class MasterScheduler implements MasterSchedulerInterface {
 
 	// NEED TO MAKE THIS THREAD SAFE
 	private Queue<ComparisonTuple> comparisonQueue = new LinkedList<ComparisonTuple>();
-	Queue<SubpathTuple> subpathQueue;
+	private Queue<SubpathTuple> subpathQueue;
 
 	// Prevents new objects of this class from being instantiated
-	private MasterScheduler() {
-	}
+	private MasterScheduler() {}
 
 	public static MasterSchedulerInterface getInstance() {
 		if (masterScheduler == null) {
@@ -48,14 +47,12 @@ public class MasterScheduler implements MasterSchedulerInterface {
 
 		return masterScheduler;
 	}
-
+	
 	public synchronized void compare(HashMap<String, NodeTuple> schedule, int scheduleBound) {
 		this.comparisonQueue.add(new ComparisonTuple(schedule, scheduleBound));
-		
 	}
 	
-	public void initiateNewSubpathTuple(ParallelSchedulerInterface scheduler){
-		System.out.println("Initiating new subpathTuple");
+	public void initiateNewSubpathTuple(ParallelSchedulerInterface scheduler) {
 		SubpathTuple tuple = getSubpathTuple();
 		if(tuple != null){
 			scheduler.initiateNewSubtree(this.nodeList, tuple.processorAllocator, tuple.nodeStack, this.bestBound, tuple.scheduleInfo,tuple.schedule);
@@ -66,7 +63,6 @@ public class MasterScheduler implements MasterSchedulerInterface {
 	public HashMap<String, NodeTuple> getSchedule() {
 		return optimalSchedule;
 	}
-	
 	
 	@Override
 	public void createSchedule(List<Node> nodeList, List<Edge> edgeList) {
@@ -97,9 +93,10 @@ public class MasterScheduler implements MasterSchedulerInterface {
 		subpathQueue = createSubpathTuples();
 		
 		ExecutorService executorService = Executors.newFixedThreadPool(traverseThreads);
-
+		List<Runnable> runnableList = new ArrayList<Runnable>(traverseThreads);
+		
 		for (int i = 0; i < traverseThreads; i++) {
-			executorService.execute(new Runnable() {
+			runnableList.add(new Runnable() {
 				public void run() {
 					SubpathTuple tuple = getSubpathTuple();
 					if (tuple != null) {
@@ -107,48 +104,43 @@ public class MasterScheduler implements MasterSchedulerInterface {
 						schedulerList.add(scheduler);
 						
 						scheduler.initiateNewSubtree(nodeList, tuple.processorAllocator, tuple.nodeStack, bestBound, tuple.scheduleInfo,tuple.schedule);
-					} else {
-						System.out.println("There are no tuples here, please resolve!");
 					}
 				}
 			});
 		}
-
+		
+		for (Runnable runnable : runnableList) {
+			executorService.execute(runnable);
+		}
+		
 		executorService.shutdown();
 		
-		while(executorService.isTerminated() == false) {
+		while(executorService.isTerminated() == false || comparisonQueue.isEmpty() == false) {
 			checkQueue();
 		}
 	}
 	
 	private void checkQueue(){
-		while(comparisonQueue.isEmpty() == false){
+		while(comparisonQueue.isEmpty() == false) {
 			ComparisonTuple tuple = comparisonQueue.remove();
 			compareBounds(tuple.schedule, tuple.scheduleBound);
-		}
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
 		}
 	}
 
 	private synchronized void compareBounds(HashMap<String, NodeTuple> schedule, int scheduleBound) {
 		if (scheduleBound < this.bestBound) {
 			this.bestBound = scheduleBound;
-			// Notify all schedules
+
 			notifyAllSchedulers(this.bestBound);
 
 			optimalSchedule = schedule;
-			System.out.println("Found new bestBound of: " + this.bestBound);
 
-		} else if (scheduleBound == this.bestBound && optimalSchedule.size() == 0) {
+		} else if (scheduleBound == this.bestBound && optimalSchedule == null) {
 			optimalSchedule = schedule;
 		}
-		
 	}
 
-	private void notifyAllSchedulers(int bestBound) {
+	private synchronized void notifyAllSchedulers(int bestBound) {
 		for (ParallelSchedulerInterface scheduler : schedulerList) {
 			 scheduler.setBestBound(bestBound);
 		}
@@ -216,7 +208,7 @@ public class MasterScheduler implements MasterSchedulerInterface {
 		// Initially subpaths are equal to root nodes, only one processor is allocated, others will just be mirrors
 		int numSubpath = rootNodeQueue.size();
 		int nextNumSubpath = 0;
-		int heuristic = traverseThreads;
+		int heuristic = (int) Math.min(Math.ceil(traverseThreads*1.5), nodeList.size() / 2);
 		int level = 0;
 		
 		while (numSubpath < heuristic) {
@@ -252,11 +244,6 @@ public class MasterScheduler implements MasterSchedulerInterface {
 					
 					List<Node> satisfiedNodes = nodeFinder.findSatisfiedNodes(this.nodeList);
 					nextNumSubpath += satisfiedNodes.size() * Math.max(level+1, numProcessors);
-					System.out.print("Next Level: ");
-					for (int i = 0; i < satisfiedNodes.size(); i++) {
-						System.out.print(satisfiedNodes.get(i).getName() + " ");
-					}
-					System.out.println("");
 					
 					Queue<Node> newNodeQueue = new LinkedList<Node>();
 					newNodeQueue.addAll(satisfiedNodes);

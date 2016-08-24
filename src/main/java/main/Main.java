@@ -8,15 +8,12 @@ import models.Node;
 import models.NodeTuple;
 import scheduler.*;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  * @author Helen Zhao
@@ -75,8 +72,6 @@ public class Main {
 
             }
         }
-
-        System.out.println("Processing...");
 
         File inputFile = new File(inputName);
 
@@ -151,11 +146,9 @@ public class Main {
         try {
 			Thread.sleep(500);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         outputWriter.writeFile(nodeList, optimalInfo, edgeList, outputFileName);
-        System.out.println("Completed.");
 
     }
 

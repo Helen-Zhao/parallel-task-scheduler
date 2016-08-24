@@ -56,7 +56,6 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 	}
 	
 	public void initiateNewSubpathTuple(ParallelSchedulerInterface scheduler){
-		System.out.println("Initiating new subpathTuple");
 		SubpathTuple tuple = getSubpathTuple();
 		if(tuple != null){
 			scheduler.initiateNewSubtree(this.nodeList, tuple.processorAllocator, tuple.nodeStack, this.bestBound, tuple.scheduleInfo,tuple.schedule);
@@ -112,8 +111,6 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 						schedulerList.add(scheduler);
 						
 						scheduler.initiateNewSubtree(nodeList, tuple.processorAllocator, tuple.nodeStack, bestBound, tuple.scheduleInfo,tuple.schedule);
-					} else {
-						System.out.println("There are no tuples here, please resolve!");
 					}
 				}
 			});
@@ -140,7 +137,6 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 			try {
 				Thread.sleep(50);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Main.gui.printOptimalLabel(1);
@@ -169,7 +165,6 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 			notifyAllSchedulers(this.bestBound);
 
 			optimalSchedule = schedule;
-			System.out.println("Found new bestBound of: " + this.bestBound);
 
 		} else if (scheduleBound == this.bestBound && optimalSchedule == null) {
 			optimalSchedule = schedule;
@@ -281,11 +276,6 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 					
 					List<Node> satisfiedNodes = nodeFinder.findSatisfiedNodes(this.nodeList);
 					nextNumSubpath += satisfiedNodes.size() * Math.max(level+1, numProcessors);
-					System.out.print("Next Level: ");
-					for (int i = 0; i < satisfiedNodes.size(); i++) {
-						System.out.print(satisfiedNodes.get(i).getName() + " ");
-					}
-					System.out.println("");
 					
 					Queue<Node> newNodeQueue = new LinkedList<Node>();
 					newNodeQueue.addAll(satisfiedNodes);

@@ -75,13 +75,9 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 		heuristicBound = heuristicValue;
 		
 		nodeStack = initialNodeStack;
-		
-		System.out.println("A thread started their subtask");
-		
+				
 		createSchedule(nodes, null);
-		
-		System.out.println("A thread finished their subtask");
-		
+				
 		// Called when other work is complete
 		notifyMaster();
 	}
@@ -166,14 +162,9 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 		nodeStack.set(initialLevel, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
 		
 		// While not all paths have been searched (not all paths from level 0 have been searched)
-		while (level >= initialLevel) {
-//			System.out.println("My level is " + level + " and the initial level was " + initialLevel);
-			
+		while (level >= initialLevel) {			
 			// While a complete path has not been found (not all nodes allocated)
 			while (scheduledNodes.size() < nodeList.size()) {
-//				sleepFunction(20);
-//				Main.gui.printOptimalLabel(2);
-				
 				// If a node is available at this index, get it for allocation
 				if (nodeStack.get(level).size() > 0) {
 					node = nodeStack.get(level).peek();
@@ -280,10 +271,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 					scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
 				}
 				masterScheduler.compare(optimalSchedule, bestBound);
-				
-				//Main.gui.printOptimalLabel(1);
-				//Main.gui.setOptimalSchedule(scheduledNodes, optimalSchedule);
-				
+
 				optimalSchedulePath(graph);
 				
 			} else if (currentBound == bestBound && optimalSchedule == null && level >= initialLevel) {
@@ -295,25 +283,19 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 					scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
 				}
 				masterScheduler.compare(optimalSchedule, bestBound);
-				
-				//Main.gui.printOptimalLabel(1);
-				//Main.gui.setOptimalSchedule(scheduledNodes, optimalSchedule);
-				
+
 				optimalSchedulePath(graph);
 			}
 			
 			returnToPreviousLevel();
 		}
-		//Main.gui.printOptimalLabel(0);
 		sleepFunction(15);
 		Main.gui.calculateHeuristic(currentBound, bestBound, heuristicBound);
-		//finalOptimalSchedulePath(graph);
 	}
 	
 	public synchronized boolean setBestBound(int newBestBound) {
 		if(newBestBound < bestBound) {
 			bestBound = newBestBound;
-			System.out.println("NEW BEST BOUND FOUND " + bestBound );
 			return true;
 		} 
 		
@@ -433,7 +415,6 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 				for (Edge e : optimalEdgeList) {
 					Node incomingNode = e.getStartNode();
 					if (matchedNodes.containsKey(incomingNode.getName())) {
-						//HEAT MAP ME
 						sleepFunction(250);
 						graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: #16a085; }");
 					}

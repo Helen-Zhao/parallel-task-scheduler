@@ -68,13 +68,13 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
         nodeInfo.get(node.getName()).setStartTime(earliestStartTime);
         nodeInfo.get(node.getName()).setProcessor(bestProcessor);
         nodeInfo.get(node.getName()).setHasRun(true);
-        processors.get(bestProcessor - 1).addNode(node, nodeInfo.get(node.getName()));
+        processors.get(bestProcessor-1).addNode(node, nodeInfo.get(node.getName()));
 
         // Node has been assigned a Processor and startTime
         return true;
     }
 
-    public int findEarliestStartTime(List<Node> schedule, Node node, int i) {
+    public int findEarliestStartTime(List<Node> schedule, Node node, int processor) {
         List<Edge> dependencies = node.getIncomingEdges();
         int earliestValidStart = 0;
         int earliestValidEnd = node.getWeight();
@@ -82,7 +82,7 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
         // Assumed all dependencies are satisfied
         // Find earliest start based on dependencies
         for (Edge edge : dependencies) {
-            if (nodeInfo.get(edge.getStartNode().getName()).getProcessor() == i) {
+            if (nodeInfo.get(edge.getStartNode().getName()).getProcessor() == processor) {
                 // Start new node after dependency
                 int earliestDependencyStart = nodeInfo.get(edge.getStartNode().getName()).getStartTime() + edge.getStartNode().getWeight();
                 if (earliestDependencyStart > earliestValidStart) {
@@ -99,22 +99,21 @@ public class ProcessorAllocator implements ProcessorAllocatorInterface {
             }
         }
 
-        earliestValidStart = processors.get(i - 1).findEarliestStartTime(node, earliestValidStart, earliestValidEnd);
+        earliestValidStart = processors.get(processor - 1).findEarliestStartTime(node, earliestValidStart, earliestValidEnd);
 
         return earliestValidStart;
     }
     
     public void addToProcessor(Node node, int p) {
-    	
-    	if (p > -1) {
+    	// Processors shouldn't equal 0 or below if assigned
+    	if (p > 0) {
     		processors.get(p - 1).addNode(node, nodeInfo.get(node.getName()));
     	}
-    	
     }
     
     public void removeFromProcessor(Node node, int p) {
-    	
-    	if (p > -1) {
+    	// Processors shouldn't equal 0 or below if assigned
+    	if (p > 0) {
     		processors.get(p - 1).removeNode(node, nodeInfo.get(node.getName()));
     	}
     	

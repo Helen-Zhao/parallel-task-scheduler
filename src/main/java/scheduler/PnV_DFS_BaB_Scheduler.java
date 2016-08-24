@@ -61,13 +61,9 @@ public class PnV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 		heuristicBound = heuristicValue;
 		
 		nodeStack = initialNodeStack;
-		
-		System.out.println("A thread started their subtask");
-		
+				
 		createSchedule(nodes, null);
-		
-		System.out.println("A thread finished their subtask");
-		
+				
 		// Called when other work is complete
 		notifyMaster();
 	}
@@ -81,12 +77,11 @@ public class PnV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 			criticalQueue.add(nodeList.get(i));
 		}
 		
-		
-		// Initialize level to be last initialized level in nodeStack
+		// Initialise level to be last initialised level in nodeStack
 		initialLevel = nodeStack.size();
 		this.level = initialLevel;
 		
-		// Initialize nodeStack
+		// Initialise nodeStack
 		for (int i = initialLevel; i < nodeList.size()+1; i++) {
 			nodeStack.add(null);
 		}
@@ -94,9 +89,7 @@ public class PnV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 		nodeStack.set(initialLevel, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
 		
 		// While not all paths have been searched (not all paths from level 0 have been searched)
-		while (level >= initialLevel) {
-//			System.out.println("My level is " + level + " and the initial level was " + initialLevel);
-			
+		while (level >= initialLevel) {			
 			// While a complete path has not been found (not all nodes allocated)
 			while (scheduledNodes.size() < nodeList.size()) {
 				// If a node is available at this index, get it for allocation
@@ -180,10 +173,8 @@ public class PnV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 	public synchronized boolean setBestBound(int newBestBound) {
 		if(newBestBound < bestBound) {
 			bestBound = newBestBound;
-			System.out.println("NEW BEST BOUND FOUND " + bestBound );
 			return true;
 		} 
-		
 		return false;
 	}
 	
@@ -202,7 +193,7 @@ public class PnV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 				criticalPathLength = criticalQueue.peek().getCriticalPathLength();
 			} else {
 				criticalPathLength = 0;
-			}			
+			}
 		} else {
 			heuristicValue += node.getWeight() / processorAllocator.getNumberProcessors();
 			criticalQueue.add(node);
@@ -265,7 +256,6 @@ public class PnV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 	
 
 	private class CriticalNodeComparator implements Comparator<Node> {
-
 		@Override
 		public int compare(Node n1, Node n2) {
 			return n2.getCriticalPathLength() - n1.getCriticalPathLength();
