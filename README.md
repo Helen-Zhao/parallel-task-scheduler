@@ -6,9 +6,12 @@ tasks with a start time, and assigns it to a processor so as to return the sched
 
 Inputs: <input-file-name> <number of processors> <optional-flags>
 Optional Flags:
-    -o OUTPUTNAME    Specify output name of choice. Default is input name with -output appended.
-    -v               Visualise the scheduling process
-    -p NUMTHREADS    Parallelise the process by using multiple cores/threads
+
+-o OUTPUTNAME    Specify output name of choice. Default is input name with -output appended.
+
+-v               Visualise the scheduling process
+
+-p NUMTHREADS    Parallelise the process by using multiple cores/threads
 
 ### Building Project from Source Code
 In an IDE with Maven installed, run the Maven clean and install goals. This will generate a .jar file in the target folder.
