@@ -16,17 +16,17 @@ This jar is ready to run.
 
 ### Where to Find Information
  Wiki (See side bar):
-    - Meeting Minutes
-    - Decisions/Issues (In Meeting Minutes)
-    - Background Research
-    - Documentation on the classes, their functions and their purposes
-    - Dependencies (External Libraries) used
-    - Development Workflow
+ - Meeting Minutes
+ - Decisions/Issues (In Meeting Minutes)
+ - Background Research
+ - Documentation on the classes, their functions and their purposes
+ - Dependencies (External Libraries) used
+ - Development Workflow
 
  ProjectPlan folder on GitHub:
-    - Project Plan diagrams
-    - UML diagrams
-    - Algorithm plans
+ - Project Plan diagrams
+ - UML diagrams
+ - Algorithm plans
 
 ### Team Members (upi, AUID, github handle)
  - Helen Zhao (hzha587, 6913580, @Helen-Zhao)
