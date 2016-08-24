@@ -1,21 +1,15 @@
 package scheduler;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
 import models.Edge;
 import models.Node;
 import models.NodeTuple;
 
+import java.util.*;
+
 /**
- * Implementation of depth first branch and bound scheduler using while loops
+ * Implementation of depth first branch and bound scheduler using while loops.
  * 
- * @author Jay
+ * @author Jay Gradon
  *
  */
 public class DepthFirst_BaB_Scheduler implements SchedulerInterface {

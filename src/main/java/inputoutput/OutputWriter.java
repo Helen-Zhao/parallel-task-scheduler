@@ -31,10 +31,7 @@ public class OutputWriter {
             for (int i = 0; i < nodes.size(); i++) {
             	
                 Node node = nodes.get(i);
-                
-                if (nodeInfo.get(node.getName()) == null) {
-                	System.out.println("nodeInfo.get(node.getName()) is null dude and node is: " + node.getName());
-                }
+
                 writer.println("\t\t" + node.getName() + "\t\t [Weight=" + node.getWeight() + ", Start=" + nodeInfo.get(node.getName()).getStartTime() + ", Processor=" + nodeInfo.get(node.getName()).getProcessor() + "];");
             }
 

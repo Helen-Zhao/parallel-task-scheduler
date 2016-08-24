@@ -73,6 +73,8 @@ public class Main {
             }
         }
 
+        System.out.println("Processing...");
+
         File inputFile = new File(inputName);
 
         try {
@@ -108,7 +110,7 @@ public class Main {
                     	}
             		}
             	});
-        		MasterSchedulerInterface scheduler = VMasterScheduler.getInstance(numCores, numProcessors);
+        		MasterSchedulerInterface scheduler = V_MasterScheduler.getInstance(numCores, numProcessors);
             	scheduler.createSchedule(nodeList, edgeList);
             	optimalInfo = scheduler.getSchedule();
         	}
@@ -130,7 +132,7 @@ public class Main {
             		}
             	});
             	
-            	SchedulerInterface scheduler = new DepthFirst_BaB_Scheduler_Visualisation(validNodeFinder, processorAllocator);
+            	SchedulerInterface scheduler = new Visual_DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
             	scheduler.createSchedule(nodeList, edgeList);
                 optimalInfo = scheduler.getSchedule();
                 
@@ -145,12 +147,8 @@ public class Main {
         // Generates output file
         String outputFileName = hasOutputName ? outputFile : format(inputName) + "-output";
         OutputWriter outputWriter = new OutputWriter();
-        try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
         outputWriter.writeFile(nodeList, optimalInfo, edgeList, outputFileName);
+        System.out.println("Completed.");
 
     }
 
@@ -162,7 +160,7 @@ public class Main {
     	return nodeList;
     }
 
-    // Formats output name
+    // Formats input name
     private static String format(String rawInputName) {
         if (rawInputName.contains(File.separator)){
             return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));

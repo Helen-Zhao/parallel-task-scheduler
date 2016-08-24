@@ -10,20 +10,20 @@ import java.util.List;
 
 /**
  * @author Benjamin Collins, Jacky Mai
- *
- * ValidNodeFinder takes a list of nodes and finds all nodes that have their dependencies
- * fulfilled.
+ *         <p>
+ *         ValidNodeFinder takes a list of nodes and finds all nodes that have their dependencies
+ *         fulfilled.
  */
 
 public class ValidNodeFinder implements ValidNodeFinderInterface {
 
-	HashMap<String, NodeTuple> nodeInfo;
-	
-	@Override
-	public void addNodeInfo(HashMap<String, NodeTuple> nodeInfo) {
-		this.nodeInfo = nodeInfo;		
-	}
-	
+    HashMap<String, NodeTuple> nodeInfo;
+
+    @Override
+    public void addNodeInfo(HashMap<String, NodeTuple> nodeInfo) {
+        this.nodeInfo = nodeInfo;
+    }
+
     // Find nodes with no dependencies (root) by searching for nodes with no incoming edges
     public List<Node> findRootNodes(List<Node> nodes) {
         List<Node> rootNodes = new ArrayList<Node>();

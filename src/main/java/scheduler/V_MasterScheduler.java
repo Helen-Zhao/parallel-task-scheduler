@@ -1,19 +1,22 @@
 package scheduler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import main.Main;
 import models.Edge;
 import models.Node;
 import models.NodeTuple;
 
-public class VMasterScheduler implements MasterSchedulerInterface {
+import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/**
+ * Implementation of Master Scheduler Interface. Keeps track of multiple threads when using
+ * parallelisation, with additions for simultaneous visualisation.
+ *
+ * @author Benjamin Collins, Jacky Mai, Henry Wu, William Lin
+ */
+
+public class V_MasterScheduler implements MasterSchedulerInterface {
 	private static MasterSchedulerInterface masterScheduler;
 	private List<ParallelSchedulerInterface> schedulerList;
 	private List<Node> nodeList;
@@ -23,28 +26,27 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 	private static int traverseThreads;
 	private static int numProcessors;
 
-	// NEED TO MAKE THIS THREAD SAFE
 	private Queue<ComparisonTuple> comparisonQueue = new LinkedList<ComparisonTuple>();
 	private Queue<SubpathTuple> subpathQueue;
 
 	// Prevents new objects of this class from being instantiated
-	private VMasterScheduler() {
+	private V_MasterScheduler() {
 	}
 
 	public static MasterSchedulerInterface getInstance() {
 		if (masterScheduler == null) {
-			masterScheduler = new VMasterScheduler();
+			masterScheduler = new V_MasterScheduler();
 		}
 
 		return masterScheduler;
 	}
 
 	public static MasterSchedulerInterface getInstance(int numCores, int numProcessors) {
-		VMasterScheduler.traverseThreads = numCores - 1;
-		VMasterScheduler.numProcessors = numProcessors;
+		V_MasterScheduler.traverseThreads = numCores - 1;
+		V_MasterScheduler.numProcessors = numProcessors;
 
 		if (masterScheduler == null) {
-			masterScheduler = new VMasterScheduler();
+			masterScheduler = new V_MasterScheduler();
 		}
 
 		return masterScheduler;
@@ -300,28 +302,28 @@ public class VMasterScheduler implements MasterSchedulerInterface {
 	
 	private synchronized SubpathTuple getSubpathTuple() {
 		while (subpathQueue.size() > 0) {
-			SubpathTuple mrTuple = subpathQueue.peek();
-			List<Queue<Node>> mrNodeStack = mrTuple.nodeStack;
-			Queue<Node> mrQueue = mrNodeStack.get(mrNodeStack.size() - 1);
+			SubpathTuple subpathTuple = subpathQueue.peek();
+			List<Queue<Node>> nodeStack = subpathTuple.nodeStack;
+			Queue<Node> queue = nodeStack.get(nodeStack.size() - 1);
 			
-			ProcessorAllocatorInterface mrAllocator = mrTuple.processorAllocator;
-			Node mrNode;
+			ProcessorAllocatorInterface processorAllocator = subpathTuple.processorAllocator;
+			Node node;
 			
-			while (mrQueue.size() > 0) {
-				mrNode = mrQueue.peek();
+			while (queue.size() > 0) {
+				node = queue.peek();
 				
-				int mrProcessor = mrTuple.scheduleInfo.get(mrNode.getName()).getProcessor();
-				if (mrProcessor != -1) {
-					mrAllocator.removeFromProcessor(mrNode, mrProcessor);
+				int processor = subpathTuple.scheduleInfo.get(node.getName()).getProcessor();
+				if (processor != -1) {
+					processorAllocator.removeFromProcessor(node, processor);
 				}
 				
-				if(mrAllocator.allocateProcessor(mrTuple.schedule, mrNode)) {
-					SubpathTuple mrClone = cloneSubpathTuple(mrTuple);
+				if(processorAllocator.allocateProcessor(subpathTuple.schedule, node)) {
+					SubpathTuple clone = cloneSubpathTuple(subpathTuple);
 					
-					return mrClone;
+					return clone;
 				} else {
-					mrTuple.scheduleInfo.put(mrNode.getName(), new NodeTuple());
-					mrQueue.remove();
+					subpathTuple.scheduleInfo.put(node.getName(), new NodeTuple());
+					queue.remove();
 				}
 			}
 			

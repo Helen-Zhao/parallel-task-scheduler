@@ -1,5 +1,6 @@
 package scheduler;
 
+
 import main.Main;
 import models.Edge;
 import models.Node;
@@ -13,74 +14,48 @@ import javax.swing.*;
 import java.util.*;
 
 /**
- * Implementation of depth first branch and bound scheduler using while loops with additions
- * for using both parallelisation and visualisation simultaneously.
+ * Implementation of depth first branch and bound scheduler using while loops with additions for
+ * visualisation only (without parallelisation).
  *
- * @author Jacky, Ben, William, Henry - Modified version of the original scheduler produced by Jay
+ * @author Henry, William - modifying original scheduler by Jay
  */
-public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
+public class Visual_DepthFirst_BaB_Scheduler implements SchedulerInterface {
 
     int currentBound = 0;
     int bestBound = 0;
-    int heuristicBound = 0;
+
     int heuristicValue = 0;
     int criticalPathLength = 0;
-    int graphId;
-    JFrame myJFrame;
+    PriorityQueue<Node> criticalQueue = new PriorityQueue<Node>(new CriticalNodeComparator());
+    int heuristicBound = 0;
 
-    private PriorityQueue<Node> criticalQueue = new PriorityQueue<Node>(new CriticalNodeComparator());
+    List<Node> nodeList;
+    List<Node> scheduledNodes = new ArrayList<Node>();
+    HashMap<String, NodeTuple> scheduleInfo = new HashMap<String, NodeTuple>();
+    HashMap<String, NodeTuple> optimalSchedule;
 
-    private List<Node> nodeList;
-    private List<Node> scheduledNodes;
-    private HashMap<String, NodeTuple> scheduleInfo;
-    private HashMap<String, NodeTuple> optimalSchedule;
-    private List<Queue<Node>> nodeStack;
-    private MasterSchedulerInterface masterScheduler;
     int level = 0;
-    int initialLevel = 0;
-
-    Graph graph;
-
+    List<Queue<Node>> nodeStack;
 
     Node node;
     ValidNodeFinderInterface nodeFinder;
     ProcessorAllocatorInterface processorAllocator;
 
-    public PV_DFS_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator, int graphId) {
+    public Visual_DepthFirst_BaB_Scheduler(ValidNodeFinderInterface nodeFinder, ProcessorAllocatorInterface processAllocator) {
         this.nodeFinder = nodeFinder;
         this.processorAllocator = processAllocator;
-        this.graphId = graphId;
-        masterScheduler = V_MasterScheduler.getInstance();
-    }
 
-    @Override
-    public void initiateNewSubtree(List<Node> nodes, ProcessorAllocatorInterface processorAllocator, List<Queue<Node>> initialNodeStack,
-                                   int initialBestBound, HashMap<String, NodeTuple> scheduleInfo, List<Node> scheduledNodes) {
-        this.processorAllocator = processorAllocator;
-        this.scheduleInfo = scheduleInfo;
-        this.scheduledNodes = scheduledNodes;
         processorAllocator.addNodeInfo(scheduleInfo);
         nodeFinder.addNodeInfo(scheduleInfo);
-        bestBound = initialBestBound;
-
-        heuristicValue = bestBound / processorAllocator.getNumberProcessors();
-        heuristicBound = heuristicValue;
-
-        nodeStack = initialNodeStack;
-
-        createSchedule(nodes, null);
-
-        // Called when other work is complete
-        notifyMaster();
     }
 
     @Override
     public void createSchedule(List<Node> nodes, List<Edge> edgeList) {
 
-        graph = new MultiGraph("Schedule 1");
+        Graph graph = new MultiGraph("Schedule 1");
 
-        // Initialise availability
-        this.nodeList = nodes;
+        // Initialize availability
+        nodeList = nodes;
 
         // Create Graph of current available nodes
         for (Node n : nodeList) {
@@ -97,72 +72,66 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
             }
         }
 
-        // Determines where graph is displayed on screen when using multiple threads
-        int x = 0;
-        int y = 0;
-        switch (graphId) {
-            case 0:
-                break;
-            case 1:
-                y = 400;
-                break;
-            case 2:
-                x = 400;
-                break;
-            case 3:
-                x = 400;
-                y = 400;
-                break;
-            case 4:
-                x = 800;
-                break;
-            case 5:
-                x = 800;
-                y = 400;
-                break;
-            case 6:
-                x = 1200;
-                break;
-        }
-
-        //Viewer for graph being instantiated and displayed
+        // Generates viewable graph to display
         Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.addDefaultView(false);
         viewer.enableAutoLayout();
         View defaultView = viewer.getDefaultView();
-        defaultView.setSize(350, 350);
-        myJFrame = new JFrame();
-        myJFrame.setBounds(x, y, 400, 400);
+        defaultView.setSize(400, 400);
+        JFrame myJFrame = new JFrame();
+        myJFrame.setBounds(600, 150, 800, 800);
         myJFrame.setVisible(true);
         myJFrame.add(defaultView);
         myJFrame.validate();
 
         setAttributeMethod(graph);
 
+        for (Node n : nodeList) {
+            bestBound += n.getWeight();
+            scheduleInfo.put(n.getName(), new NodeTuple());
+        }
+        heuristicValue = bestBound / processorAllocator.getNumberProcessors();
+        heuristicBound = heuristicValue;
+
+        // Estimate heuristic costs
+        boolean hasDistanceChanged = true;
+        while (hasDistanceChanged) {
+            hasDistanceChanged = false;
+            for (Edge edge : edgeList) {
+                int newCritPathLength = edge.getEndNode().getCriticalPathLength() + edge.getStartNode().getWeight();
+                if (newCritPathLength > edge.getStartNode().getCriticalPathLength()) {
+                    edge.getStartNode().setCriticalPathLength(newCritPathLength);
+                    hasDistanceChanged = true;
+                }
+            }
+        }
+
         for (int i = 0; i < nodeList.size(); i++) {
             criticalQueue.add(nodeList.get(i));
         }
 
-
-        // Initialize level to be last initialized level in nodeStack
-        initialLevel = nodeStack.size();
-        this.level = initialLevel;
+        nodeStack = new ArrayList<Queue<Node>>(nodeList.size() + 1);
 
         // Initialize nodeStack
-        for (int i = initialLevel; i < nodeList.size() + 1; i++) {
+        for (int i = 0; i < nodeList.size() + 1; i++) {
             nodeStack.add(null);
         }
 
-        nodeStack.set(initialLevel, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
+        nodeStack.set(0, new LinkedList<Node>(nodeFinder.findRootNodes(nodeList)));
 
         // While not all paths have been searched (not all paths from level 0 have been searched)
-        while (level >= initialLevel) {
+        while (level > -1) {
             // While a complete path has not been found (not all nodes allocated)
             while (scheduledNodes.size() < nodeList.size()) {
+                sleepFunction(20);
+                // Shows current status of program in chart
+                Main.gui.printOptimalLabel(2);
+
                 // If a node is available at this index, get it for allocation
                 if (nodeStack.get(level).size() > 0) {
                     node = nodeStack.get(level).peek();
 
+                    // Changes node to red
                     graph.addAttribute("ui.stylesheet", "node#" + "foo" + node.getName() + "foo" + "{fill-color: #c0392b;}");
 
                     // If a node is not available, all paths from the last scheduled node have been searched
@@ -170,7 +139,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
                     // Return to previous level
                     returnToPreviousLevel();
 
-                    if (level < initialLevel) {
+                    if (level < 0) {
                         // Just finished all paths, break loop
                         break;
                     }
@@ -196,7 +165,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
                 }
 
                 scheduledNodes.add(node);
-                updateHeuristic(node, true);
+                updateHeurisitic(node, true);
 
                 sleepFunction(1);
 
@@ -238,7 +207,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
                         continue;
                     } else {
                         currentBound = nBound;
-                        sleepFunction(40);
+                        sleepFunction(15);
                         Main.gui.calculateHeuristic(currentBound, bestBound, heuristicBound);
                     }
                 }
@@ -247,26 +216,15 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
                     removeLastNodeFromSchedule();
                     continue;
                 }
+
                 level++;
                 nodeStack.set(level, new LinkedList<Node>(nodeFinder.findSatisfiedNodes(nodeList)));
-
             }
 
-            if (scheduledNodes.size() == nodeList.size() && setBestBound(currentBound) && level >= initialLevel) {
-                optimalSchedule = scheduleInfo;
-
-                sleepFunction(1);
+            if (currentBound < bestBound && level > -1) {
+                bestBound = currentBound;
+                sleepFunction(15);
                 Main.gui.calculateHeuristic(currentBound, bestBound, heuristicBound);
-
-                scheduleInfo = new HashMap<String, NodeTuple>();
-                processorAllocator.addNodeInfo(scheduleInfo);
-                nodeFinder.addNodeInfo(scheduleInfo);
-                for (Node n : nodeList) {
-                    scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
-                }
-                masterScheduler.compare(optimalSchedule, bestBound);
-
-            } else if (currentBound == bestBound && optimalSchedule == null && level >= initialLevel) {
                 optimalSchedule = scheduleInfo;
                 scheduleInfo = new HashMap<String, NodeTuple>();
                 processorAllocator.addNodeInfo(scheduleInfo);
@@ -274,22 +232,44 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
                 for (Node n : nodeList) {
                     scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
                 }
-                masterScheduler.compare(optimalSchedule, bestBound);
-            }
 
+                // Shows current status of program in chart
+                Main.gui.printOptimalLabel(1);
+
+                // Updates chart with new optimal schedule
+                Main.gui.setOptimalSchedule(scheduledNodes, optimalSchedule);
+
+                // Draws optimal path on graph
+                optimalSchedulePath(graph);
+
+            } else if (optimalSchedule == null && level > -1) {
+                optimalSchedule = scheduleInfo;
+                scheduleInfo = new HashMap<String, NodeTuple>();
+                processorAllocator.addNodeInfo(scheduleInfo);
+                nodeFinder.addNodeInfo(scheduleInfo);
+                for (Node n : nodeList) {
+                    scheduleInfo.put(n.getName(), optimalSchedule.get(n.getName()).clone());
+                }
+
+                // Shows current status of program in chart
+                Main.gui.printOptimalLabel(1);
+
+                // Updates chart with new optimal schedule
+                Main.gui.setOptimalSchedule(scheduledNodes, optimalSchedule);
+
+                // Draws optimal path on graph
+                optimalSchedulePath(graph);
+
+            }
             returnToPreviousLevel();
         }
+        // Prints final optimal schedule onto chart and graph
+        Main.gui.printOptimalLabel(0);
         sleepFunction(15);
         Main.gui.calculateHeuristic(currentBound, bestBound, heuristicBound);
-    }
+        finalOptimalSchedulePath(graph);
 
-    public synchronized boolean setBestBound(int newBestBound) {
-        if (newBestBound < bestBound) {
-            bestBound = newBestBound;
-            return true;
-        }
-
-        return false;
+        return;
     }
 
     @Override
@@ -297,7 +277,7 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
         return optimalSchedule;
     }
 
-    private void updateHeuristic(Node node, boolean isAllocated) {
+    private void updateHeurisitic(Node node, boolean isAllocated) {
         if (isAllocated) {
             heuristicValue -= node.getWeight() / processorAllocator.getNumberProcessors();
             while (criticalQueue.size() > 0 && scheduleInfo.get(criticalQueue.peek().getName()).getHasRun()) {
@@ -330,10 +310,9 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
             // Node has no longer been allocated
             scheduleInfo.get(lastNode.getName()).setHasRun(false);
 
-            updateHeuristic(lastNode, false);
+            updateHeurisitic(lastNode, false);
         }
     }
-
 
     /*
      * Calculates the appropriate max runtime for the schedule
@@ -363,14 +342,6 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
         level--;
     }
 
-    private void notifyMaster() {
-        MasterSchedulerInterface masterScheduler = V_MasterScheduler.getInstance();
-        // Closes graph
-        myJFrame.dispose();
-        masterScheduler.initiateNewSubpathTuple(this);
-    }
-
-
     private class CriticalNodeComparator implements Comparator<Node> {
 
         @Override
@@ -380,15 +351,15 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 
     }
 
-    // Prints the optimal path, while displaying the dependencies being satisfied
+    // Prints the optimal path found, while also displaying dependencies being satisfied
     private void optimalSchedulePath(Graph graph) {
         graph.removeAttribute("ui.stylesheet");
         setAttributeMethod(graph);
 
         HashMap<String, Node> matchedNodes = new HashMap<String, Node>();
         sleepFunction(250);
-        for (int i = 0; i < optimalSchedule.size(); i++) {
 
+        for (int i = 0; i < optimalSchedule.size(); i++) {
             if (i == 0) {
                 Node n = scheduledNodes.get(i);
                 sleepFunction(250);
@@ -418,6 +389,71 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
 
     }
 
+    // Prints the final optimal path, while also displaying dependencies being satisfied
+    private void finalOptimalSchedulePath(Graph graph) {
+        graph.removeAttribute("ui.stylesheet");
+        setAttributeMethod(graph);
+
+        HashMap<String, Node> matchedNodes = new HashMap<String, Node>();
+        ArrayList<Node> orderArray = new ArrayList<Node>();
+        sleepFunction(250);
+        Node earliestNode = nodeList.get(0);
+
+        // Generates ordered schedule according to node start times, to be used to draw graph
+        while (true) {
+            if (orderArray.size() == nodeList.size()) {
+                break;
+            }
+            int earliestStartTime = Integer.MAX_VALUE;
+            for (int i = 0; i < nodeList.size(); i++) {
+
+                String nodeTupleKey = nodeList.get(i).getName();
+                NodeTuple tuple = optimalSchedule.get(nodeTupleKey);
+                int tupleStartTime = tuple.getStartTime();
+                if (tupleStartTime <= earliestStartTime) {
+                    if (!matchedNodes.containsKey(nodeList.get(i).getName())) {
+                        earliestStartTime = tupleStartTime;
+                        earliestNode = nodeList.get(i);
+                    }
+                }
+            }
+            orderArray.add(earliestNode);
+            matchedNodes.put(earliestNode.getName(), earliestNode);
+
+        }
+
+        // Updates graph with final optimal schedule found
+        for (int i = 0; i < orderArray.size(); i++) {
+
+            if (i == 0) {
+                Node n = orderArray.get(i);
+                sleepFunction(250);
+                graph.addAttribute("ui.stylesheet", "node#" + "foo" + n.getName() + "foo" + " { fill-color: #27ae60; }");
+                matchedNodes.put(n.getName(), n);
+            } else {
+                Node n = orderArray.get(i);
+                List<Edge> optimalEdgeList = new ArrayList<Edge>();
+                for (Node nl : nodeList) {
+                    if (n.getName().equals(nl.getName())) {
+                        optimalEdgeList = nl.getIncomingEdges();
+                        break;
+                    }
+                }
+                for (Edge e : optimalEdgeList) {
+                    Node incomingNode = e.getStartNode();
+                    if (matchedNodes.containsKey(incomingNode.getName())) {
+                        sleepFunction(250);
+                        graph.addAttribute("ui.stylesheet", "edge#Edge" + incomingNode.getName() + "Edge" + n.getName() + " { fill-color: #16a085; }");
+
+                    }
+                }
+                graph.addAttribute("ui.stylesheet", "node#" + "foo" + n.getName() + "foo" + " { fill-color: #27ae60; }");
+                matchedNodes.put(n.getName(), n);
+            }
+        }
+        sleepFunction(250);
+    }
+
     // Sets default styling for graph
     private void setAttributeMethod(Graph graph) {
         graph.addAttribute("ui.stylesheet", "node{text-color: blue; text-size: 20px; size: 20px; fill-color: #2c3e50;}");
@@ -431,5 +467,6 @@ public class PV_DFS_BaB_Scheduler implements ParallelSchedulerInterface {
             Thread.currentThread().interrupt();
         }
     }
+
 }
 
