@@ -21,7 +21,7 @@ Optional Flags:
 
 &nbsp;&nbsp;&nbsp;&nbsp;-o OUTPUTNAME&nbsp;&nbsp;&nbsp;&nbsp;Specify output name of choice. Default is input name with -output appended.
 
-&nbsp;&nbsp;&nbsp;&nbsp;-v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visualise the scheduling process
+&nbsp;&nbsp;&nbsp;&nbsp;-v&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Visualise the scheduling process
 
 &nbsp;&nbsp;&nbsp;&nbsp;-p NUMTHREADS&nbsp;&nbsp;&nbsp;&nbsp;Parallelise the process by using multiple cores/threads
 
