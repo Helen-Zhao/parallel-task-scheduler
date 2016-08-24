@@ -1,5 +1,6 @@
 package main;
 
+import graphgui.GraphGUI;
 import inputoutput.InputReader;
 import inputoutput.OutputWriter;
 import models.Edge;
@@ -7,10 +8,12 @@ import models.Node;
 import models.NodeTuple;
 import scheduler.*;
 
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+
 
 /**
  * @author Helen Zhao
@@ -23,12 +26,14 @@ import java.util.List;
  */
 
 public class Main {
+    private static List<Node> optimalSchedule;
+    public static GraphGUI gui;
 	
     private static List<Node> nodeList;
     private static HashMap<String, NodeTuple> optimalInfo;
 
     public static void main(String[] args) throws IllegalArgumentException {
-
+    	
         if (args.length < 2) {
             throw new IllegalArgumentException("Error: Not enough parameters. Please use the following argument format: <input-file-path> <number of processors>");
         }
@@ -41,7 +46,8 @@ public class Main {
         boolean parallelisation = false;
 
         String outputFile = "";
-        int numThreads;
+        int numProcessors;
+        int numCores = 1;
 
 
         //If there are extra parameters specified
@@ -59,7 +65,7 @@ public class Main {
                             break;
                         case "-p":
                             parallelisation = true;
-                            numThreads = Integer.parseInt(args[i + 1]);
+                            numCores = Integer.parseInt(args[i + 1]);
                             break;
                     }
                 }
@@ -67,11 +73,8 @@ public class Main {
             }
         }
 
-        System.out.println("Processing...");
-
         File inputFile = new File(inputName);
 
-        int numProcessors;
         try {
             numProcessors = Integer.parseInt(args[1]);
         } catch (NumberFormatException nfe) {
@@ -91,16 +94,63 @@ public class Main {
 
         ValidNodeFinderInterface validNodeFinder = new ValidNodeFinder();
         ProcessorAllocatorInterface processorAllocator = new ProcessorAllocator(numProcessors);
-        SchedulerInterface scheduler;
+        
+        // Checks what mode to run program in, depending on input arguments
+        if(parallelisation) {
+        	if(visualisation) {
+        		EventQueue.invokeLater(new Runnable() {
+            		public void run() {
+            			try {
+                    		gui = new GraphGUI(numProcessors);
+                    		gui.setVisible(true);
+                    	} catch (Exception e) {
+                    		e.printStackTrace();
+                    	}
+            		}
+            	});
+        		MasterSchedulerInterface scheduler = VMasterScheduler.getInstance(numCores, numProcessors);
+            	scheduler.createSchedule(nodeList, edgeList);
+            	optimalInfo = scheduler.getSchedule();
+        	}
+        	else {
+        		MasterSchedulerInterface scheduler = MasterScheduler.getInstance(numCores, numProcessors);
+            	scheduler.createSchedule(nodeList, edgeList);
+            	optimalInfo = scheduler.getSchedule();
+        	}
+        } else {
+        	if (visualisation) {
+            	EventQueue.invokeLater(new Runnable() {
+            		public void run() {
+            			try {
+                    		gui = new GraphGUI(numProcessors);
+                    		gui.setVisible(true);
+                    	} catch (Exception e) {
+                    		e.printStackTrace();
+                    	}
+            		}
+            	});
+            	
+            	SchedulerInterface scheduler = new DepthFirst_BaB_Scheduler_Visualisation(validNodeFinder, processorAllocator);
+            	scheduler.createSchedule(nodeList, edgeList);
+                optimalInfo = scheduler.getSchedule();
+                
+            }
+            else {
+            	SchedulerInterface scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
+            	scheduler.createSchedule(nodeList, edgeList);
+                optimalInfo = scheduler.getSchedule();
+            }  
+        }
 
-        scheduler = new DepthFirst_BaB_Scheduler(validNodeFinder, processorAllocator);
-        scheduler.createSchedule(nodeList, edgeList);
-        optimalInfo = scheduler.getSchedule();
-
+        // Generates output file
         String outputFileName = hasOutputName ? outputFile : format(inputName) + "-output";
         OutputWriter outputWriter = new OutputWriter();
+        try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         outputWriter.writeFile(nodeList, optimalInfo, edgeList, outputFileName);
-        System.out.println("Completed.");
 
     }
 
@@ -112,6 +162,7 @@ public class Main {
     	return nodeList;
     }
 
+    // Formats output name
     private static String format(String rawInputName) {
         if (rawInputName.contains(File.separator)){
             return rawInputName.substring(rawInputName.lastIndexOf(File.separator), rawInputName.indexOf(".dot"));

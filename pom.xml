@@ -27,6 +27,29 @@
           </archive>
         </configuration>
       </plugin>
+      <plugin>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<version>2.2-beta-2</version>
+		<executions>
+			<execution>
+				<id>create-executable-jar</id>
+				<phase>package</phase>
+				<goals>
+					<goal>single</goal>
+				</goals>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+				<archive>
+					<manifest>
+						<mainClass>main.Main</mainClass>
+					</manifest>
+				</archive>
+				</configuration>
+			</execution>
+		</executions>
+</plugin>
     </plugins>
   </build>
   <dependencies>
@@ -53,6 +76,12 @@
 	    <groupId>junit-addons</groupId>
 	    <artifactId>junit-addons</artifactId>
 	    <version>1.4</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.graphstream/gs-core -->
+	<dependency>
+		<groupId>org.graphstream</groupId>
+		<artifactId>gs-core</artifactId>
+		<version>1.2</version>
 	</dependency>
 
   </dependencies>
