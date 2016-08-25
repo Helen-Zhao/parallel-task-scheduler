@@ -1,19 +1,14 @@
 package graphgui;
 
-import java.awt.BorderLayout;
+import models.Node;
+import models.NodeTuple;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
-import models.Node;
-import models.NodeTuple;
 
 @SuppressWarnings("serial")
 public class GraphGUI extends JFrame {
@@ -37,7 +32,7 @@ public class GraphGUI extends JFrame {
 	
 
 	public GraphGUI(int numProcessors) {
-		// Instantion of frame
+		// Instantiation of frame
 		this.numProcessors = numProcessors;
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(1400, 450, 350, 500);
@@ -88,7 +83,6 @@ public class GraphGUI extends JFrame {
         mainPanel.add(promptPanel, BorderLayout.NORTH);
         mainPanel.add(chartPanel, BorderLayout.CENTER);
         mainPanel.add(statsPanel, BorderLayout.SOUTH);
-        
 	}
 	
 	// Prints optimal schedule to the chart

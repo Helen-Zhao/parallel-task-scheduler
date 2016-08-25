@@ -149,6 +149,7 @@ public class Main {
         OutputWriter outputWriter = new OutputWriter();
         outputWriter.writeFile(nodeList, optimalInfo, edgeList, outputFileName);
         System.out.println("Completed.");
+        System.exit(0);
 
     }
 
