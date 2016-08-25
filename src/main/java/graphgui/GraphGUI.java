@@ -34,7 +34,7 @@ public class GraphGUI extends JFrame {
 	public GraphGUI(int numProcessors) {
 		// Instantiation of frame
 		this.numProcessors = numProcessors;
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(1400, 450, 350, 500);
         
 		// Creating Table model for chart
