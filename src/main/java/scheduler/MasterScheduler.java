@@ -212,6 +212,9 @@ public class MasterScheduler implements MasterSchedulerInterface {
         int numSubpath = rootNodeQueue.size();
         int nextNumSubpath = 0;
         int heuristic = (int) Math.min(Math.ceil(traverseThreads * 1.5), nodeList.size() / 2);
+        if (heuristic < traverseThreads){
+            heuristic = traverseThreads;
+        }
         int level = 0;
 
         while (numSubpath < heuristic) {
