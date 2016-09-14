@@ -1,14 +1,14 @@
 # softeng-306-p1: Team 4, NP-Easy
 
 ## Team Members
-| Name             | UPI          | AUID | GitHub |
-| ---------------- | ------------- | ----- | ------------ |
-| Benjamin Collins | bcol602 | 9168328 | @MizdaCollinz |
-| Helen Zhao | hzha587 | 6913580 | @Helen-Zhao |
-| Jay Gradon | jgra718 | 6320267 | @jaygradon |
-| William Lin | wlin943 | 6820093 | @OphielOM |
-| Jacky Mai | jmai871 | 8572038 | @JackyMai |
-| Henry Wu | hwu668 | 9076300 | @HellScytheX |
+| Name             | GitHub |
+| ---------------- | ------------ |
+| Benjamin Collins | @MizdaCollinz |
+| Helen Zhao | @Helen-Zhao |
+| Jay Gradon | @jaygradon |
+| William Lin | @OphielOM |
+| Jacky Mai | @JackyMai |
+| Henry Wu | @HellScytheX |
 
 ## Overview
 A Directed Acyclic Graph in dot file form is used to model tasks and dependencies between tasks. This program schedules
