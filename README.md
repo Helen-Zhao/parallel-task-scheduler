@@ -1,4 +1,4 @@
-# softeng-306-p1: Team 4, NP-Easy
+# Team NP-Easy Parallel Task Scheduler
 
 ## Team Members
 | Name             | GitHub |
